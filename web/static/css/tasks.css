@@ -1,0 +1,318 @@
+:root {
+    --error-color: #e53e3e;
+    --edit-btn-color: #ff9800;
+    --edit-btn-hover: #f57c00;
+    --delete-btn-color: #f44336;
+    --delete-btn-hover: #d32f2f;
+}
+
+.dark-mode {
+    --error-color: #fc8181;
+    --edit-btn-color: #e67e22;
+    --edit-btn-hover: #d35400;
+    --delete-btn-color: #c0392b;
+    --delete-btn-hover: #a52714;
+}
+
+.tasks-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.task-form {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.task-input {
+    padding: 10px;
+    flex-grow: 1;
+    min-width: 200px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: border-color 0.2s;
+}
+
+.task-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.time-selector {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.time-input {
+    padding: 10px;
+    width: 70px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    text-align: center;
+    cursor: ns-resize;
+    transition: all 0.2s;
+}
+
+.time-input:hover {
+    border-color: var(--primary-color);
+}
+
+.time-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.time-spinner {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.time-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 25px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 0;
+    transition: background-color 0.2s;
+}
+
+.time-btn:hover {
+    background-color: var(--hover-color);
+}
+
+.task-button {
+    padding: 10px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.task-button:hover {
+    background-color: var(--hover-color);
+}
+
+.task-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.task-item {
+    background-color: var(--bg-color);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s;
+}
+
+.task-item:hover {
+    transform: translateY(-2px);
+}
+
+.task-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+    margin-bottom: 10px;
+}
+
+.task-time {
+    font-weight: bold;
+    color: var(--primary-color);
+    min-width: 50px;
+}
+
+.task-text {
+    flex-grow: 1;
+    word-break: break-word;
+}
+
+.task-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.task-created {
+    color: var(--text-color);
+    opacity: 0.7;
+    font-size: 0.8em;
+    white-space: nowrap;
+    margin-right: auto;
+}
+
+/* Стили для кнопки удаления */
+.task-actions .delete-btn {
+    padding: 8px 12px;
+    background-color: var(--delete-btn-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.task-actions .delete-btn:hover {
+    background-color: var(--delete-btn-hover);
+}
+
+/* Стили для кнопки редактирования */
+.task-actions .edit-btn {
+    padding: 8px 12px;
+    background-color: var(--edit-btn-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.task-actions .edit-btn:hover {
+    background-color: var(--edit-btn-hover);
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: var(--primary-color);
+    padding: 10px 15px;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.back-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.no-tasks {
+    color: var(--text-color);
+    font-style: italic;
+    padding: 15px;
+    text-align: center;
+}
+
+.edit-form {
+    display: none;
+    margin-top: 10px;
+    padding: 15px;
+    background-color: var(--bg-color);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    width: 100%;
+}
+
+.edit-form.active {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-form .task-input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.cancel-edit {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.cancel-edit:hover {
+    background-color: #5a6268;
+}
+
+/* Для форм с кнопками */
+.task-actions form {
+    margin: 0;
+    display: inline;
+}
+
+@media (max-width: 600px) {
+    .task-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .task-actions {
+        width: 100%;
+        margin-top: 10px;
+        justify-content: space-between;
+    }
+
+    .task-created {
+        color: #757575;
+        font-size: 0.8em;
+        white-space: nowrap;
+        margin-right: auto;
+        font-style: italic;
+    }
+
+    .task-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .task-button {
+        width: 100%;
+    }
+
+    .edit-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .edit-buttons button {
+        width: 100%;
+    }
+}

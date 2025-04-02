@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center;">Профиль пользователя</h1>
+
+    <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px;">Имя пользователя:</label>
+        <div style="padding: 10px; background-color: var(--card-bg); border-radius: 4px; border: 1px solid var(--border-color);">
+            {{ user.username }}
+        </div>
+    </div>
+
+    <form method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        <div>
+            <label for="email" style="display: block; margin-bottom: 5px;">Email:</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required
+                   style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;">
+        </div>
+
+        <button type="submit"
+                style="padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Обновить email
+        </button>
+    </form>
+
+    <!-- Секция для привязки Telegram -->
+    <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+        <h3 style="margin-bottom: 15px;">Привязка Telegram</h3>
+
+        <!-- Статус привязки -->
+        {% if user.is_telegram_linked() %}
+        <div class="telegram-status telegram-linked" style="margin-bottom: 15px;">
+            Telegram аккаунт привязан
+        </div>
+        {% else %}
+        <div class="telegram-status telegram-not-linked" style="margin-bottom: 15px;">
+            Telegram аккаунт не привязан
+        </div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(category_filter=["telegram"]) %}
+            {% if messages %}
+                <div style="margin-bottom: 15px; color: {% if 'успешно' in messages[0] %}green{% else %}red{% endif %};">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('link_telegram') }}" style="display: flex; flex-direction: column; gap: 15px;">
+            <div>
+                <label for="telegram_id" style="display: block; margin-bottom: 5px;">Ваш Telegram ID:</label>
+                <input type="text" id="telegram_id" name="telegram_id" required
+                       style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;"
+                       placeholder="Введите ваш ID Telegram"
+                       value="{{ telegram_id if telegram_id else '' }}">
+            </div>
+
+            <button type="submit"
+                    style="padding: 10px; background-color: #0088cc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                {% if user.is_telegram_linked() %}Обновить привязку{% else %}Привязать аккаунт{% endif %}
+            </button>
+        </form>
+
+        <div style="margin-top: 15px; font-size: 0.9em; color: var(--text-secondary);">
+            <p>Как получить Telegram ID:</p>
+            <ol style="padding-left: 20px; margin-top: 5px;">
+                <li>Напишите боту @solodo_bot в Telegram</li>
+                <li>Используйте команду: /start</li>
+                <li>Скопируйте ваш ID из ответа бота</li>
+                <li>Вставьте его в поле выше</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Секция для Google Calendar -->
+    <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+        <h3 style="margin-bottom: 15px;">Google Calendar</h3>
+
+        <!-- Статус подключения -->
+        {% if user.google_token %}
+        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="color: green;">
+                Google Calendar подключен
+            </div>
+            <form method="POST" action="{{ url_for('disconnect_google') }}">
+                <button type="submit"
+                        style="padding: 8px 12px; background-color: #d9534f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Отключить
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <div style="margin-bottom: 15px; color: var(--text-secondary);">
+            Google Calendar не подключен
+        </div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(category_filter=["google"]) %}
+            {% if messages %}
+                <div style="margin-bottom: 15px; color: {% if 'успешно' in messages[0] %}green{% else %}red{% endif %};">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if user.google_token %}
+        <div style="margin-top: 15px; font-size: 0.9em; color: var(--text-secondary);">
+            <p>События автоматически синхронизируются каждые 2 минуты.</p>
+            <p>Будут добавлены только будущие события (максимум 10 ближайших).</p>
+            <p>Вы также можете выполнить синхронизацию вручную:</p>
+            <a href="{{ url_for('sync_google_calendar') }}"
+               style="display: inline-block; padding: 8px 12px; background-color: #4285F4; color: white; border-radius: 4px; text-decoration: none; margin-top: 5px;">
+                Синхронизировать сейчас
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('show_calendar') }}" 
+           style="display: inline-block; padding: 10px; background-color: var(--bg-color); color: var(--primary-color); border: 1px solid var(--primary-color); border-radius: 4px; text-decoration: none;">
+            ← Вернуться к календарю
+        </a>
+    </div>
+</div>
+{% endblock %}

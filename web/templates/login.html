@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center;">Вход</h1>
+
+    <form method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        <div>
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" name="username" required
+                   style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;">
+        </div>
+
+        <div>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required
+                   style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;">
+        </div>
+
+        <button type="submit"
+                style="padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Войти
+        </button>
+    </form>
+
+    <p style="text-align: center; margin-top: 20px;">
+        Нет аккаунта? <a href="{{ url_for('register') }}" style="color: var(--primary-color);">Зарегистрируйтесь</a>
+    </p>
+</div>
+{% endblock %}

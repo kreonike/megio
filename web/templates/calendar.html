@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}Календарь на {{ russian_month_name }} {{ year }}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calendar.css') }}">
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Функции для работы с временем
+    function formatTimeInput(value) {
+        let numbers = value.replace(/\D/g, '');
+        if (numbers.length > 2) {
+            numbers = numbers.substring(0, 4);
+            return numbers.substring(0, 2) + ':' + numbers.substring(2, 4);
+        }
+        return numbers;
+    }
+
+    function validateTime(timeStr) {
+        if (!timeStr || typeof timeStr !== 'string') return '12:00';
+        let [hours, minutes] = timeStr.includes(':') ? timeStr.split(':') : [timeStr.substring(0, 2), timeStr.substring(2, 4)];
+        hours = Math.min(23, Math.max(0, parseInt(hours) || 0));
+        minutes = Math.min(59, Math.max(0, parseInt(minutes) || 0));
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+
+    function updateTime(input, change) {
+        let time = validateTime(input.value);
+        let [hours, minutes] = time.split(':').map(Number);
+        minutes += change;
+        if (minutes >= 60) {
+            minutes = 0;
+            hours = (hours + 1) % 24;
+        } else if (minutes < 0) {
+            minutes = 55;
+            hours = (hours - 1 + 24) % 24;
+        }
+        input.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+
+    let selectedDay = null;
+
+    // Обработчики кликов по дням календаря
+    document.querySelectorAll('.day-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const year = {{ year }};
+            const month = {{ month }};
+            const day = this.getAttribute('data-day');
+
+            if (!day || isNaN(day)) {
+                console.error('Invalid day value:', day);
+                return;
+            }
+
+            selectedDay = day;
+            const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            fetch(`/tasks/${year}/${month}/${day}`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => updateTasksSection(data.tasks, date, day))
+            .catch(error => console.error('Ошибка при загрузке задач:', error));
+        });
+    });
+
+    // Функция обновления секции задач
+    function updateTasksSection(tasks, date, day) {
+        const tasksSection = document.querySelector('.tasks-section');
+        tasksSection.innerHTML = `
+            <h3>Задачи на ${date}</h3>
+            <form class="task-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
+                <input type="hidden" name="date" value="${date}">
+                <input type="text" name="task" class="task-input" placeholder="Добавить новую задачу..." required>
+                <div class="time-selector">
+                    <input type="text" id="task-time" name="time" class="time-input" value="12:00"
+                           pattern="[0-9]{2}:[0-9]{2}" title="Формат: ЧЧ:ММ (24 часа)">
+                    <div class="time-spinner">
+                        <button type="button" class="time-btn up">▲</button>
+                        <button type="button" class="time-btn down">▼</button>
+                    </div>
+                </div>
+                <button type="submit" class="task-button">Добавить задачу</button>
+            </form>
+            <ul class="task-list">
+                ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => `
+                    <li class="task-item">
+                        <div class="task-content">
+                            ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
+                            <span class="task-text">${task.task}</span>
+                        </div>
+                        <div class="task-actions">
+                            <small class="task-created">${new Date(task.created).toLocaleString('ru-RU', {
+                                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                            })}</small>
+                            <button type="button" class="edit-btn" data-task-id="${task.id}">Редактировать</button>
+                            <button type="button" class="delete-btn" data-task-id="${task.id}">Удалить</button>
+                        </div>
+                        <form id="edit-form-${task.id}" class="edit-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
+                            <input type="hidden" name="task_id" value="${task.id}">
+                            <input type="text" name="task" class="task-input" value="${task.task}" required>
+                            <div class="time-selector">
+                                <input type="text" name="time" class="edit-time-input" value="${task.time || '12:00'}"
+                                       pattern="[0-9]{2}:[0-9]{2}">
+                                <div class="time-spinner">
+                                    <button type="button" class="time-btn up">▲</button>
+                                    <button type="button" class="time-btn down">▼</button>
+                                </div>
+                            </div>
+                            <div class="edit-buttons">
+                                <button type="submit" class="task-button">Сохранить</button>
+                                <button type="button" class="cancel-edit" data-task-id="${task.id}">Отмена</button>
+                            </div>
+                        </form>
+                    </li>
+                `).join('')}
+            </ul>
+        `;
+
+        bindTaskEventListeners(day);
+    }
+
+    // Привязка обработчиков событий
+    function bindTaskEventListeners(day) {
+        // Привязка для формы добавления задачи
+        const taskTimeInput = document.getElementById('task-time');
+        if (taskTimeInput) {
+            taskTimeInput.value = validateTime(taskTimeInput.value);
+            taskTimeInput.addEventListener('input', function() { this.value = formatTimeInput(this.value); });
+            taskTimeInput.addEventListener('blur', function() { this.value = validateTime(this.value); });
+            taskTimeInput.addEventListener('focus', function() { this.select(); });
+            taskTimeInput.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                updateTime(this, e.deltaY > 0 ? -5 : 5);
+            });
+
+            const taskUpBtn = document.querySelector('.task-form .time-btn.up');
+            const taskDownBtn = document.querySelector('.task-form .time-btn.down');
+            if (taskUpBtn) taskUpBtn.addEventListener('click', () => updateTime(taskTimeInput, 5));
+            if (taskDownBtn) taskDownBtn.addEventListener('click', () => updateTime(taskTimeInput, -5));
+        }
+
+        // Обработчик отправки формы добавления
+        document.querySelectorAll('.task-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!selectedDay) {
+                    console.error('No day selected');
+                    alert('Пожалуйста, выберите день в календаре');
+                    return;
+                }
+
+                const formData = new FormData(this);
+                const year = {{ year }};
+                const month = {{ month }};
+                const day = selectedDay;
+
+                fetch(`/tasks/${year}/${month}/${day}`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        this.reset();
+                        taskTimeInput.value = '12:00'; // Сброс времени
+                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        fetch(`/tasks/${year}/${month}/${day}`, {
+                            method: 'GET',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        })
+                        .then(response => response.json())
+                        .then(data => updateTasksSection(data.tasks, date, day));
+                    }
+                })
+                .catch(error => console.error('Ошибка при добавлении задачи:', error));
+            });
+        });
+
+        // Обработчики удаления
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!selectedDay) return;
+                const taskId = this.dataset.taskId;
+                const year = {{ year }};
+                const month = {{ month }};
+                const day = selectedDay;
+
+                if (!confirm('Вы уверены, что хотите удалить эту задачу?')) return;
+
+                fetch(`/tasks/${year}/${month}/${day}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: `delete=${taskId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        fetch(`/tasks/${year}/${month}/${day}`, {
+                            method: 'GET',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        })
+                        .then(response => response.json())
+                        .then(data => updateTasksSection(data.tasks, date, day));
+                    }
+                })
+                .catch(error => console.error('Ошибка:', error));
+            });
+        });
+
+        // Обработчики редактирования
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const taskId = this.dataset.taskId;
+                const form = document.getElementById(`edit-form-${taskId}`);
+                form.classList.toggle('active');
+                const timeInput = form.querySelector('.edit-time-input');
+                if (timeInput) {
+                    timeInput.value = validateTime(timeInput.value);
+                    bindTimeSpinnerEvents(timeInput);
+                }
+            });
+        });
+
+        // Обработчик отправки формы редактирования
+        document.querySelectorAll('.edit-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!selectedDay) return;
+                const formData = new FormData(this);
+                const year = {{ year }};
+                const month = {{ month }};
+                const day = selectedDay;
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        fetch(`/tasks/${year}/${month}/${day}`, {
+                            method: 'GET',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        })
+                        .then(response => response.json())
+                        .then(data => updateTasksSection(data.tasks, date, day));
+                    }
+                })
+                .catch(error => console.error('Ошибка:', error));
+            });
+        });
+
+        document.querySelectorAll('.cancel-edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const taskId = this.dataset.taskId;
+                document.getElementById(`edit-form-${taskId}`).classList.remove('active');
+            });
+        });
+    }
+
+    // Вспомогательная функция для привязки событий спиннера времени
+    function bindTimeSpinnerEvents(timeInput) {
+        timeInput.addEventListener('input', function() { this.value = formatTimeInput(this.value); });
+        timeInput.addEventListener('blur', function() { this.value = validateTime(this.value); });
+        timeInput.addEventListener('focus', function() { this.select(); });
+        timeInput.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            updateTime(this, e.deltaY > 0 ? -5 : 5);
+        });
+
+        const upBtn = timeInput.parentElement.querySelector('.time-btn.up');
+        const downBtn = timeInput.parentElement.querySelector('.time-btn.down');
+        if (upBtn) upBtn.addEventListener('click', () => updateTime(timeInput, 5));
+        if (downBtn) downBtn.addEventListener('click', () => updateTime(timeInput, -5));
+    }
+
+    bindTaskEventListeners(null); // Инициализация
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <h1 class="calendar-title">Календарь на {{ russian_month_name }} {{ year }}</h1>
+
+    <div class="month-nav-wrapper">
+        <a href="{{ url_for('show_calendar', year=year, month=month-1) }}" class="month-nav-btn">
+            ← Пред
+        </a>
+        <a href="{{ url_for('show_calendar', year=year, month=month+1) }}" class="month-nav-btn">
+            След →
+        </a>
+    </div>
+
+    <div class="calendar-wrapper">
+        <div class="calendar-table-container">
+            {{ calendar|safe }}
+        </div>
+
+        <div class="tasks-sidebar">
+            <div class="tasks-section">
+                <h3>Выберите дату</h3>
+                <p>Нажмите на день в календаре, чтобы просмотреть или добавить задачи.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-description" style="margin-top: 40px; padding: 20px; background-color: var(--bg-secondary-color); border-radius: 8px;">
+        <h2 style="text-align: center; margin-bottom: 20px; color: var(--primary-color);">Возможности менеджера задач</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+            <div class="feature-card" style="flex: 1; min-width: 250px; padding: 15px; background-color: var(--bg-color); border-radius: 6px; border: 1px solid var(--border-color);">
+                <h3 style="color: var(--primary-color); margin-top: 0;">📅 Управление задачами</h3>
+                <p>Нажмите на любой день в календаре, чтобы просмотреть, добавить или отредактировать задачи в правой колонке.</p>
+            </div>
+            <div class="feature-card" style="flex: 1; min-width: 250px; padding: 15px; background-color: var(--bg-color); border-radius: 6px; border: 1px solid var(--border-color);">
+                <h3 style="color: var(--primary-color); margin-top: 0;">🤖 Telegram бот</h3>
+                <p>Привяжите Telegram аккаунт в <a href="{{ url_for('profile') }}" style="color: var(--primary-color);">профиле</a>, чтобы получать уведомления о задачах.</p>
+            </div>
+            <div class="feature-card" style="flex: 1; min-width: 250px; padding: 15px; background-color: var(--bg-color); border-radius: 6px; border: 1px solid var(--border-color);">
+                <h3 style="color: var(--primary-color); margin-top: 0;">🔗 Google Calendar</h3>
+                <p>Подключите Google Calendar в <a href="{{ url_for('profile') }}" style="color: var(--primary-color);">профиле</a> для синхронизации событий.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
