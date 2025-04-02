@@ -590,3 +590,47 @@
         flex-direction: column;
     }
 }
+
+/* Стили для повторяющихся задач */
+.task-repeat-badge {
+    font-size: 0.8em;
+    background-color: rgba(75, 192, 192, 0.2);
+    color: #2d3748;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    display: inline-block;
+}
+
+.dark-mode .task-repeat-badge {
+    background-color: rgba(75, 192, 192, 0.3);
+    color: #e2e8f0;
+}
+
+.repeat-options {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: var(--bg-secondary-color);
+    border-radius: 5px;
+}
+
+.repeat-details {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--bg-color);
+    border-radius: 5px;
+}
+
+.repeat-details div {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.repeat-details input[type="date"] {
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+

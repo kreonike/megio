@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="task-content">
                             ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
                             <span class="task-text">${task.task}</span>
+                            ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
                         </div>
                         <div class="task-actions">
                             <button type="button" class="remind-btn" data-task-id="${task.id}">Напомнить</button>
@@ -116,6 +117,26 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div class="time-spinner">
                                     <button type="button" class="time-btn up">▲</button>
                                     <button type="button" class="time-btn down">▼</button>
+                                </div>
+                            </div>
+                            <div class="repeat-options">
+                                <label>
+                                    <input type="checkbox" name="repeat_enabled" ${task.repeat_days ? 'checked' : ''}> Повторять задачу
+                                </label>
+                                <div class="repeat-details" style="${task.repeat_days ? '' : 'display: none;'}">
+                                    <div>
+                                        <span>Каждые</span>
+                                        <input type="number" name="repeat_days" min="1" max="365" value="${task.repeat_days || 1}" style="width: 50px;">
+                                        <span>дней</span>
+                                    </div>
+                                    <div>
+                                        <span>Начиная с</span>
+                                        <input type="date" name="repeat_start" value="${task.repeat_start || date}">
+                                    </div>
+                                    <div>
+                                        <span>Заканчивая</span>
+                                        <input type="date" name="repeat_end" value="${task.repeat_end || ''}">
+                                    </div>
                                 </div>
                             </div>
                             <div class="edit-buttons">
@@ -146,8 +167,18 @@ document.addEventListener('DOMContentLoaded', function() {
             </ul>
         `;
 
-        bindTaskEventListeners(day);
-    }
+        // Добавьте обработчик для чекбокса повторения
+    document.querySelectorAll('input[name="repeat_enabled"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const details = this.closest('.repeat-options').querySelector('.repeat-details');
+            details.style.display = this.checked ? 'block' : 'none';
+        });
+    });
+
+    bindTaskEventListeners(day);
+}
+
+
 
     // Привязка обработчиков событий
     function bindTaskEventListeners(day) {
