@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, g, session, json
+from logging_config import configure_logging
+from flask import Flask, render_template, request, redirect, url_for, flash, g, session, json, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 import sqlite3
@@ -15,6 +16,7 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 import datetime as dt
 from dotenv import load_dotenv
+import re
 
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
@@ -25,13 +27,13 @@ atexit.register(lambda: scheduler.shutdown())
 # Загрузка переменных окружения из .env файла
 load_dotenv()
 
-# Настройка логирования
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
-
 # Инициализация приложения
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', secrets.token_hex(32))
+
+# Настройка логирования
+configure_logging(app)
+logger = app.logger
 
 # Конфигурация Google OAuth
 app.config['GOOGLE_CLIENT_ID'] = os.getenv('GOOGLE_CLIENT_ID')
@@ -381,6 +383,53 @@ def day_tasks(year, month, day):
     return render_template('tasks.html', year=year, month=month, day=day, date_str=date_str, tasks=tasks)
 
 
+@app.route('/tasks/<int:year>/<int:month>/<int:day>/remind', methods=['POST'])
+@login_required
+def set_task_reminders(year, month, day):
+    if not request.is_json:
+        return jsonify({'success': False, 'error': 'Invalid content type'}), 400
+
+    data = request.get_json()
+    task_id = data.get('task_id')
+    remind_times = data.get('remind_times', [])  # Пример: [15, 120, 1440]
+    logger.debug(f"Received remind request: task_id={task_id}, remind_times={remind_times}")
+
+    if not task_id or not remind_times:
+        return jsonify({'success': False, 'error': 'Missing task_id or remind_times'}), 400
+
+    try:
+        db = get_db()
+        cursor = db.cursor()
+
+        # Проверяем, принадлежит ли задача текущему пользователю
+        cursor.execute('SELECT user_id FROM tasks WHERE id = ?', (task_id,))
+        task = cursor.fetchone()
+        if not task or task['user_id'] != current_user.id:
+            return jsonify({'success': False, 'error': 'Task not found or access denied'}), 403
+
+        # Обновляем флаги напоминаний
+        cursor.execute('''
+            UPDATE tasks 
+            SET 
+                reminder_15m_sent = ?,
+                reminder_2h_sent = ?,
+                reminder_1day_sent = ?
+            WHERE id = ?
+        ''', (
+            0 if 15 in remind_times else 1,   # 15 минут
+            0 if 120 in remind_times else 1,   # 2 часа
+            0 if 1440 in remind_times else 1,  # 24 часа
+            task_id
+        ))
+
+        db.commit()
+        return jsonify({'success': True})
+
+    except Exception as e:
+        logger.error(f"Ошибка при установке напоминаний: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -390,6 +439,19 @@ def register():
 
         if not username or not email or not password:
             flash('Заполните все поля', 'error')
+            return render_template('register.html')
+
+        # Проверка email
+        if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+            flash('Введите корректный email', 'error')
+            return render_template('register.html')
+
+        # Проверка сложности пароля
+        if (len(password) < 8 or
+                not re.search(r'[A-Z]', password) or
+                not re.search(r'[a-z]', password) or
+                not re.search(r'\d', password)):
+            flash('Пароль должен содержать минимум 8 символов, включая цифры, заглавные и строчные буквы', 'error')
             return render_template('register.html')
 
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')

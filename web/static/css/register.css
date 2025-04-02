@@ -1,0 +1,137 @@
+/* Регистрационная форма */
+.registration-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: var(--bg-secondary-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.dark-mode .registration-container {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-control {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-primary);
+    font-family: inherit;
+    transition: var(--transition-base);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.dark-mode .form-control:focus {
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.4);
+}
+
+.password-generator {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.password-generator input {
+    flex: 1;
+}
+
+.generate-btn {
+    padding: 0 1rem;
+    background: var(--primary-color);
+    color: var(--text-inverse);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.generate-btn:hover {
+    background: var(--hover-color);
+}
+
+.submit-btn {
+    padding: 0.75rem;
+    background: var(--primary-color);
+    color: var(--text-inverse);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition-base);
+}
+
+.submit-btn:hover {
+    background: var(--hover-color);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.hint-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.error-text {
+    font-size: 0.8rem;
+    color: var(--weekend-color);
+    margin-top: 0.25rem;
+    display: none;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .registration-container {
+        margin: 1rem auto;
+        padding: 1.25rem;
+    }
+
+    .password-generator {
+        flex-direction: column;
+    }
+
+    .generate-btn {
+        padding: 0.5rem;
+    }
+}

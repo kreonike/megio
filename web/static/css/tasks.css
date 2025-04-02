@@ -4,6 +4,10 @@
     --edit-btn-hover: #f57c00;
     --delete-btn-color: #f44336;
     --delete-btn-hover: #d32f2f;
+    --remind-confirm-btn: #4CAF50;
+    --remind-confirm-btn-hover: #3e8e41;
+    --cancel-remind-btn: #6c757d;
+    --cancel-remind-btn-hover: #5a6268;
 }
 
 .dark-mode {
@@ -12,6 +16,10 @@
     --edit-btn-hover: #d35400;
     --delete-btn-color: #c0392b;
     --delete-btn-hover: #a52714;
+    --remind-confirm-btn: #2E7D32;
+    --remind-confirm-btn-hover: #1B5E20;
+    --cancel-remind-btn: #5a6268;
+    --cancel-remind-btn-hover: #495057;
 }
 
 .tasks-container {
@@ -278,6 +286,37 @@
     display: inline;
 }
 
+/* Стили для кнопки напоминания */
+.task-actions .remind-btn {
+    padding: 8px 12px;
+    background-color: var(--remind-btn-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.task-actions .remind-btn:hover {
+    background-color: var(--remind-btn-hover);
+}
+
+/* Добавим новые переменные для кнопки напоминания */
+:root {
+    --remind-btn-color: #4CAF50;
+    --remind-btn-hover: #3e8e41;
+}
+
+.dark-mode {
+    --remind-btn-color: #2E7D32;
+    --remind-btn-hover: #1B5E20;
+}
+
 @media (max-width: 600px) {
     .task-item {
         flex-direction: column;
@@ -315,4 +354,6 @@
     .edit-buttons button {
         width: 100%;
     }
+
+
 }

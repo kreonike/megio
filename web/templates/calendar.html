@@ -73,10 +73,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Функция обновления секции задач
     function updateTasksSection(tasks, date, day) {
-        const tasksSection = document.querySelector('.tasks-section');
-        tasksSection.innerHTML = `
-            <h3>Задачи на ${date}</h3>
-            <form class="task-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
+    const dateParts = date.split('-');
+    const year = dateParts[0];
+    const month = dateParts[1];
+    const dayNum = dateParts[2];
+    const formattedDate = `${dayNum.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
+
+    const tasksSection = document.querySelector('.tasks-section');
+    tasksSection.innerHTML = `
+        <h3 class="task-date-header" style="color: inherit;">${formattedDate}</h3>
+        <form class="task-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
                 <input type="hidden" name="date" value="${date}">
                 <input type="text" name="task" class="task-input" placeholder="Добавить новую задачу..." required>
                 <div class="time-selector">
@@ -97,9 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="task-text">${task.task}</span>
                         </div>
                         <div class="task-actions">
-                            <small class="task-created">${new Date(task.created).toLocaleString('ru-RU', {
-                                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                            })}</small>
+                            <button type="button" class="remind-btn" data-task-id="${task.id}">Напомнить</button>
                             <button type="button" class="edit-btn" data-task-id="${task.id}">Редактировать</button>
                             <button type="button" class="delete-btn" data-task-id="${task.id}">Удалить</button>
                         </div>
@@ -117,6 +121,24 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="edit-buttons">
                                 <button type="submit" class="task-button">Сохранить</button>
                                 <button type="button" class="cancel-edit" data-task-id="${task.id}">Отмена</button>
+                            </div>
+                        </form>
+                        <form id="remind-form-${task.id}" class="remind-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}/remind">
+                            <input type="hidden" name="task_id" value="${task.id}">
+                            <div class="remind-options">
+                                <label class="remind-option">
+                                    <input type="checkbox" name="remind_time" value="15" checked> За 15 минут
+                                </label>
+                                <label class="remind-option">
+                                    <input type="checkbox" name="remind_time" value="120" checked> За 2 часа
+                                </label>
+                                <label class="remind-option">
+                                    <input type="checkbox" name="remind_time" value="1440" checked> За 24 часа
+                                </label>
+                            </div>
+                            <div class="remind-buttons">
+                                <button type="submit" class="remind-confirm-btn">Установить напоминание</button>
+                                <button type="button" class="cancel-remind" data-task-id="${task.id}">Отмена</button>
                             </div>
                         </form>
                     </li>
@@ -147,133 +169,204 @@ document.addEventListener('DOMContentLoaded', function() {
             if (taskDownBtn) taskDownBtn.addEventListener('click', () => updateTime(taskTimeInput, -5));
         }
 
-        // Обработчик отправки формы добавления
-        document.querySelectorAll('.task-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (!selectedDay) {
-                    console.error('No day selected');
-                    alert('Пожалуйста, выберите день в календаре');
-                    return;
-                }
-
-                const formData = new FormData(this);
-                const year = {{ year }};
-                const month = {{ month }};
-                const day = selectedDay;
-
-                fetch(`/tasks/${year}/${month}/${day}`, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.status === 'success') {
-                        this.reset();
-                        taskTimeInput.value = '12:00'; // Сброс времени
-                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                        .then(response => response.json())
-                        .then(data => updateTasksSection(data.tasks, date, day));
-                    }
-                })
-                .catch(error => console.error('Ошибка при добавлении задачи:', error));
+        // Обработчик кнопки "Напомнить"
+        document.querySelectorAll('.remind-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const taskId = this.dataset.taskId;
+                // Скрываем все активные формы редактирования
+                document.querySelectorAll('.edit-form.active').forEach(form => {
+                    form.classList.remove('active');
+                });
+                // Показываем/скрываем форму напоминания
+                const remindForm = document.getElementById(`remind-form-${taskId}`);
+                remindForm.classList.toggle('active');
             });
         });
+
+        // Обработчик кнопки "Отмена" в форме напоминания
+        document.querySelectorAll('.cancel-remind').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const taskId = this.dataset.taskId;
+                document.getElementById(`remind-form-${taskId}`).classList.remove('active');
+            });
+        });
+
+        // Обработчик отправки формы напоминания
+        document.querySelectorAll('.remind-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!selectedDay) return;
+
+        const formData = new FormData(this);
+        const taskId = formData.get('task_id');
+        const remindTimes = [];
+
+        // Собираем выбранные варианты напоминаний
+        this.querySelectorAll('input[name="remind_time"]:checked').forEach(checkbox => {
+            remindTimes.push(parseInt(checkbox.value)); // 15, 120, 1440
+        });
+
+        if (remindTimes.length === 0) {
+            alert('Выберите хотя бы одно напоминание!');
+            return;
+        }
+
+        // Отправляем данные на сервер
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                task_id: taskId,
+                remind_times: remindTimes
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Напоминания установлены!');
+                document.getElementById(`remind-form-${taskId}`).classList.remove('active');
+            } else {
+                alert('Ошибка: ' + data.error);
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    });
+});
 
         // Обработчики удаления
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (!selectedDay) return;
-                const taskId = this.dataset.taskId;
-                const year = {{ year }};
-                const month = {{ month }};
-                const day = selectedDay;
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (!selectedDay) return;
+            const taskId = this.dataset.taskId;
+            const year = {{ year }};
+            const month = {{ month }};
+            const day = selectedDay;
 
-                if (!confirm('Вы уверены, что хотите удалить эту задачу?')) return;
+            if (!confirm('Вы уверены, что хотите удалить эту задачу?')) return;
 
-                fetch(`/tasks/${year}/${month}/${day}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: `delete=${taskId}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                        .then(response => response.json())
-                        .then(data => updateTasksSection(data.tasks, date, day));
-                    }
-                })
-                .catch(error => console.error('Ошибка:', error));
-            });
-        });
-
-        // Обработчики редактирования
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const taskId = this.dataset.taskId;
-                const form = document.getElementById(`edit-form-${taskId}`);
-                form.classList.toggle('active');
-                const timeInput = form.querySelector('.edit-time-input');
-                if (timeInput) {
-                    timeInput.value = validateTime(timeInput.value);
-                    bindTimeSpinnerEvents(timeInput);
+            fetch(`/tasks/${year}/${month}/${day}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: `delete=${taskId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    fetch(`/tasks/${year}/${month}/${day}`, {
+                        method: 'GET',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(response => response.json())
+                    .then(data => updateTasksSection(data.tasks, date, day));
                 }
-            });
+            })
+            .catch(error => console.error('Ошибка:', error));
         });
+    });
 
-        // Обработчик отправки формы редактирования
-        document.querySelectorAll('.edit-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (!selectedDay) return;
-                const formData = new FormData(this);
-                const year = {{ year }};
-                const month = {{ month }};
-                const day = selectedDay;
-
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                        .then(response => response.json())
-                        .then(data => updateTasksSection(data.tasks, date, day));
-                    }
-                })
-                .catch(error => console.error('Ошибка:', error));
-            });
+    // Обработчики редактирования
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const taskId = this.dataset.taskId;
+            const form = document.getElementById(`edit-form-${taskId}`);
+            form.classList.toggle('active');
+            const timeInput = form.querySelector('.edit-time-input');
+            if (timeInput) {
+                timeInput.value = validateTime(timeInput.value);
+                bindTimeSpinnerEvents(timeInput);
+            }
         });
+    });
+    // Обработчик отправки формы добавления
+    document.querySelectorAll('.task-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!selectedDay) {
+                console.error('No day selected');
+                alert('Пожалуйста, выберите день в календаре');
+                return;
+            }
 
-        document.querySelectorAll('.cancel-edit').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const taskId = this.dataset.taskId;
-                document.getElementById(`edit-form-${taskId}`).classList.remove('active');
-            });
+            const formData = new FormData(this);
+            const year = {{ year }};
+            const month = {{ month }};
+            const day = selectedDay;
+
+            fetch(`/tasks/${year}/${month}/${day}`, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    // Очищаем форму, но остаемся на той же дате
+                    this.reset();
+                    const taskTimeInput = this.querySelector('.time-input');
+                    if (taskTimeInput) taskTimeInput.value = '12:00';
+
+                    // Обновляем список задач без перезагрузки страницы
+                    const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    fetch(`/tasks/${year}/${month}/${day}`, {
+                        method: 'GET',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(response => response.json())
+                    .then(data => updateTasksSection(data.tasks, date, day));
+                }
+            })
+            .catch(error => console.error('Ошибка при добавлении задачи:', error));
         });
+    });
+
+    // Обработчик отправки формы редактирования
+    document.querySelectorAll('.edit-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!selectedDay) return;
+            const formData = new FormData(this);
+            const year = {{ year }};
+            const month = {{ month }};
+            const day = selectedDay;
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    fetch(`/tasks/${year}/${month}/${day}`, {
+                        method: 'GET',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(response => response.json())
+                    .then(data => updateTasksSection(data.tasks, date, day));
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        });
+    });
+
+    document.querySelectorAll('.cancel-edit').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const taskId = this.dataset.taskId;
+            document.getElementById(`edit-form-${taskId}`).classList.remove('active');
+        });
+    });
+
     }
 
     // Вспомогательная функция для привязки событий спиннера времени
