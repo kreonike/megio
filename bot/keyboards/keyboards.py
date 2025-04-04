@@ -82,24 +82,24 @@ def create_tasks_keyboard(user_id: int, year: int, month: int, day: int, lang: s
     conn.close()
 
     date_str = f"{day:02d}.{month:02d}.{year}"
-    # Убираем Markdown из заголовка, чтобы избежать проблем с форматированием
     tasks_text = i18n.get("messages.tasks.day_header", lang=lang).replace('*', '').format(date=date_str)
 
     keyboard = []
-    keyboard.append([InlineKeyboardButton(
-        text=i18n.get("buttons.add_task", lang=lang),
+
+    # Кнопка "Добавить задачу" (шириной как 7 кнопок календаря)
+    add_task_button = InlineKeyboardButton(
+        text=f"➕               {i18n.get('buttons.add_task', lang=lang)}               ➕",
         callback_data=f"add_task_{year}_{month}_{day}"
-    )])
+    )
+    keyboard.append([add_task_button])  # Растягивается на всю строку
 
     if not tasks:
         tasks_text += i18n.get("messages.tasks.no_tasks", lang=lang)
     else:
         for task_id, task_text, task_time in tasks:
-            # Получаем шаблон префикса времени
             time_prefix_template = i18n.get("messages.tasks.time_prefix", lang=lang)
             time_str = time_prefix_template.format(time=task_time) if task_time else ""
 
-            # Экранируем Markdown-символы в тексте задачи
             task_text = task_text.translate(str.maketrans({
                 '*': '\\*',
                 '_': '\\_',
@@ -112,15 +112,19 @@ def create_tasks_keyboard(user_id: int, year: int, month: int, day: int, lang: s
 
             tasks_text += f"\n• {time_str}{task_text}"
 
-        keyboard.append([InlineKeyboardButton(
-            text=i18n.get("buttons.delete_task", lang=lang),
+        # Кнопка "Удалить задачу" (шириной как 7 кнопок календаря)
+        delete_task_button = InlineKeyboardButton(
+            text=f"❌                    {i18n.get('buttons.delete_task', lang=lang)}               ❌",
             callback_data=f"delete_menu_{year}_{month}_{day}"
-        )])
+        )
+        keyboard.append([delete_task_button])
 
-    keyboard.append([InlineKeyboardButton(
-        text=i18n.get("buttons.back", lang=lang),
+    # Кнопка "Назад" (шириной как 7 кнопок календаря)
+    back_button = InlineKeyboardButton(
+        text=f"          {i18n.get('buttons.back', lang=lang)}          ",
         callback_data=f"back_{year}_{month}"
-    )])
+    )
+    keyboard.append([back_button])
 
     return tasks_text, InlineKeyboardMarkup(inline_keyboard=keyboard)
 

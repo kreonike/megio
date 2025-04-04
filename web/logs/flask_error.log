@@ -1,0 +1,492 @@
+2025-04-02 12:50:20 | WARNING | werkzeug | _internal.py:97 |  * Debugger is active!
+2025-04-02 12:51:34 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 13:40:53 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 13:41:14 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 13:46:23 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 13:56:56 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 13:58:35 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 13:59:52 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 14:02:11 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 14:04:50 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 14:32:04 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:28:46 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:29:28 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:36:11 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:37:50 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:38:12 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:44:14 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:48:49 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:51:44 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 17:53:30 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 18:22:16 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 18:28:12 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 18:51:46 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 21:36:15 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 21:36:39 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 21:36:55 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 21:37:21 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 21:40:07 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-02 21:54:24 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 11:02:17 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 11:04:15 | ERROR    | apscheduler.executors.default | base.py:145 | Job "sync_google_calendar_for_all_users (trigger: interval[0:02:00], next run at: 2025-04-04 11:06:15 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: users.password_hash
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes.py", line 102, in sync_google_calendar_for_all_users
+    users = User.query.filter(User.google_token.isnot(None)).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.password_hash
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.telegram_token AS users_telegram_token, users.google_token AS users_google_token 
+FROM users 
+WHERE users.google_token IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-04 11:04:17 | ERROR    | apscheduler.executors.default | base.py:145 | Job "sync_google_calendar_for_all_users (trigger: interval[0:02:00], next run at: 2025-04-04 11:06:17 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: users.password_hash
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes.py", line 102, in sync_google_calendar_for_all_users
+    users = User.query.filter(User.google_token.isnot(None)).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.password_hash
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.telegram_token AS users_telegram_token, users.google_token AS users_google_token 
+FROM users 
+WHERE users.google_token IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-04 11:06:15 | ERROR    | apscheduler.executors.default | base.py:145 | Job "sync_google_calendar_for_all_users (trigger: interval[0:02:00], next run at: 2025-04-04 11:08:15 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: users.password_hash
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes.py", line 102, in sync_google_calendar_for_all_users
+    users = User.query.filter(User.google_token.isnot(None)).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.password_hash
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.telegram_token AS users_telegram_token, users.google_token AS users_google_token 
+FROM users 
+WHERE users.google_token IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-04 11:06:17 | ERROR    | apscheduler.executors.default | base.py:145 | Job "sync_google_calendar_for_all_users (trigger: interval[0:02:00], next run at: 2025-04-04 11:08:17 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: users.password_hash
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes.py", line 102, in sync_google_calendar_for_all_users
+    users = User.query.filter(User.google_token.isnot(None)).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.password_hash
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.telegram_token AS users_telegram_token, users.google_token AS users_google_token 
+FROM users 
+WHERE users.google_token IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-04 11:08:15 | ERROR    | apscheduler.executors.default | base.py:145 | Job "sync_google_calendar_for_all_users (trigger: interval[0:02:00], next run at: 2025-04-04 11:10:15 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: users.password_hash
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes.py", line 102, in sync_google_calendar_for_all_users
+    users = User.query.filter(User.google_token.isnot(None)).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.password_hash
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.telegram_token AS users_telegram_token, users.google_token AS users_google_token 
+FROM users 
+WHERE users.google_token IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-04 11:08:17 | ERROR    | apscheduler.executors.default | base.py:145 | Job "sync_google_calendar_for_all_users (trigger: interval[0:02:00], next run at: 2025-04-04 11:10:17 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: users.password_hash
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes.py", line 102, in sync_google_calendar_for_all_users
+    users = User.query.filter(User.google_token.isnot(None)).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.password_hash
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.telegram_token AS users_telegram_token, users.google_token AS users_google_token 
+FROM users 
+WHERE users.google_token IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-04 11:10:15 | ERROR    | apscheduler.executors.default | base.py:145 | Job "sync_google_calendar_for_all_users (trigger: interval[0:02:00], next run at: 2025-04-04 11:12:15 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: users.password_hash
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes.py", line 102, in sync_google_calendar_for_all_users
+    users = User.query.filter(User.google_token.isnot(None)).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.password_hash
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.telegram_token AS users_telegram_token, users.google_token AS users_google_token 
+FROM users 
+WHERE users.google_token IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-04 11:10:17 | ERROR    | apscheduler.executors.default | base.py:145 | Job "sync_google_calendar_for_all_users (trigger: interval[0:02:00], next run at: 2025-04-04 11:12:17 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: users.password_hash
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes.py", line 102, in sync_google_calendar_for_all_users
+    users = User.query.filter(User.google_token.isnot(None)).all()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2704, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2858, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2365, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2251, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 945, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: users.password_hash
+[SQL: SELECT users.id AS users_id, users.username AS users_username, users.email AS users_email, users.password_hash AS users_password_hash, users.telegram_token AS users_telegram_token, users.google_token AS users_google_token 
+FROM users 
+WHERE users.google_token IS NOT NULL]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-04 11:26:28 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 11:29:12 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 11:30:19 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 11:32:24 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 11:34:09 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 11:35:00 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
