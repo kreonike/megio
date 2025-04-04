@@ -9,6 +9,8 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded and parsed');
+
     // Функции для работы с временем
     function formatTimeInput(value) {
         let numbers = value.replace(/\D/g, '');
@@ -41,9 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
         input.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     }
 
-    // Функция для обновления календаря
+    // Функция для обновления календаря с логированием
     function updateCalendar(year, month) {
-        // Добавляем анимацию обновления
+        console.log(`[updateCalendar] Starting update for ${year}-${month}`);
+
         document.querySelectorAll('.task-count-badge').forEach(badge => {
             badge.classList.add('updating');
         });
@@ -53,21 +56,29 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (!response.ok) {
+                console.error(`[updateCalendar] Network response not ok: ${response.status}`);
+                throw new Error('Network response was not ok');
+            }
             return response.json();
         })
         .then(data => {
-            // Обновляем индикаторы для всех дней
+            console.log(`[updateCalendar] Received data:`, data);
+
             document.querySelectorAll('.day-link').forEach(link => {
                 const day = link.getAttribute('data-day');
+                console.log(`[updateCalendar] Processing day ${day}`);
+
                 if (day && data.tasksByDay && data.tasksByDay[day]) {
                     const tasks = data.tasksByDay[day];
+                    console.log(`[updateCalendar] Found ${tasks.length} tasks for day ${day}`);
+
                     let badge = link.querySelector('.task-count-badge');
                     const dayCell = link.closest('.day-cell');
 
                     if (tasks.length > 0) {
                         if (!badge) {
-                            // Создаем badge если его нет
+                            console.log(`[updateCalendar] Creating new badge for day ${day}`);
                             badge = document.createElement('span');
                             badge.className = 'task-count-badge';
                             link.appendChild(badge);
@@ -90,9 +101,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
 
                         dayCell.classList.add('has-tasks');
+                        console.log(`[updateCalendar] Updated badge for day ${day} with ${tasks.length} tasks`);
                     } else {
-                        // Удаляем badge если нет задач
                         if (badge) {
+                            console.log(`[updateCalendar] Removing badge for day ${day}`);
                             badge.remove();
                         }
                         dayCell.classList.remove('has-tasks');
@@ -100,9 +112,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         })
-        .catch(error => console.error('Ошибка при обновлении календаря:', error))
+        .catch(error => {
+            console.error('[updateCalendar] Error updating calendar:', error);
+            throw error;
+        })
         .finally(() => {
-            // Убираем анимацию обновления
+            console.log('[updateCalendar] Finished updating calendar');
             document.querySelectorAll('.task-count-badge').forEach(badge => {
                 badge.classList.remove('updating');
             });
@@ -111,8 +126,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Функция для обновления цвета индикатора задач
     function updateTaskPriorityIndicator(dayElement, tasks) {
+        console.log(`[updateTaskPriorityIndicator] Updating for day element`, dayElement);
         const badge = dayElement.querySelector('.task-count-badge');
-        if (!badge || !tasks || tasks.length === 0) return;
+        if (!badge) {
+            console.log('[updateTaskPriorityIndicator] No badge found');
+            return;
+        }
+        if (!tasks || tasks.length === 0) {
+            console.log('[updateTaskPriorityIndicator] No tasks provided');
+            dayElement.classList.remove('has-tasks');
+            badge.remove();
+            return;
+        }
 
         let maxPriority = 1;
         tasks.forEach(task => {
@@ -128,9 +153,11 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             badge.classList.add('priority-low');
         }
+
+        console.log(`[updateTaskPriorityIndicator] Updated priority to ${maxPriority}`);
     }
 
-    // Функция для форматирования даты в русский формат (дд.мм.гггг)
+    // Функции для форматирования даты
     function formatDateToRussian(dateStr) {
         if (!dateStr) return '';
         const date = new Date(dateStr);
@@ -147,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return `${day}.${month}.${year}`;
     }
 
-    // Функция для преобразования даты в формат input[type="date"] (гггг-мм-дд)
     function formatDateForInput(dateStr) {
         if (!dateStr) return '';
         const date = new Date(dateStr);
@@ -173,6 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const year = {{ year }};
             const month = {{ month }};
             const day = this.getAttribute('data-day');
+            console.log(`Day clicked: ${year}-${month}-${day}`);
 
             if (!day || isNaN(day)) {
                 console.error('Invalid day value:', day);
@@ -181,29 +208,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
             selectedDay = day;
             const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+            console.log(`Fetching tasks for ${date}`);
             fetch(`/tasks/${year}/${month}/${day}`, {
                 method: 'GET',
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
             .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                if (!response.ok) {
+                    console.error(`HTTP error! Status: ${response.status}`);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
                 return response.json();
             })
             .then(data => {
+                console.log('Received tasks data:', data);
                 updateTasksSection(data.tasks, date, day, data.categories);
                 updateTaskPriorityIndicator(this.closest('.day-cell'), data.tasks);
             })
-            .catch(error => console.error('Ошибка при загрузке задач:', error));
+            .catch(error => {
+                console.error('Error loading tasks:', error);
+            });
         });
     });
 
     // Функция обновления секции задач
     function updateTasksSection(tasks, date, day, categories) {
+        console.log(`[updateTasksSection] Updating for date ${date}, day ${day}`);
         const dateParts = date.split('-');
         const year = dateParts[0];
         const month = dateParts[1];
         const dayNum = dateParts[2];
         const formattedDate = `${dayNum.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
+
+        console.log(`[updateTasksSection] Formatted date: ${formattedDate}`);
 
         const tasksSection = document.querySelector('.tasks-section');
         tasksSection.innerHTML = `
@@ -355,36 +393,37 @@ document.addEventListener('DOMContentLoaded', function() {
             </ul>
         `;
 
-        // Добавьте обработчик для чекбокса повторения
+        console.log('[updateTasksSection] Updated tasks section HTML');
+
         document.querySelectorAll('input[name="repeat_enabled"]').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const details = this.closest('.repeat-options').querySelector('.repeat-details');
                 details.style.display = this.checked ? 'block' : 'none';
 
-                // Если чекбокс снят, очищаем поля повторения
                 if (!this.checked) {
                     details.querySelector('input[name="repeat_days"]').value = '';
                     details.querySelector('input[name="repeat_start"]').value = '';
                     details.querySelector('input[name="repeat_end"]').value = '';
                 } else {
-                    // Если чекбокс установлен, устанавливаем значения по умолчанию
                     details.querySelector('input[name="repeat_days"]').value = '1';
                     details.querySelector('input[name="repeat_start"]').value = formatDateForInput(date);
                 }
             });
         });
 
-        // Добавьте обработчики для фильтров
         document.getElementById('category-filter').addEventListener('change', applyFilters);
         document.getElementById('priority-filter').addEventListener('change', applyFilters);
 
         bindTaskEventListeners(day);
+        console.log('[updateTasksSection] Finished updating tasks section');
     }
 
     // Функция для применения фильтров
     function applyFilters() {
+        console.log('[applyFilters] Applying filters');
         const categoryFilter = document.getElementById('category-filter').value;
         const priorityFilter = document.getElementById('priority-filter').value;
+        console.log(`[applyFilters] Category: ${categoryFilter}, Priority: ${priorityFilter}`);
 
         document.querySelectorAll('.task-item').forEach(item => {
             const itemCategories = item.dataset.categories.split(',');
@@ -399,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Привязка обработчиков событий
     function bindTaskEventListeners(day) {
+        console.log(`[bindTaskEventListeners] Binding events for day ${day}`);
         const year = {{ year }};
         const month = {{ month }};
 
@@ -420,21 +460,19 @@ document.addEventListener('DOMContentLoaded', function() {
             if (taskDownBtn) taskDownBtn.addEventListener('click', () => updateTime(taskTimeInput, -5));
         }
 
-        // Обработчик кнопки "Напомнить"
+        // Обработчики напоминаний
         document.querySelectorAll('.remind-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const taskId = this.dataset.taskId;
-                // Скрываем все активные формы редактирования
+                console.log(`Remind button clicked for task ${taskId}`);
                 document.querySelectorAll('.edit-form.active').forEach(form => {
                     form.classList.remove('active');
                 });
-                // Показываем/скрываем форму напоминания
                 const remindForm = document.getElementById(`remind-form-${taskId}`);
                 remindForm.classList.toggle('active');
             });
         });
 
-        // Обработчик кнопки "Отмена" в форме напоминания
         document.querySelectorAll('.cancel-remind').forEach(btn => {
             btn.addEventListener('click', function() {
                 const taskId = this.dataset.taskId;
@@ -442,17 +480,18 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Обработчик отправки формы напоминания
         document.querySelectorAll('.remind-form').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                if (!selectedDay) return;
+                if (!selectedDay) {
+                    console.log('No day selected for reminder');
+                    return;
+                }
 
                 const formData = new FormData(this);
                 const taskId = formData.get('task_id');
                 const remindTimes = [];
 
-                // Собираем выбранные варианты напоминаний
                 this.querySelectorAll('input[name="remind_time"]:checked').forEach(checkbox => {
                     remindTimes.push(parseInt(checkbox.value));
                 });
@@ -462,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                // Отправляем данные на сервер
+                console.log(`Setting reminders for task ${taskId}: ${remindTimes.join(', ')}`);
                 fetch(this.action, {
                     method: 'POST',
                     headers: {
@@ -487,43 +526,91 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Обработчики удаления
+        // Обработчик удаления задач
         document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (!selectedDay) return;
+            btn.addEventListener('click', async function() {
+                if (!selectedDay) {
+                    console.log('No day selected for deletion');
+                    return;
+                }
+
                 const taskId = this.dataset.taskId;
                 const year = {{ year }};
                 const month = {{ month }};
                 const day = selectedDay;
+                const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-                if (!confirm('Вы уверены, что хотите удалить эту задачу?')) return;
+                if (!confirm('Вы уверены, что хотите удалить эту задачу?')) {
+                    console.log('Deletion cancelled by user');
+                    return;
+                }
 
-                fetch(`/tasks/${year}/${month}/${day}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: `delete=${taskId}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        // Обновляем календарь и список задач
-                        return Promise.all([
-                            updateCalendar(year, month),
-                            fetch(`/tasks/${year}/${month}/${day}`, {
-                                method: 'GET',
-                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                            })
-                        ]);
+                console.log(`Deleting task ${taskId} for date ${dateStr}`);
+                try {
+                    // Добавляем индикатор загрузки
+                    this.disabled = true;
+                    this.textContent = 'Удаление...';
+
+                    // 1. Отправляем запрос на удаление
+                    const deleteResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: `delete=${taskId}`
+                    });
+
+                    if (!deleteResponse.ok) {
+                        throw new Error(`Ошибка сервера: ${deleteResponse.status}`);
                     }
-                })
-                .then(([_, tasksResponse]) => tasksResponse.json())
-                .then(data => {
-                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories);
-                })
-                .catch(error => console.error('Ошибка:', error));
+
+                    const deleteData = await deleteResponse.json();
+                    console.log('Delete response:', deleteData);
+
+                    // 2. Получаем обновленный список задач
+                    const tasksResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
+                        method: 'GET',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+
+                    if (!tasksResponse.ok) {
+                        throw new Error('Не удалось загрузить обновленный список задач');
+                    }
+
+                    const tasksData = await tasksResponse.json();
+                    console.log('Updated tasks data:', tasksData);
+
+                    // 3. Обновляем список задач и календарь
+                    updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories);
+                    await updateCalendar(year, month);
+
+                    // 4. Обновляем индикатор выбранного дня
+                    const dayElement = document.querySelector(`.day-link[data-day="${day}"]`);
+                    if (dayElement) {
+                        const dayCell = dayElement.closest('.day-cell');
+                        if (tasksData.tasks.length === 0) {
+                            dayCell.classList.remove('has-tasks');
+                            const badge = dayElement.querySelector('.task-count-badge');
+                            if (badge) {
+                                badge.remove();
+                            }
+                        } else {
+                            updateTaskPriorityIndicator(dayCell, tasksData.tasks);
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Ошибка при удалении задачи:', error);
+                    alert('Произошла ошибка при удалении задачи: ' + error.message);
+                } finally {
+                    // Восстанавливаем кнопку в любом случае
+                    const buttons = document.querySelectorAll(`.delete-btn[data-task-id="${taskId}"]`);
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.textContent = 'Удалить';
+                    });
+                }
             });
         });
 
@@ -531,6 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const taskId = this.dataset.taskId;
+                console.log(`Edit button clicked for task ${taskId}`);
                 const form = document.getElementById(`edit-form-${taskId}`);
                 form.classList.toggle('active');
                 const timeInput = form.querySelector('.edit-time-input');
@@ -556,23 +644,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 const month = {{ month }};
                 const day = selectedDay;
 
+                console.log(`Adding new task for ${year}-${month}-${day}`);
                 fetch(`/tasks/${year}/${month}/${day}`, {
                     method: 'POST',
                     body: formData,
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    if (!response.ok) {
+                        console.error(`HTTP error! Status: ${response.status}`);
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
                     return response.json();
                 })
                 .then(data => {
                     if (data.status === 'success') {
-                        // Очищаем форму
+                        console.log('Task added successfully');
                         this.reset();
                         const taskTimeInput = this.querySelector('.time-input');
                         if (taskTimeInput) taskTimeInput.value = '12:00';
 
-                        // Обновляем календарь и список задач
                         return Promise.all([
                             updateCalendar(year, month),
                             fetch(`/tasks/${year}/${month}/${day}`, {
@@ -584,6 +675,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(([_, tasksResponse]) => tasksResponse.json())
                 .then(data => {
+                    console.log('Updating tasks section after addition');
                     updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories);
                 })
                 .catch(error => console.error('Ошибка при добавлении задачи:', error));
@@ -594,12 +686,18 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.edit-form').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                if (!selectedDay) return;
+                if (!selectedDay) {
+                    console.log('No day selected for edit');
+                    return;
+                }
+
                 const formData = new FormData(this);
                 const year = {{ year }};
                 const month = {{ month }};
                 const day = selectedDay;
+                const taskId = formData.get('task_id');
 
+                console.log(`Saving edited task ${taskId}`);
                 fetch(this.action, {
                     method: 'POST',
                     body: formData,
@@ -608,9 +706,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        // Закрываем форму редактирования
+                        console.log('Task saved successfully');
                         this.classList.remove('active');
-                        // Обновляем календарь и список задач
                         return Promise.all([
                             updateCalendar(year, month),
                             fetch(`/tasks/${year}/${month}/${day}`, {
@@ -624,6 +721,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(([_, tasksResponse]) => tasksResponse.json())
                 .then(data => {
+                    console.log('Updating tasks section after edit');
                     updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories);
                 })
                 .catch(error => {
@@ -658,8 +756,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Инициализация
-    updateCalendar({{ year }}, {{ month }});
+    console.log('Initializing calendar...');
+    updateCalendar({{ year }}, {{ month }})
+        .then(() => console.log('Calendar initialized'))
+        .catch(err => console.error('Error initializing calendar:', err));
+
     bindTaskEventListeners(null);
+    console.log('Event listeners bound');
 });
 </script>
 {% endblock %}
