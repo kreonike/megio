@@ -141,6 +141,7 @@
 
 /* Счётчик задач */
 .task-count-badge {
+    transition: all 0.3s ease;
     position: absolute;
     top: 5px;
     right: 5px;
@@ -555,4 +556,166 @@
     .remind-buttons {
         flex-direction: column;
     }
+}
+
+/* Стили для категорий и приоритетов */
+.category-badge, .category-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin-right: 5px;
+    color: white;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+.task-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+.priority-high {
+    color: #e53935;
+    font-weight: bold;
+}
+
+.priority-medium {
+    color: #fb8c00;
+}
+
+.calendar-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.calendar-filters select {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Темная тема */
+.dark-mode .priority-high {
+    color: #ff6d6d;
+}
+
+.dark-mode .priority-medium {
+    color: #ffb74d;
+}
+
+.dark-mode .calendar-filters select {
+    background-color: var(--bg-secondary-color);
+}
+
+/* Добавьте эти стили в calendar.css */
+
+/* Стили для приоритетов */
+.priority-marker {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.priority-high .priority-marker {
+    background-color: #ff5252; /* Красный для высокого приоритета */
+}
+
+.priority-medium .priority-marker {
+    background-color: #ff9800; /* Оранжевый для среднего */
+}
+
+.priority-low .priority-marker {
+    background-color: #4caf50; /* Зеленый для низкого */
+}
+
+/* Иконки для приоритетов (опционально) */
+.priority-high .priority-marker::after {
+    content: "❗";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+}
+
+.priority-medium .priority-marker::after {
+    content: "🔹";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+}
+
+.priority-low .priority-marker::after {
+    content: "↓";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+}
+
+/* Для темной темы */
+.dark-mode .priority-high .priority-marker {
+    background-color: #ff6d6d;
+}
+
+.dark-mode .priority-medium .priority-marker {
+    background-color: #ffb74d;
+}
+
+.dark-mode .priority-low .priority-marker {
+    background-color: #81c784;
+}
+
+/* Стили для кружка с количеством задач по приоритетам */
+.task-count-badge.priority-low {
+    background-color: #4CAF50;  /* Зеленый */
+    color: white;
+}
+
+.task-count-badge.priority-medium {
+    background-color: #FF9800;  /* Оранжевый */
+    color: black;
+}
+
+.task-count-badge.priority-high {
+    background-color: #F44336;  /* Красный */
+    color: white;
+}
+
+/* Темная тема */
+.dark-mode .task-count-badge.priority-low {
+    background-color: #388E3C;
+}
+
+.dark-mode .task-count-badge.priority-medium {
+    background-color: #F57C00;
+}
+
+.dark-mode .task-count-badge.priority-high {
+    background-color: #D32F2F;
+}
+.day-cell, .task-count-badge {
+    transition: all 0.3s ease;
+}
+
+.task-count-badge {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.task-count-badge.updating {
+    transform: scale(1.2);
+    opacity: 0.7;
 }

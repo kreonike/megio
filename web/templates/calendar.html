@@ -41,12 +41,100 @@ document.addEventListener('DOMContentLoaded', function() {
         input.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     }
 
+    // Функция для обновления календаря
+    function updateCalendar(year, month) {
+        // Добавляем анимацию обновления
+        document.querySelectorAll('.task-count-badge').forEach(badge => {
+            badge.classList.add('updating');
+        });
+
+        return fetch(`/tasks/${year}/${month}`, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            // Обновляем индикаторы для всех дней
+            document.querySelectorAll('.day-link').forEach(link => {
+                const day = link.getAttribute('data-day');
+                if (day && data.tasksByDay && data.tasksByDay[day]) {
+                    const tasks = data.tasksByDay[day];
+                    let badge = link.querySelector('.task-count-badge');
+                    const dayCell = link.closest('.day-cell');
+
+                    if (tasks.length > 0) {
+                        if (!badge) {
+                            // Создаем badge если его нет
+                            badge = document.createElement('span');
+                            badge.className = 'task-count-badge';
+                            link.appendChild(badge);
+                        }
+
+                        let maxPriority = 1;
+                        tasks.forEach(task => {
+                            if (task.priority > maxPriority) maxPriority = task.priority;
+                        });
+
+                        badge.textContent = tasks.length;
+                        badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
+
+                        if (maxPriority === 3) {
+                            badge.classList.add('priority-high');
+                        } else if (maxPriority === 2) {
+                            badge.classList.add('priority-medium');
+                        } else {
+                            badge.classList.add('priority-low');
+                        }
+
+                        dayCell.classList.add('has-tasks');
+                    } else {
+                        // Удаляем badge если нет задач
+                        if (badge) {
+                            badge.remove();
+                        }
+                        dayCell.classList.remove('has-tasks');
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Ошибка при обновлении календаря:', error))
+        .finally(() => {
+            // Убираем анимацию обновления
+            document.querySelectorAll('.task-count-badge').forEach(badge => {
+                badge.classList.remove('updating');
+            });
+        });
+    }
+
+    // Функция для обновления цвета индикатора задач
+    function updateTaskPriorityIndicator(dayElement, tasks) {
+        const badge = dayElement.querySelector('.task-count-badge');
+        if (!badge || !tasks || tasks.length === 0) return;
+
+        let maxPriority = 1;
+        tasks.forEach(task => {
+            if (task.priority > maxPriority) maxPriority = task.priority;
+        });
+
+        badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
+
+        if (maxPriority === 3) {
+            badge.classList.add('priority-high');
+        } else if (maxPriority === 2) {
+            badge.classList.add('priority-medium');
+        } else {
+            badge.classList.add('priority-low');
+        }
+    }
+
     // Функция для форматирования даты в русский формат (дд.мм.гггг)
     function formatDateToRussian(dateStr) {
         if (!dateStr) return '';
         const date = new Date(dateStr);
         if (isNaN(date.getTime())) {
-            // Если дата в формате гггг-мм-дд
             const parts = dateStr.split('-');
             if (parts.length === 3) {
                 return `${parts[2]}.${parts[1]}.${parts[0]}`;
@@ -64,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!dateStr) return '';
         const date = new Date(dateStr);
         if (isNaN(date.getTime())) {
-            // Если дата уже в формате дд.мм.гггг
             const parts = dateStr.split('.');
             if (parts.length === 3) {
                 return `${parts[2]}-${parts[1]}-${parts[0]}`;
@@ -102,13 +189,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 return response.json();
             })
-            .then(data => updateTasksSection(data.tasks, date, day))
+            .then(data => {
+                updateTasksSection(data.tasks, date, day, data.categories);
+                updateTaskPriorityIndicator(this.closest('.day-cell'), data.tasks);
+            })
             .catch(error => console.error('Ошибка при загрузке задач:', error));
         });
     });
 
     // Функция обновления секции задач
-    function updateTasksSection(tasks, date, day) {
+    function updateTasksSection(tasks, date, day, categories) {
         const dateParts = date.split('-');
         const year = dateParts[0];
         const month = dateParts[1];
@@ -117,6 +207,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const tasksSection = document.querySelector('.tasks-section');
         tasksSection.innerHTML = `
+            <div class="calendar-filters">
+                <select id="category-filter">
+                    <option value="">Все категории</option>
+                    ${categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
+                </select>
+
+                <select id="priority-filter">
+                    <option value="">Все приоритеты</option>
+                    <option value="3">Высокий</option>
+                    <option value="2">Средний</option>
+                    <option value="1">Низкий</option>
+                </select>
+            </div>
+
             <h3 class="task-date-header" style="color: inherit;">${formattedDate}</h3>
             <form class="task-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
                 <input type="hidden" name="date" value="${date}">
@@ -129,15 +233,43 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button type="button" class="time-btn down">▼</button>
                     </div>
                 </div>
+                <div class="task-priority">
+                    <label>Приоритет:</label>
+                    <select name="priority">
+                        <option value="1">Низкий</option>
+                        <option value="2">Средний</option>
+                        <option value="3">Высокий</option>
+                    </select>
+                </div>
+                <div class="task-categories">
+                    <label>Категории:</label>
+                    <div class="category-options">
+                        ${categories.map(cat => `
+                            <label>
+                                <input type="checkbox" name="categories" value="${cat.id}">
+                                <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
                 <button type="submit" class="task-button">Добавить задачу</button>
             </form>
             <ul class="task-list">
                 ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => `
-                    <li class="task-item">
+                    <li class="task-item" data-priority="${task.priority}" data-categories="${task.category_ids.join(',')}">
                         <div class="task-content">
                             ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
+                            <span class="priority-marker"></span>
                             <span class="task-text">${task.task}</span>
-                            ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
+                             ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
+                        </div>
+                        <div class="task-meta">
+                            ${task.priority == 3 ? '<span class="priority-high">❗ Высокий приоритет</span>' : ''}
+                            ${task.priority == 2 ? '<span class="priority-medium">🔹 Средний приоритет</span>' : ''}
+                            ${task.category_ids.map(cat_id => {
+                                const cat = categories.find(c => c.id == cat_id);
+                                return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
+                            }).join('')}
                         </div>
                         <div class="task-actions">
                             <button type="button" class="remind-btn" data-task-id="${task.id}">Напомнить</button>
@@ -155,11 +287,31 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <button type="button" class="time-btn down">▼</button>
                                 </div>
                             </div>
+                            <div class="task-priority">
+                                <label>Приоритет:</label>
+                                <select name="priority">
+                                    <option value="1" ${task.priority == 1 ? 'selected' : ''}>Низкий</option>
+                                    <option value="2" ${task.priority == 2 ? 'selected' : ''}>Средний</option>
+                                    <option value="3" ${task.priority == 3 ? 'selected' : ''}>Высокий</option>
+                                </select>
+                            </div>
+                            <div class="task-categories">
+                                <label>Категории:</label>
+                                <div class="category-options">
+                                    ${categories.map(cat => `
+                                        <label>
+                                            <input type="checkbox" name="categories" value="${cat.id}"
+                                                   ${task.category_ids.includes(cat.id) ? 'checked' : ''}>
+                                            <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
                             <div class="repeat-options">
                                 <label>
-                                    <input type="checkbox" name="repeat_enabled" ${task.repeat_days ? 'checked' : ''}> Повторять задачу
+                                    <input type="checkbox" name="repeat_enabled" ${task.repeat_days !== null && task.repeat_days !== undefined ? 'checked' : ''}> Повторять задачу
                                 </label>
-                                <div class="repeat-details" style="${task.repeat_days ? '' : 'display: none;'}">
+                                <div class="repeat-details" style="${task.repeat_days !== null && task.repeat_days !== undefined ? '' : 'display: none;'}">
                                     <div>
                                         <span>Каждые</span>
                                         <input type="number" name="repeat_days" min="1" max="365" value="${task.repeat_days || 1}" style="width: 50px;">
@@ -208,14 +360,48 @@ document.addEventListener('DOMContentLoaded', function() {
             checkbox.addEventListener('change', function() {
                 const details = this.closest('.repeat-options').querySelector('.repeat-details');
                 details.style.display = this.checked ? 'block' : 'none';
+
+                // Если чекбокс снят, очищаем поля повторения
+                if (!this.checked) {
+                    details.querySelector('input[name="repeat_days"]').value = '';
+                    details.querySelector('input[name="repeat_start"]').value = '';
+                    details.querySelector('input[name="repeat_end"]').value = '';
+                } else {
+                    // Если чекбокс установлен, устанавливаем значения по умолчанию
+                    details.querySelector('input[name="repeat_days"]').value = '1';
+                    details.querySelector('input[name="repeat_start"]').value = formatDateForInput(date);
+                }
             });
         });
+
+        // Добавьте обработчики для фильтров
+        document.getElementById('category-filter').addEventListener('change', applyFilters);
+        document.getElementById('priority-filter').addEventListener('change', applyFilters);
 
         bindTaskEventListeners(day);
     }
 
+    // Функция для применения фильтров
+    function applyFilters() {
+        const categoryFilter = document.getElementById('category-filter').value;
+        const priorityFilter = document.getElementById('priority-filter').value;
+
+        document.querySelectorAll('.task-item').forEach(item => {
+            const itemCategories = item.dataset.categories.split(',');
+            const itemPriority = item.dataset.priority;
+
+            const categoryMatch = !categoryFilter || itemCategories.includes(categoryFilter);
+            const priorityMatch = !priorityFilter || itemPriority === priorityFilter;
+
+            item.style.display = (categoryMatch && priorityMatch) ? '' : 'none';
+        });
+    }
+
     // Привязка обработчиков событий
     function bindTaskEventListeners(day) {
+        const year = {{ year }};
+        const month = {{ month }};
+
         // Привязка для формы добавления задачи
         const taskTimeInput = document.getElementById('task-time');
         if (taskTimeInput) {
@@ -268,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Собираем выбранные варианты напоминаний
                 this.querySelectorAll('input[name="remind_time"]:checked').forEach(checkbox => {
-                    remindTimes.push(parseInt(checkbox.value)); // 15, 120, 1440
+                    remindTimes.push(parseInt(checkbox.value));
                 });
 
                 if (remindTimes.length === 0) {
@@ -323,14 +509,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                        .then(response => response.json())
-                        .then(data => updateTasksSection(data.tasks, date, day));
+                        // Обновляем календарь и список задач
+                        return Promise.all([
+                            updateCalendar(year, month),
+                            fetch(`/tasks/${year}/${month}/${day}`, {
+                                method: 'GET',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                            })
+                        ]);
                     }
+                })
+                .then(([_, tasksResponse]) => tasksResponse.json())
+                .then(data => {
+                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories);
                 })
                 .catch(error => console.error('Ошибка:', error));
             });
@@ -376,20 +567,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(data => {
                     if (data.status === 'success') {
-                        // Очищаем форму, но остаемся на той же дате
+                        // Очищаем форму
                         this.reset();
                         const taskTimeInput = this.querySelector('.time-input');
                         if (taskTimeInput) taskTimeInput.value = '12:00';
 
-                        // Обновляем список задач без перезагрузки страницы
-                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                        .then(response => response.json())
-                        .then(data => updateTasksSection(data.tasks, date, day));
+                        // Обновляем календарь и список задач
+                        return Promise.all([
+                            updateCalendar(year, month),
+                            fetch(`/tasks/${year}/${month}/${day}`, {
+                                method: 'GET',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                            })
+                        ]);
                     }
+                })
+                .then(([_, tasksResponse]) => tasksResponse.json())
+                .then(data => {
+                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories);
                 })
                 .catch(error => console.error('Ошибка при добавлении задачи:', error));
             });
@@ -413,16 +608,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                        .then(response => response.json())
-                        .then(data => updateTasksSection(data.tasks, date, day));
+                        // Закрываем форму редактирования
+                        this.classList.remove('active');
+                        // Обновляем календарь и список задач
+                        return Promise.all([
+                            updateCalendar(year, month),
+                            fetch(`/tasks/${year}/${month}/${day}`, {
+                                method: 'GET',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                            })
+                        ]);
+                    } else {
+                        throw new Error('Ошибка при сохранении задачи');
                     }
                 })
-                .catch(error => console.error('Ошибка:', error));
+                .then(([_, tasksResponse]) => tasksResponse.json())
+                .then(data => {
+                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories);
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка при сохранении задачи');
+                });
             });
         });
 
@@ -450,7 +657,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (downBtn) downBtn.addEventListener('click', () => updateTime(timeInput, -5));
     }
 
-    bindTaskEventListeners(null); // Инициализация
+    // Инициализация
+    updateCalendar({{ year }}, {{ month }});
+    bindTaskEventListeners(null);
 });
 </script>
 {% endblock %}
@@ -489,12 +698,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>Нажмите на любой день в календаре, чтобы просмотреть, добавить или отредактировать задачи в правой колонке.</p>
             </div>
             <div class="feature-card" style="flex: 1; min-width: 250px; padding: 15px; background-color: var(--bg-color); border-radius: 6px; border: 1px solid var(--border-color);">
-                <h3 style="color: var(--primary-color); margin-top: 0;">🤖 Telegram бот</h3>
-                <p>Привяжите Telegram аккаунт в <a href="{{ url_for('profile') }}" style="color: var(--primary-color);">профиле</a>, чтобы получать уведомления о задачах.</p>
+                <h3 style="color: var(--primary-color); margin-top: 0;">🏷️ Категории и теги</h3>
+                <p>Организуйте задачи по категориям с цветовой маркировкой и фильтруйте их.</p>
             </div>
             <div class="feature-card" style="flex: 1; min-width: 250px; padding: 15px; background-color: var(--bg-color); border-radius: 6px; border: 1px solid var(--border-color);">
-                <h3 style="color: var(--primary-color); margin-top: 0;">🔗 Google Calendar</h3>
-                <p>Подключите Google Calendar в <a href="{{ url_for('profile') }}" style="color: var(--primary-color);">профиле</a> для синхронизации событий.</p>
+                <h3 style="color: var(--primary-color); margin-top: 0;">🔔 Напоминания</h3>
+                <p>Устанавливайте напоминания для важных задач за 15 минут, 2 часа или 24 часа.</p>
             </div>
         </div>
     </div>
