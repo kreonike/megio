@@ -571,3 +571,287 @@ WHERE users.google_token IS NOT NULL]
 2025-04-04 16:47:50 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
 2025-04-04 16:48:13 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
 2025-04-04 16:48:40 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 16:49:03 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 16:52:00 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 16:52:16 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 16:52:55 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 16:59:25 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 17:01:25 | ERROR    | app                  | app.py:140 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:02:22 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 17:02:53 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 17:04:52 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:04:53 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:06:52 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:06:53 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:32:04 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 17:34:02 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:34:04 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:36:02 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:36:04 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:38:02 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:38:04 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:39:55 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 17:40:02 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:41:50 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 17:42:02 | ERROR    | app                  | app.py:142 | Ошибка синхронизации для пользователя kreonike: name 'fetch_google_events' is not defined
+2025-04-04 17:50:56 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 17:52:55 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 17:54:55 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 267, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 17:52:56 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 17:54:56 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 267, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 17:54:55 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 17:56:55 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 267, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 17:54:56 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 17:56:56 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 267, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 17:56:55 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 17:58:55 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 267, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 17:56:56 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 17:58:56 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 267, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 17:58:15 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 17:58:27 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:00:26 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:02:26 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:00:27 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:02:27 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:02:26 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:04:26 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:02:27 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:04:27 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:04:26 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:06:26 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:04:27 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:06:27 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:06:26 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:08:26 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:06:27 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:08:27 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:07:44 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:08:26 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:10:26 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    #         db = get_db()
+                     ^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:09:11 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:09:59 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:10:11 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:12:10 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:14:10 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:12:11 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:14:11 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:14:10 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:16:10 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:14:11 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:16:11 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:16:10 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:18:10 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:16:11 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:18:11 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:18:10 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:20:10 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:18:11 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:20:11 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:20:10 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:22:10 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:20:11 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:22:11 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:22:10 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:24:10 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:22:11 | ERROR    | apscheduler.executors.default | base.py:145 | Job "google_sync_scheduler.<locals>.<lambda> (trigger: interval[0:02:00], next run at: 2025-04-04 18:24:11 MSK)" raised an exception
+Traceback (most recent call last):
+  File "C:\Users\kreon\Dropbox\python_advanced_final\.venv\Lib\site-packages\apscheduler\executors\base.py", line 131, in run_job
+    retval = job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kreon\Dropbox\python_advanced_final\web\routes\google.py", line 264, in <lambda>
+    func=lambda: sync_google_calendar_for_all_users(app, get_db),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'sync_google_calendar_for_all_users' is not defined
+2025-04-04 18:25:11 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:43:39 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:46:14 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:53:30 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:54:08 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:58:27 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 18:59:28 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 19:01:19 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 19:14:23 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 19:14:40 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-04 19:16:39 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!

@@ -18,11 +18,15 @@ from google.auth.transport.requests import Request
 import datetime as dt
 from dotenv import load_dotenv
 import re
+from config.config import init_db
+
 from models.models import User
 from web.routes.profile import profile_routes
 from web.routes.telegram import telegram_routes
 from web.routes.register import register_routes
 from web.routes.login import login_routes
+from web.routes.logout import logout_routes
+from web.routes.google import google_routes, google_sync_scheduler
 
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -35,18 +39,29 @@ from config.config import (
     MONTH_NAMES, get_db, close_db
 )
 
-atexit.register(lambda: scheduler.shutdown())
 
 # Инициализация приложения
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = SECRET_KEY
 
+# Настройка логирования
+configure_logging(app)
+logger = app.logger
+
 # Инициализация маршрутов профиля
 profile_routes(app, get_db)
 telegram_routes(app, get_db)
 register_routes(app, get_db, bcrypt)
 login_routes(app, get_db, bcrypt)
+logout_routes(app)
+google_routes(app, get_db)
+
+logger.info("Initializing Google Scheduler...")
+if not hasattr(app, 'google_scheduler') and (not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true'):
+    app.google_scheduler = google_sync_scheduler(app, get_db)
+    app.google_scheduler.start()
+    atexit.register(lambda: app.google_scheduler.shutdown())
 
 
 # Инициализация Flask-Login
@@ -57,162 +72,19 @@ login_manager.login_view = 'login'
 # Инициализация Bcrypt
 bcrypt = Bcrypt(app)
 
-# Настройка логирования
-configure_logging(app)
-logger = app.logger
 
 # Конфигурация Google OAuth
 app.config['GOOGLE_CLIENT_ID'] = GOOGLE_CLIENT_ID
 app.config['GOOGLE_CLIENT_SECRET'] = GOOGLE_CLIENT_SECRET
 app.config['GOOGLE_REDIRECT_URI'] = GOOGLE_REDIRECT_URI
+app.config['SCOPES'] = SCOPES
 
 
-def sync_google_calendar_for_all_users():
-    with app.app_context():
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('SELECT id, username, email, google_token FROM users WHERE google_token IS NOT NULL')
-        users = cursor.fetchall()
-
-        for user_data in users:
-            user = User(user_data['id'], user_data['username'], user_data['email'],
-                        google_token=user_data['google_token'])
-            try:
-                events = fetch_google_events(user)
-                if events is None:
-                    continue
-
-                added_count = 0
-
-                for event in events:
-                    start = event['start'].get('dateTime', event['start'].get('date'))
-                    if not start:
-                        continue
-
-                    try:
-                        event_date = dt.datetime.fromisoformat(start) if 'T' in start else dt.datetime.strptime(start,
-                                                                                                                '%Y-%m-%d')
-                        if 'date' in event['start']:
-                            event_date = event_date.replace(hour=12, minute=0)
-
-                        # Проверка на существующее событие
-                        cursor.execute('''
-                            SELECT 1 FROM tasks 
-                            WHERE user_id = ? 
-                            AND year = ? AND month = ? AND day = ?
-                            AND task = ?
-                            AND (time = ? OR (time IS NULL AND ? IS NULL))
-                        ''', (
-                            user.id,
-                            event_date.year,
-                            event_date.month,
-                            event_date.day,
-                            event.get('summary', 'Без названия'),
-                            event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                            event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None
-                        ))
-
-                        if not cursor.fetchone():
-                            cursor.execute('''
-                                INSERT INTO tasks (user_id, year, month, day, task, time, created)
-                                VALUES (?, ?, ?, ?, ?, ?, ?)
-                            ''', (
-                                user.id,
-                                event_date.year,
-                                event_date.month,
-                                event_date.day,
-                                event.get('summary', 'Без названия'),
-                                event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                                dt.datetime.now()
-                            ))
-                            added_count += 1
-                    except Exception as e:
-                        logger.error(f"Ошибка при добавлении события для пользователя {user.username}: {str(e)}")
-                        continue
-
-                db.commit()
-                logger.info(
-                    f"Для пользователя {user.username} добавлено {added_count} новых событий из Google Calendar")
-
-            except Exception as e:
-                logger.error(f"Ошибка синхронизации для пользователя {user.username}: {str(e)}")
-                continue
-
-
-# Инициализация планировщика
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=sync_google_calendar_for_all_users, trigger='interval', minutes=2)
-scheduler.start()
-
-
-# Функции для работы с БД
-# def get_db():
-#     if 'db' not in g:
-#         g.db = sqlite3.connect(DB_PATH, timeout=30)
-#         g.db.execute('PRAGMA journal_mode=WAL')
-#         g.db.row_factory = sqlite3.Row
-#     return g.db
-#
-# def close_db(e=None):
-#     db = g.pop('db', None)
-#     if db is not None:
-#         db.close()
 
 app.teardown_appcontext(close_db)
 
 # Инициализация БД
-def init_db():
-    with app.app_context():
-        db = get_db()
-        cursor = db.cursor()
-
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            telegram_token TEXT UNIQUE,
-            google_token TEXT
-        )''')
-
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS tasks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            year INTEGER NOT NULL,
-            month INTEGER NOT NULL,
-            day INTEGER NOT NULL,
-            task TEXT NOT NULL,
-            time TEXT,
-            created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            repeat_days INTEGER DEFAULT NULL,
-            repeat_start TEXT DEFAULT NULL,
-            repeat_end TEXT DEFAULT NULL,
-            FOREIGN KEY (user_id) REFERENCES users (id)
-        )''')
-
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS telegram_users (
-            telegram_id INTEGER PRIMARY KEY,
-            user_id INTEGER NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users (id)
-        )''')
-        db.commit()
-
-        cursor.execute('PRAGMA table_info(tasks)')
-        columns = [row[1] for row in cursor.fetchall()]
-
-        if 'repeat_days' not in columns:
-            cursor.execute('ALTER TABLE tasks ADD COLUMN repeat_days INTEGER DEFAULT NULL')
-        if 'repeat_start' not in columns:
-            cursor.execute('ALTER TABLE tasks ADD COLUMN repeat_start TEXT DEFAULT NULL')
-        if 'repeat_end' not in columns:
-            cursor.execute('ALTER TABLE tasks ADD COLUMN repeat_end TEXT DEFAULT NULL')
-        db.commit()
-
-init_db()
-
+init_db(app)
 
 
 @login_manager.user_loader
@@ -449,200 +321,6 @@ def set_task_reminders(year, month, day):
         logger.error(f"Ошибка при установке напоминаний: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
-
-
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('Вы успешно вышли из системы', 'success')
-    return redirect(url_for('login'))
-
-
-@app.route('/connect_google')
-@login_required
-def connect_google():
-    logger.debug(f"Using redirect_uri: {app.config['GOOGLE_REDIRECT_URI']}")
-
-    session.permanent = True
-
-    flow = Flow.from_client_config(
-        client_config={
-            "web": {
-                "client_id": app.config['GOOGLE_CLIENT_ID'],
-                "client_secret": app.config['GOOGLE_CLIENT_SECRET'],
-                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                "token_uri": "https://oauth2.googleapis.com/token",
-                "redirect_uris": [
-                    app.config['GOOGLE_REDIRECT_URI'],
-                    "http://localhost:5000/oauth2callback",
-                    "http://127.0.0.1:5000/oauth2callback"
-                ]
-            }
-        },
-        scopes=SCOPES,
-        redirect_uri=app.config['GOOGLE_REDIRECT_URI']
-    )
-
-    authorization_url, state = flow.authorization_url(
-        access_type='offline',
-        include_granted_scopes='true',
-        prompt='consent'
-    )
-
-    session['oauth_state'] = state
-    logger.debug(f"Generated auth URL: {authorization_url}")
-    return redirect(authorization_url)
-
-
-@app.route('/oauth2callback')
-@login_required
-def oauth2callback():
-    logger.debug(f"Received callback with URL: {request.url}")
-
-    if 'oauth_state' not in session:
-        logger.error("Missing oauth_state in session")
-        flash('Сессия истекла. Пожалуйста, начните процесс авторизации снова.', 'error')
-        return redirect(url_for('profile'))
-
-    try:
-        flow = Flow.from_client_config(
-            client_config={
-                "web": {
-                    "client_id": app.config['GOOGLE_CLIENT_ID'],
-                    "client_secret": app.config['GOOGLE_CLIENT_SECRET'],
-                    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                    "token_uri": "https://oauth2.googleapis.com/token",
-                    "redirect_uris": [app.config['GOOGLE_REDIRECT_URI']]
-                }
-            },
-            scopes=SCOPES,
-            state=session['oauth_state'],
-            redirect_uri=app.config['GOOGLE_REDIRECT_URI']
-        )
-
-        flow.fetch_token(authorization_response=request.url)
-        credentials = flow.credentials
-
-        # Сохраняем токены в БД
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('UPDATE users SET google_token = ? WHERE id = ?',
-                       (json.dumps({
-                           'token': credentials.token,
-                           'refresh_token': credentials.refresh_token,
-                           'token_uri': credentials.token_uri,
-                           'client_id': credentials.client_id,
-                           'client_secret': credentials.client_secret,
-                           'scopes': credentials.scopes
-                       }), current_user.id))
-        db.commit()
-
-        flash('Google Calendar успешно подключен', 'success')
-        return redirect(url_for('profile'))
-
-
-    except Exception as e:
-        logger.error(f"OAuth error: {str(e)}")
-        flash('Ошибка авторизации через Google. Пожалуйста, попробуйте снова.', 'error')
-        return redirect(url_for('profile'))
-
-
-@app.route('/disconnect_google', methods=['POST'])
-@login_required
-def disconnect_google():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute('UPDATE users SET google_token = NULL WHERE id = ?', (current_user.id,))
-    db.commit()
-    flash('Google Calendar успешно отключен', 'success')
-    return redirect(url_for('profile'))
-
-
-def fetch_google_events(user, max_results=10):
-    creds = user.get_google_credentials()
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            return None
-
-    service = build('calendar', 'v3', credentials=creds)
-    now = dt.datetime.utcnow().isoformat() + 'Z'
-
-    events_result = service.events().list(
-        calendarId='primary',
-        timeMin=now,
-        maxResults=max_results,
-        singleEvents=True,
-        orderBy='startTime'
-    ).execute()
-
-    return events_result.get('items', [])
-
-
-@app.route('/sync_google_calendar')
-@login_required
-def sync_google_calendar():
-    events = fetch_google_events(current_user)
-    if events is None:
-        flash('Не удалось получить доступ к Google Calendar. Пожалуйста, подключите аккаунт.', 'error')
-        return redirect(url_for('profile'))
-
-    db = get_db()
-    cursor = db.cursor()
-    added_count = 0
-
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        if not start:
-            continue
-
-        try:
-            event_date = dt.datetime.fromisoformat(start) if 'T' in start else dt.datetime.strptime(start, '%Y-%m-%d')
-            if 'date' in event['start']:  # Целодневное событие
-                event_date = event_date.replace(hour=12, minute=0)
-
-            # Проверяем, существует ли уже такое событие
-            cursor.execute('''
-                SELECT 1 FROM tasks 
-                WHERE user_id = ? 
-                AND year = ? AND month = ? AND day = ?
-                AND task = ? 
-                AND (time = ? OR (time IS NULL AND ? IS NULL))
-            ''', (
-                current_user.id,
-                event_date.year,
-                event_date.month,
-                event_date.day,
-                event.get('summary', 'Без названия'),
-                event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None
-            ))
-
-            if not cursor.fetchone():  # Событие еще не существует
-                cursor.execute('''
-                    INSERT INTO tasks (user_id, year, month, day, task, time, created)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                    current_user.id,
-                    event_date.year,
-                    event_date.month,
-                    event_date.day,
-                    event.get('summary', 'Без названия'),
-                    event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                    dt.datetime.now()
-                ))
-                added_count += 1
-
-        except Exception as e:
-            logger.error(f"Ошибка при добавлении события: {str(e)}")
-            continue
-
-    db.commit()
-    flash(f'Добавлено {added_count} новых событий из Google Calendar', 'success')
-    return redirect(url_for('show_calendar'))
 
 
 if __name__ == '__main__':

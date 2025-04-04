@@ -41,3 +41,54 @@ def close_db(e=None):
     db = g.pop('db', None)
     if db is not None:
         db.close()
+
+# config/config.py (добавьте в конец файла)
+def init_db(app):
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            telegram_token TEXT UNIQUE,
+            google_token TEXT
+        )''')
+
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            year INTEGER NOT NULL,
+            month INTEGER NOT NULL,
+            day INTEGER NOT NULL,
+            task TEXT NOT NULL,
+            time TEXT,
+            created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            repeat_days INTEGER DEFAULT NULL,
+            repeat_start TEXT DEFAULT NULL,
+            repeat_end TEXT DEFAULT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )''')
+
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS telegram_users (
+            telegram_id INTEGER PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )''')
+        db.commit()
+
+        cursor.execute('PRAGMA table_info(tasks)')
+        columns = [row[1] for row in cursor.fetchall()]
+
+        if 'repeat_days' not in columns:
+            cursor.execute('ALTER TABLE tasks ADD COLUMN repeat_days INTEGER DEFAULT NULL')
+        if 'repeat_start' not in columns:
+            cursor.execute('ALTER TABLE tasks ADD COLUMN repeat_start TEXT DEFAULT NULL')
+        if 'repeat_end' not in columns:
+            cursor.execute('ALTER TABLE tasks ADD COLUMN repeat_end TEXT DEFAULT NULL')
+        db.commit()
