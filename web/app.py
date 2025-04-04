@@ -21,41 +21,35 @@ import re
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 
+# Импорт конфигурации
+from config.config import (
+    SECRET_KEY, DB_PATH, BASE_DIR,
+    GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, SCOPES,
+    MONTH_NAMES
+)
+
 atexit.register(lambda: scheduler.shutdown())
-
-
-# Загрузка переменных окружения из .env файла
-load_dotenv()
 
 # Инициализация приложения
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', secrets.token_hex(32))
+app.secret_key = SECRET_KEY
+
+# Инициализация Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# Инициализация Bcrypt
+bcrypt = Bcrypt(app)
 
 # Настройка логирования
 configure_logging(app)
 logger = app.logger
 
 # Конфигурация Google OAuth
-app.config['GOOGLE_CLIENT_ID'] = os.getenv('GOOGLE_CLIENT_ID')
-app.config['GOOGLE_CLIENT_SECRET'] = os.getenv('GOOGLE_CLIENT_SECRET')
-app.config['GOOGLE_REDIRECT_URI'] = os.getenv('GOOGLE_REDIRECT_URI')
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-
-# Настройка Flask-Login
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
-bcrypt = Bcrypt(app)
-
-# Русские названия месяцев
-MONTH_NAMES = {
-    1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель",
-    5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
-    9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь"
-}
-
-# Путь к БД
-BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = os.path.join(BASE_DIR, os.getenv('DB_PATH', 'database/tasks.db'))
+app.config['GOOGLE_CLIENT_ID'] = GOOGLE_CLIENT_ID
+app.config['GOOGLE_CLIENT_SECRET'] = GOOGLE_CLIENT_SECRET
+app.config['GOOGLE_REDIRECT_URI'] = GOOGLE_REDIRECT_URI
 
 
 def sync_google_calendar_for_all_users():
