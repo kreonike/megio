@@ -1,3 +1,4 @@
+
 from logging_config import configure_logging
 from flask import Flask, render_template, request, redirect, url_for, flash, g, session, json, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -17,6 +18,12 @@ from google.auth.transport.requests import Request
 import datetime as dt
 from dotenv import load_dotenv
 import re
+from models.models import User
+from web.routes.profile import profile_routes
+from web.routes.telegram import telegram_routes
+from web.routes.register import register_routes
+from web.routes.login import login_routes
+
 
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
@@ -25,14 +32,22 @@ import atexit
 from config.config import (
     SECRET_KEY, DB_PATH, BASE_DIR,
     GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, SCOPES,
-    MONTH_NAMES
+    MONTH_NAMES, get_db, close_db
 )
 
 atexit.register(lambda: scheduler.shutdown())
 
 # Инициализация приложения
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.secret_key = SECRET_KEY
+
+# Инициализация маршрутов профиля
+profile_routes(app, get_db)
+telegram_routes(app, get_db)
+register_routes(app, get_db, bcrypt)
+login_routes(app, get_db, bcrypt)
+
 
 # Инициализация Flask-Login
 login_manager = LoginManager()
@@ -131,17 +146,17 @@ scheduler.start()
 
 
 # Функции для работы с БД
-def get_db():
-    if 'db' not in g:
-        g.db = sqlite3.connect(DB_PATH, timeout=30)
-        g.db.execute('PRAGMA journal_mode=WAL')
-        g.db.row_factory = sqlite3.Row
-    return g.db
-
-def close_db(e=None):
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
+# def get_db():
+#     if 'db' not in g:
+#         g.db = sqlite3.connect(DB_PATH, timeout=30)
+#         g.db.execute('PRAGMA journal_mode=WAL')
+#         g.db.row_factory = sqlite3.Row
+#     return g.db
+#
+# def close_db(e=None):
+#     db = g.pop('db', None)
+#     if db is not None:
+#         db.close()
 
 app.teardown_appcontext(close_db)
 
@@ -198,33 +213,7 @@ def init_db():
 
 init_db()
 
-class User(UserMixin):
-    def __init__(self, user_id, username, email, telegram_token=None, google_token=None):
-        self.id = user_id
-        self.username = username
-        self.email = email
-        self.telegram_token = telegram_token
-        self.google_token = google_token
 
-    def is_telegram_linked(self):
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('SELECT 1 FROM telegram_users WHERE user_id = ?', (self.id,))
-        return cursor.fetchone() is not None
-
-    def generate_telegram_token(self):
-        token = secrets.token_urlsafe(16)
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('UPDATE users SET telegram_token = ? WHERE id = ?', (token, self.id))
-        db.commit()
-        self.telegram_token = token
-        return token
-
-    def get_google_credentials(self):
-        if not self.google_token:
-            return None
-        return Credentials.from_authorized_user_info(json.loads(self.google_token))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -235,7 +224,6 @@ def load_user(user_id):
     if user_data:
         return User(user_data['id'], user_data['username'], user_data['email'],
                    user_data['telegram_token'], user_data['google_token'])
-    return None
 
 def generate_calendar(year, month, user_id):
     cal = calendar.Calendar()
@@ -462,147 +450,6 @@ def set_task_reminders(year, month, day):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        if not username or not email or not password:
-            flash('Заполните все поля', 'error')
-            return render_template('register.html')
-
-        # Проверка email
-        if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
-            flash('Введите корректный email', 'error')
-            return render_template('register.html')
-
-        # Проверка сложности пароля
-        if (len(password) < 8 or
-                not re.search(r'[A-Z]', password) or
-                not re.search(r'[a-z]', password) or
-                not re.search(r'\d', password)):
-            flash('Пароль должен содержать минимум 8 символов, включая цифры, заглавные и строчные буквы', 'error')
-            return render_template('register.html')
-
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-        try:
-            db = get_db()
-            cursor = db.cursor()
-            cursor.execute('''
-                INSERT INTO users (username, email, password)
-                VALUES (?, ?, ?)
-            ''', (username, email, hashed_password))
-            db.commit()
-
-            flash('Регистрация успешна. Теперь вы можете войти.', 'success')
-            return redirect(url_for('login'))
-
-        except sqlite3.IntegrityError as e:
-            if 'username' in str(e):
-                flash('Это имя пользователя уже занято', 'error')
-            elif 'email' in str(e):
-                flash('Этот email уже используется', 'error')
-            return render_template('register.html')
-
-    return render_template('register.html')
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('SELECT id, username, email, password FROM users WHERE username = ?', (username,))
-        user_data = cursor.fetchone()
-
-        if user_data and bcrypt.check_password_hash(user_data['password'], password):
-            user = User(user_data['id'], user_data['username'], user_data['email'])
-            login_user(user)
-            return redirect(url_for('show_calendar'))
-        else:
-            flash('Неверное имя пользователя или пароль', 'error')
-            return render_template('login.html')
-
-    return render_template('login.html')
-
-
-@app.route('/profile', methods=['GET', 'POST'])
-@login_required
-def profile():
-    db = get_db()
-
-    if request.method == 'POST' and 'email' in request.form:
-        new_email = request.form.get('email')
-        if not new_email:
-            flash('Email не может быть пустым', 'error')
-            return redirect(url_for('profile'))
-
-        try:
-            cursor = db.cursor()
-            cursor.execute('UPDATE users SET email = ? WHERE id = ?', (new_email, current_user.id))
-            db.commit()
-            current_user.email = new_email
-            flash('Email успешно обновлен', 'success')
-        except sqlite3.IntegrityError:
-            flash('Этот email уже используется другим пользователем', 'error')
-
-    if not current_user.telegram_token:
-        current_user.telegram_token = current_user.generate_telegram_token()
-
-    return render_template('profile.html',
-                           user=current_user,
-                           telegram_linked=current_user.is_telegram_linked())
-
-
-@app.route('/link_telegram', methods=['GET', 'POST'])
-@login_required
-def link_telegram():
-    if request.method == 'POST':
-        telegram_id = request.form.get('telegram_id')
-
-        if not telegram_id or not telegram_id.isdigit():
-            flash('Неверный ID Telegram', 'error')
-            return redirect(url_for('profile'))
-
-        try:
-            db = get_db()
-            cursor = db.cursor()
-            cursor.execute('DELETE FROM telegram_users WHERE telegram_id = ? OR user_id = ?',
-                           (telegram_id, current_user.id))
-            cursor.execute('INSERT INTO telegram_users (telegram_id, user_id) VALUES (?, ?)',
-                           (telegram_id, current_user.id))
-            db.commit()
-
-            flash('Telegram аккаунт успешно привязан', 'success')
-        except sqlite3.Error as e:
-            flash(f'Ошибка при привязке аккаунта: {str(e)}', 'error')
-
-        return redirect(url_for('profile'))
-
-    return render_template('link_telegram.html')
-
-
-@app.route('/telegram_auth/<token>')
-def telegram_auth(token):
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute('SELECT id, username FROM users WHERE telegram_token = ?', (token,))
-    user_data = cursor.fetchone()
-
-    if user_data:
-        user = User(user_data['id'], user_data['username'], "")
-        login_user(user)
-        flash('Вы успешно авторизованы через Telegram', 'success')
-        return redirect(url_for('show_calendar'))
-
-    flash('Неверная ссылка авторизации', 'error')
-    return redirect(url_for('login'))
 
 
 @app.route('/logout')

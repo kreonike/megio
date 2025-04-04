@@ -1,7 +1,9 @@
 # config/config.py
 import os
+import sqlite3
 from pathlib import Path
 from dotenv import load_dotenv
+from flask import g
 
 # Загрузка переменных окружения из .env файла
 load_dotenv()
@@ -27,3 +29,15 @@ MONTH_NAMES = {
     5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
     9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь"
 }
+
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(DB_PATH, timeout=30)
+        g.db.execute('PRAGMA journal_mode=WAL')
+        g.db.row_factory = sqlite3.Row
+    return g.db
+
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
