@@ -598,7 +598,8 @@
                             this.disabled = true;
                             this.textContent = 'Выполнение...';
 
-                            const response = await fetch(`/tasks/${year}/${month}/${day}/complete`, {
+                            // 1. Отправляем запрос на выполнение задачи
+                            const completeResponse = await fetch(`/tasks/${year}/${month}/${day}/complete`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -607,14 +608,14 @@
                                 body: JSON.stringify({ task_id: taskId })
                             });
 
-                            if (!response.ok) {
-                                throw new Error(`Ошибка сервера: ${response.status}`);
+                            if (!completeResponse.ok) {
+                                throw new Error(`Ошибка сервера: ${completeResponse.status}`);
                             }
 
-                            const data = await response.json();
-                            console.log('Complete response:', data);
+                            const completeData = await completeResponse.json();
+                            console.log('Complete response:', completeData);
 
-                            // Обновляем список задач
+                            // 2. Получаем обновленный список задач
                             const tasksResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
                                 method: 'GET',
                                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -625,16 +626,35 @@
                             }
 
                             const tasksData = await tasksResponse.json();
+                            console.log('Updated tasks data:', tasksData);
+
+                            // 3. Обновляем список задач и календарь
                             updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories || []);
                             await updateCalendar(year, month);
 
-                            // Показываем уведомление об успешном выполнении
+                            // 4. Обновляем индикатор выбранного дня
+                            const dayElement = document.querySelector(`.day-link[data-day="${day}"]`);
+                            if (dayElement) {
+                                const dayCell = dayElement.closest('.day-cell');
+                                if (tasksData.tasks.length === 0) {
+                                    dayCell.classList.remove('has-tasks');
+                                    const badge = dayElement.querySelector('.task-count-badge');
+                                    if (badge) {
+                                        badge.remove();
+                                    }
+                                } else {
+                                    updateTaskPriorityIndicator(dayCell, tasksData.tasks);
+                                }
+                            }
+
+                            // 5. Показываем уведомление об успешном выполнении
                             alert('Задача успешно выполнена и перенесена в статистику!');
 
                         } catch (error) {
                             console.error('Ошибка при выполнении задачи:', error);
                             alert('Произошла ошибка: ' + error.message);
                         } finally {
+                            // Восстанавливаем кнопку в любом случае
                             const buttons = document.querySelectorAll(`.complete-btn[data-task-id="${taskId}"]`);
                             buttons.forEach(btn => {
                                 btn.disabled = false;

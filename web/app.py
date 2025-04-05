@@ -468,7 +468,7 @@ def complete_task(year, month, day):
             task_id,
             task['task'],
             task['priority'],
-            json.dumps(categories) if categories else None
+            ','.join(categories) if categories else None  # Преобразуем список в строку
         ))
 
         # 4. Удаляем из текущих задач

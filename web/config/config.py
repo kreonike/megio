@@ -180,5 +180,11 @@ def init_db(app):
                 categories TEXT,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )''')
+        else:
+            # Проверка наличия столбца categories в таблице completed_tasks
+            cursor.execute('PRAGMA table_info(completed_tasks)')
+            completed_tasks_columns = [row[1] for row in cursor.fetchall()]
+            if 'categories' not in completed_tasks_columns:
+                cursor.execute('ALTER TABLE completed_tasks ADD COLUMN categories TEXT')
 
         db.commit()
