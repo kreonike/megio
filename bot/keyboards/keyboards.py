@@ -164,23 +164,23 @@ def create_help_keyboard(lang: str = None) -> InlineKeyboardMarkup:
     """Создаёт клавиатуру для команды /help."""
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
-            text=i18n.get("help.commands.start", lang=lang),
+            text=i18n.get("messages.help.commands.start", lang=lang),
             callback_data="cmd_start"
         )],
         [InlineKeyboardButton(
-            text=i18n.get("help.commands.today", lang=lang),
+            text=i18n.get("messages.help.commands.today", lang=lang),
             callback_data="cmd_today"
         )],
         [InlineKeyboardButton(
-            text=i18n.get("help.commands.add", lang=lang),
+            text=i18n.get("messages.help.commands.add", lang=lang),
             callback_data="cmd_add"
         )],
         [InlineKeyboardButton(
-            text=i18n.get("help.commands.me", lang=lang),
+            text=i18n.get("messages.help.commands.me", lang=lang),
             callback_data="cmd_me"
         )],
         [InlineKeyboardButton(
-            text=i18n.get("help.commands.help", lang=lang),
+            text=i18n.get("messages.help.commands.help", lang=lang),
             callback_data="cmd_help"
         )]
     ])
