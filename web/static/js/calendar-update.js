@@ -289,7 +289,36 @@ export function updateCalendar(year, month) {
                 let badge = link.querySelector('.task-count-badge');
                 const dayCell = link.closest('.day-cell');
 
+                // Удаляем предыдущие классы статуса
+                dayCell.classList.remove('has-overdue-tasks', 'all-tasks-completed');
+
                 if (tasks.length > 0) {
+                    // Проверяем статус задач
+                    const now = new Date();
+                    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    const taskDate = new Date(year, month - 1, day);
+
+                    let hasOverdue = false;
+                    let allCompleted = true;
+
+                    tasks.forEach(task => {
+                        // Проверяем просроченные задачи (старше 1 дня)
+                        if (taskDate < today && !task.completed) {
+                            hasOverdue = true;
+                        }
+                        // Проверяем выполненные задачи
+                        if (!task.completed) {
+                            allCompleted = false;
+                        }
+                    });
+
+                    // Добавляем соответствующие классы
+                    if (hasOverdue) {
+                        dayCell.classList.add('has-overdue-tasks');
+                    } else if (allCompleted) {
+                        dayCell.classList.add('all-tasks-completed');
+                    }
+
                     if (!badge) {
                         console.log(`[updateCalendar] Creating new badge for day ${day}`);
                         badge = document.createElement('span');
