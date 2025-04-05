@@ -422,5 +422,95 @@ def month_tasks(year, month):
     return jsonify({'tasksByDay': tasks_by_day})
 
 
+@app.route('/tasks/<int:year>/<int:month>/<int:day>/complete', methods=['POST'])
+@login_required
+def complete_task(year, month, day):
+    if not request.is_json:
+        return jsonify({'success': False, 'error': 'Invalid content type'}), 400
+
+    data = request.get_json()
+    task_id = data.get('task_id')
+
+    if not task_id:
+        return jsonify({'success': False, 'error': 'Missing task_id'}), 400
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        # 1. Получаем данные задачи
+        cursor.execute('''
+            SELECT id, user_id, task, priority 
+            FROM tasks 
+            WHERE id = ? AND user_id = ?
+        ''', (task_id, current_user.id))
+        task = cursor.fetchone()
+
+        if not task:
+            return jsonify({'success': False, 'error': 'Task not found'}), 404
+
+        # 2. Получаем категории задачи
+        cursor.execute('''
+            SELECT c.name 
+            FROM categories c
+            JOIN task_categories tc ON c.id = tc.category_id
+            WHERE tc.task_id = ?
+        ''', (task_id,))
+        categories = [row['name'] for row in cursor.fetchall()]
+
+        # 3. Переносим в таблицу выполненных задач
+        cursor.execute('''
+            INSERT INTO completed_tasks 
+            (user_id, task_id, task_text, priority, categories)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (
+            current_user.id,
+            task_id,
+            task['task'],
+            task['priority'],
+            json.dumps(categories) if categories else None
+        ))
+
+        # 4. Удаляем из текущих задач
+        cursor.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
+
+        # 5. Удаляем связи с категориями
+        cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
+
+        db.commit()
+
+        return jsonify({'success': True})
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Ошибка при выполнении задачи: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/stats')
+@login_required
+def show_stats():
+    db = get_db()
+    cursor = db.cursor()
+
+    # Статистика по выполненным задачам
+    cursor.execute('''
+        SELECT 
+            strftime('%Y-%m', completion_time) as month,
+            COUNT(*) as total,
+            SUM(CASE WHEN priority = 3 THEN 1 ELSE 0 END) as high_priority,
+            SUM(CASE WHEN priority = 2 THEN 1 ELSE 0 END) as medium_priority,
+            SUM(CASE WHEN priority = 1 THEN 1 ELSE 0 END) as low_priority
+        FROM completed_tasks
+        WHERE user_id = ?
+        GROUP BY strftime('%Y-%m', completion_time)
+        ORDER BY month DESC
+    ''', (current_user.id,))
+
+    stats = cursor.fetchall()
+
+    return render_template('stats.html', stats=stats)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

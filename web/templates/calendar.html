@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         input.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     }
 
-    // Функция для обновления календаря с логированием
+    // Функция для обновления календаря
     function updateCalendar(year, month) {
         console.log(`[updateCalendar] Starting update for ${year}-${month}`);
 
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 console.log('Received tasks data:', data);
-                updateTasksSection(data.tasks, date, day, data.categories);
+                updateTasksSection(data.tasks, date, day, data.categories || []);
                 updateTaskPriorityIndicator(this.closest('.day-cell'), data.tasks);
             })
             .catch(error => {
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </form>
             <ul class="task-list">
                 ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => `
-                    <li class="task-item" data-priority="${task.priority}" data-categories="${task.category_ids.join(',')}">
+                    <li class="task-item" data-priority="${task.priority}" data-categories="${task.category_ids ? task.category_ids.join(',') : ''}">
                         <div class="task-content">
                             ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
                             <span class="priority-marker"></span>
@@ -304,14 +304,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="task-meta">
                             ${task.priority == 3 ? '<span class="priority-high">❗ Высокий приоритет</span>' : ''}
                             ${task.priority == 2 ? '<span class="priority-medium">🔹 Средний приоритет</span>' : ''}
-                            ${task.category_ids.map(cat_id => {
+                            ${task.category_ids ? task.category_ids.map(cat_id => {
                                 const cat = categories.find(c => c.id == cat_id);
                                 return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
-                            }).join('')}
+                            }).join('') : ''}
                         </div>
                         <div class="task-actions">
                             <button type="button" class="remind-btn" data-task-id="${task.id}">Напомнить</button>
                             <button type="button" class="edit-btn" data-task-id="${task.id}">Редактировать</button>
+                            <button type="button" class="complete-btn" data-task-id="${task.id}">Выполнено</button>
                             <button type="button" class="delete-btn" data-task-id="${task.id}">Удалить</button>
                         </div>
                         <form id="edit-form-${task.id}" class="edit-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
@@ -339,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${categories.map(cat => `
                                         <label>
                                             <input type="checkbox" name="categories" value="${cat.id}"
-                                                   ${task.category_ids.includes(cat.id) ? 'checked' : ''}>
+                                                   ${task.category_ids && task.category_ids.includes(cat.id) ? 'checked' : ''}>
                                             <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
                                         </label>
                                     `).join('')}
@@ -426,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`[applyFilters] Category: ${categoryFilter}, Priority: ${priorityFilter}`);
 
         document.querySelectorAll('.task-item').forEach(item => {
-            const itemCategories = item.dataset.categories.split(',');
+            const itemCategories = item.dataset.categories ? item.dataset.categories.split(',') : [];
             const itemPriority = item.dataset.priority;
 
             const categoryMatch = !categoryFilter || itemCategories.includes(categoryFilter);
@@ -582,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('Updated tasks data:', tasksData);
 
                     // 3. Обновляем список задач и календарь
-                    updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories);
+                    updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories || []);
                     await updateCalendar(year, month);
 
                     // 4. Обновляем индикатор выбранного дня
@@ -676,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(([_, tasksResponse]) => tasksResponse.json())
                 .then(data => {
                     console.log('Updating tasks section after addition');
-                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories);
+                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories || []);
                 })
                 .catch(error => console.error('Ошибка при добавлении задачи:', error));
             });
@@ -722,7 +723,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(([_, tasksResponse]) => tasksResponse.json())
                 .then(data => {
                     console.log('Updating tasks section after edit');
-                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories);
+                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories || []);
                 })
                 .catch(error => {
                     console.error('Ошибка:', error);
@@ -735,6 +736,76 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.addEventListener('click', function() {
                 const taskId = this.dataset.taskId;
                 document.getElementById(`edit-form-${taskId}`).classList.remove('active');
+            });
+        });
+
+        // Обработчик для кнопки "Выполнено"
+        document.querySelectorAll('.complete-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                if (!selectedDay) {
+                    console.log('No day selected for completion');
+                    return;
+                }
+
+                const taskId = this.dataset.taskId;
+                const year = {{ year }};
+                const month = {{ month }};
+                const day = selectedDay;
+                const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+                if (!confirm('Пометить задачу как выполненную?')) {
+                    console.log('Completion cancelled by user');
+                    return;
+                }
+
+                console.log(`Completing task ${taskId} for date ${dateStr}`);
+                try {
+                    this.disabled = true;
+                    this.textContent = 'Выполнение...';
+
+                    const response = await fetch(`/tasks/${year}/${month}/${day}/complete`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ task_id: taskId })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Ошибка сервера: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Complete response:', data);
+
+                    // Обновляем список задач
+                    const tasksResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
+                        method: 'GET',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+
+                    if (!tasksResponse.ok) {
+                        throw new Error('Не удалось загрузить обновленный список задач');
+                    }
+
+                    const tasksData = await tasksResponse.json();
+                    updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories || []);
+                    await updateCalendar(year, month);
+
+                    // Показываем уведомление об успешном выполнении
+                    alert('Задача успешно выполнена и перенесена в статистику!');
+
+                } catch (error) {
+                    console.error('Ошибка при выполнении задачи:', error);
+                    alert('Произошла ошибка: ' + error.message);
+                } finally {
+                    const buttons = document.querySelectorAll(`.complete-btn[data-task-id="${taskId}"]`);
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.textContent = 'Выполнено';
+                    });
+                }
             });
         });
     }

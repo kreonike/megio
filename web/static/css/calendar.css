@@ -191,11 +191,6 @@
     border-radius: 8px;
 }
 
-
-
-
-
-
 .tasks-sidebar h3 {
     margin: 0 0 10px 0;
     color: var(--text-primary);
@@ -289,15 +284,22 @@
 /* Кнопки действий */
 .task-actions {
     display: flex;
+    flex-wrap: wrap; /* Добавляем перенос на новую строку */
     gap: 8px;
     margin-top: 8px;
-    align-items: center;
-    flex-wrap: wrap;
+    width: 100%;
+}
+
+.task-actions > * {
+    flex: 1 0 calc(50% - 4px); /* Каждый элемент занимает 50% ширины минус отступ */
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .edit-btn,
 .delete-btn,
-.remind-btn {
+.remind-btn,
+.complete-btn {
     padding: 6px 12px;
     border: none;
     cursor: pointer;
@@ -312,26 +314,46 @@
     white-space: nowrap;
     line-height: 1.2;
     height: 32px;
+    min-width: 90px;
 }
 
 .edit-btn {
     background-color: #ff7b25;
     color: white;
     border: 1px solid #e56a00;
-    min-width: 100px;
 }
 
 .delete-btn {
     background-color: #f44336;
     color: white;
     border: 1px solid #d32f2f;
-    min-width: 80px;
 }
 
 .remind-btn {
     background-color: #4CAF50;
     color: white;
-    min-width: 90px;
+}
+
+.complete-btn {
+    background-color: #2196F3;
+    color: white;
+    border: 1px solid #1976D2;
+}
+
+.edit-btn:hover {
+    background-color: #e56a00;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+.remind-btn:hover {
+    background-color: #3e8e41;
+}
+
+.complete-btn:hover {
+    background-color: #1976D2;
 }
 
 /* Форма редактирования */
@@ -469,6 +491,11 @@
         background-color: #2E7D32;
     }
 
+    .complete-btn {
+        background-color: #1565C0;
+        border-color: #0D47A1;
+    }
+
     .task-repeat-badge {
         background-color: rgba(75, 192, 192, 0.3);
         color: #e2e8f0;
@@ -476,85 +503,6 @@
 
     .tasks-sidebar .task-date-header {
         color: #90cdf4 !important;
-    }
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .calendar-wrapper {
-        flex-direction: column;
-    }
-
-    .day-cell {
-        height: 45px;
-    }
-}
-
-@media (max-width: 480px) {
-    .day-number {
-        font-size: 0.9em;
-    }
-
-    .today .day-number {
-        width: 22px;
-        height: 22px;
-        line-height: 22px;
-    }
-
-    .day-cell {
-        height: 40px;
-    }
-
-    .calendar-title {
-        font-size: 1.5rem;
-    }
-
-    .day-link.has-tasks::after {
-        width: 4px;
-        height: 4px;
-        bottom: 3px;
-    }
-}
-
-@media (max-width: 480px) {
-    .edit-btn::after {
-        content: "Ред.";
-    }
-    .delete-btn::after {
-        content: "Удал.";
-    }
-    .remind-btn::after {
-        content: "Напом.";
-    }
-
-    .edit-btn span,
-    .delete-btn span,
-    .remind-btn span {
-        display: none;
-    }
-
-    .day-number {
-        padding-left: 4px;
-        font-size: 0.9em;
-    }
-
-    .today .day-number {
-        margin-left: 4px;
-        width: 20px;
-        height: 20px;
-        line-height: 20px;
-    }
-
-    .day-cell {
-        height: 40px;
-    }
-
-    .calendar-title {
-        font-size: 1.5rem;
-    }
-
-    .remind-buttons {
-        flex-direction: column;
     }
 }
 
@@ -599,21 +547,6 @@
     color: var(--text-color);
 }
 
-/* Темная тема */
-.dark-mode .priority-high {
-    color: #ff6d6d;
-}
-
-.dark-mode .priority-medium {
-    color: #ffb74d;
-}
-
-.dark-mode .calendar-filters select {
-    background-color: var(--bg-secondary-color);
-}
-
-/* Добавьте эти стили в calendar.css */
-
 /* Стили для приоритетов */
 .priority-marker {
     display: inline-block;
@@ -626,71 +559,30 @@
 }
 
 .priority-high .priority-marker {
-    background-color: #ff5252; /* Красный для высокого приоритета */
+    background-color: #ff5252;
 }
 
 .priority-medium .priority-marker {
-    background-color: #ff9800; /* Оранжевый для среднего */
+    background-color: #ff9800;
 }
 
 .priority-low .priority-marker {
-    background-color: #4caf50; /* Зеленый для низкого */
-}
-
-/* Иконки для приоритетов (опционально) */
-.priority-high .priority-marker::after {
-    content: "❗";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 12px;
-}
-
-.priority-medium .priority-marker::after {
-    content: "🔹";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 10px;
-}
-
-.priority-low .priority-marker::after {
-    content: "↓";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 10px;
-}
-
-/* Для темной темы */
-.dark-mode .priority-high .priority-marker {
-    background-color: #ff6d6d;
-}
-
-.dark-mode .priority-medium .priority-marker {
-    background-color: #ffb74d;
-}
-
-.dark-mode .priority-low .priority-marker {
-    background-color: #81c784;
+    background-color: #4caf50;
 }
 
 /* Стили для кружка с количеством задач по приоритетам */
 .task-count-badge.priority-low {
-    background-color: #4CAF50;  /* Зеленый */
+    background-color: #4CAF50;
     color: white;
 }
 
 .task-count-badge.priority-medium {
-    background-color: #FF9800;  /* Оранжевый */
+    background-color: #FF9800;
     color: black;
 }
 
 .task-count-badge.priority-high {
-    background-color: #F44336;  /* Красный */
+    background-color: #F44336;
     color: white;
 }
 
@@ -706,6 +598,7 @@
 .dark-mode .task-count-badge.priority-high {
     background-color: #D32F2F;
 }
+
 .day-cell, .task-count-badge {
     transition: all 0.3s ease;
 }
@@ -718,4 +611,70 @@
 .task-count-badge.updating {
     transform: scale(1.2);
     opacity: 0.7;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .calendar-wrapper {
+        flex-direction: column;
+    }
+
+    .day-cell {
+        height: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    .task-actions {
+        flex-wrap: wrap;
+    }
+
+    .today .day-number {
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+    }
+
+    .day-cell {
+        height: 40px;
+    }
+
+    .calendar-title {
+        font-size: 1.5rem;
+    }
+
+    .day-link.has-tasks::after {
+        width: 4px;
+        height: 4px;
+        bottom: 3px;
+    }
+
+    .edit-btn::after {
+        content: "Ред.";
+    }
+    .delete-btn::after {
+        content: "Удал.";
+    }
+    .remind-btn::after {
+        content: "Напом.";
+    }
+    .complete-btn::after {
+        content: "Вып.";
+    }
+
+    .edit-btn span,
+    .delete-btn span,
+    .remind-btn span,
+    .complete-btn span {
+        display: none;
+    }
+
+    .task-actions > * {
+        min-width: calc(50% - 4px);
+        flex-grow: 1;
+    }
+
+    .task-actions > * {
+        min-width: calc(50% - 4px);
+    }
 }

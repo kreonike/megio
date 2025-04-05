@@ -110,6 +110,19 @@ def init_db(app):
             FOREIGN KEY (user_id) REFERENCES users (id)
         )''')
 
+        # Таблица выполненных задач
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS completed_tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            task_id INTEGER NOT NULL,
+            task_text TEXT NOT NULL,
+            completion_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            priority INTEGER DEFAULT 1,
+            categories TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )''')
+
         db.commit()
 
         # Проверка и добавление отсутствующих столбцов
@@ -139,7 +152,7 @@ def init_db(app):
                 name TEXT NOT NULL,
                 color TEXT NOT NULL DEFAULT '#3498db',
                 FOREIGN KEY (user_id) REFERENCES users(id)
-            ''')
+            )''')
 
         # Проверка существования таблицы task_categories
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='task_categories'")
@@ -151,6 +164,21 @@ def init_db(app):
                 PRIMARY KEY (task_id, category_id),
                 FOREIGN KEY (task_id) REFERENCES tasks(id),
                 FOREIGN KEY (category_id) REFERENCES categories(id)
+            )''')
+
+        # Проверка существования таблицы completed_tasks
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='completed_tasks'")
+        if not cursor.fetchone():
+            cursor.execute('''
+            CREATE TABLE completed_tasks (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                task_id INTEGER NOT NULL,
+                task_text TEXT NOT NULL,
+                completion_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                priority INTEGER DEFAULT 1,
+                categories TEXT,
+                FOREIGN KEY (user_id) REFERENCES users(id)
             )''')
 
         db.commit()

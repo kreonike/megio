@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика выполненных задач{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Статистика выполненных задач</h1>
+
+    <table class="stats-table">
+        <tr>
+            <th>Месяц</th>
+            <th>Всего</th>
+            <th>Высокий приоритет</th>
+            <th>Средний приоритет</th>
+            <th>Низкий приоритет</th>
+        </tr>
+        {% for stat in stats %}
+        <tr>
+            <td>{{ stat['month'] }}</td>
+            <td>{{ stat['total'] }}</td>
+            <td>{{ stat['high_priority'] }}</td>
+            <td>{{ stat['medium_priority'] }}</td>
+            <td>{{ stat['low_priority'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
