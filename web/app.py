@@ -487,7 +487,7 @@ def complete_task(year, month, day):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/stats')
+@app.route('/stats', endpoint='stats')
 @login_required
 def show_stats():
     db = get_db()

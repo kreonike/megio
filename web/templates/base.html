@@ -16,6 +16,7 @@
                 {% if current_user.is_authenticated %}
                     <span>Привет, {{ current_user.username }}!</span>
                     <a href="{{ url_for('profile') }}">Профиль</a>
+                    <a href="{{ url_for('stats') }}">Статистика</a>
                     <a href="{{ url_for('logout') }}">Выйти</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">Войти</a>
