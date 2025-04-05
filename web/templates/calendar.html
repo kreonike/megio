@@ -17,124 +17,15 @@
             bindTimeSpinnerEvents
         } from "{{ url_for('static', filename='js/time.js') }}";
 
+        import {
+            updateCalendar,
+            updateTaskPriorityIndicator
+        } from "{{ url_for('static', filename='js/calendar-update.js') }}";
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM fully loaded and parsed');
 
             let selectedDay = null;
-
-            // Функция для обновления календаря
-            function updateCalendar(year, month) {
-                console.log(`[updateCalendar] Starting update for ${year}-${month}`);
-
-                document.querySelectorAll('.task-count-badge').forEach(badge => {
-                    badge.classList.add('updating');
-                });
-
-                return fetch(`/tasks/${year}/${month}`, {
-                    method: 'GET',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        console.error(`[updateCalendar] Network response not ok: ${response.status}`);
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(`[updateCalendar] Received data:`, data);
-
-                    document.querySelectorAll('.day-link').forEach(link => {
-                        const day = link.getAttribute('data-day');
-                        console.log(`[updateCalendar] Processing day ${day}`);
-
-                        if (day && data.tasksByDay && data.tasksByDay[day]) {
-                            const tasks = data.tasksByDay[day];
-                            console.log(`[updateCalendar] Found ${tasks.length} tasks for day ${day}`);
-
-                            let badge = link.querySelector('.task-count-badge');
-                            const dayCell = link.closest('.day-cell');
-
-                            if (tasks.length > 0) {
-                                if (!badge) {
-                                    console.log(`[updateCalendar] Creating new badge for day ${day}`);
-                                    badge = document.createElement('span');
-                                    badge.className = 'task-count-badge';
-                                    link.appendChild(badge);
-                                }
-
-                                let maxPriority = 1;
-                                tasks.forEach(task => {
-                                    if (task.priority > maxPriority) maxPriority = task.priority;
-                                });
-
-                                badge.textContent = tasks.length;
-                                badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-
-                                if (maxPriority === 3) {
-                                    badge.classList.add('priority-high');
-                                } else if (maxPriority === 2) {
-                                    badge.classList.add('priority-medium');
-                                } else {
-                                    badge.classList.add('priority-low');
-                                }
-
-                                dayCell.classList.add('has-tasks');
-                                console.log(`[updateCalendar] Updated badge for day ${day} with ${tasks.length} tasks`);
-                            } else {
-                                if (badge) {
-                                    console.log(`[updateCalendar] Removing badge for day ${day}`);
-                                    badge.remove();
-                                }
-                                dayCell.classList.remove('has-tasks');
-                            }
-                        }
-                    });
-                })
-                .catch(error => {
-                    console.error('[updateCalendar] Error updating calendar:', error);
-                    throw error;
-                })
-                .finally(() => {
-                    console.log('[updateCalendar] Finished updating calendar');
-                    document.querySelectorAll('.task-count-badge').forEach(badge => {
-                        badge.classList.remove('updating');
-                    });
-                });
-            }
-
-            // Функция для обновления цвета индикатора задач
-            function updateTaskPriorityIndicator(dayElement, tasks) {
-                console.log(`[updateTaskPriorityIndicator] Updating for day element`, dayElement);
-                const badge = dayElement.querySelector('.task-count-badge');
-                if (!badge) {
-                    console.log('[updateTaskPriorityIndicator] No badge found');
-                    return;
-                }
-                if (!tasks || tasks.length === 0) {
-                    console.log('[updateTaskPriorityIndicator] No tasks provided');
-                    dayElement.classList.remove('has-tasks');
-                    badge.remove();
-                    return;
-                }
-
-                let maxPriority = 1;
-                tasks.forEach(task => {
-                    if (task.priority > maxPriority) maxPriority = task.priority;
-                });
-
-                badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-
-                if (maxPriority === 3) {
-                    badge.classList.add('priority-high');
-                } else if (maxPriority === 2) {
-                    badge.classList.add('priority-medium');
-                } else {
-                    badge.classList.add('priority-low');
-                }
-
-                console.log(`[updateTaskPriorityIndicator] Updated priority to ${maxPriority}`);
-            }
 
             // Обработчики кликов по дням календаря
             document.querySelectorAll('.day-link').forEach(link => {
