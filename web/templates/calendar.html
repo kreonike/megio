@@ -7,835 +7,763 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM fully loaded and parsed');
+    <script type="module">
+        import {
+            formatTimeInput,
+            validateTime,
+            updateTime,
+            formatDateToRussian,
+            formatDateForInput,
+            bindTimeSpinnerEvents
+        } from "{{ url_for('static', filename='js/time.js') }}";
 
-    // Функции для работы с временем
-    function formatTimeInput(value) {
-        let numbers = value.replace(/\D/g, '');
-        if (numbers.length > 2) {
-            numbers = numbers.substring(0, 4);
-            return numbers.substring(0, 2) + ':' + numbers.substring(2, 4);
-        }
-        return numbers;
-    }
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded and parsed');
 
-    function validateTime(timeStr) {
-        if (!timeStr || typeof timeStr !== 'string') return '12:00';
-        let [hours, minutes] = timeStr.includes(':') ? timeStr.split(':') : [timeStr.substring(0, 2), timeStr.substring(2, 4)];
-        hours = Math.min(23, Math.max(0, parseInt(hours) || 0));
-        minutes = Math.min(59, Math.max(0, parseInt(minutes) || 0));
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-    }
+            let selectedDay = null;
 
-    function updateTime(input, change) {
-        let time = validateTime(input.value);
-        let [hours, minutes] = time.split(':').map(Number);
-        minutes += change;
-        if (minutes >= 60) {
-            minutes = 0;
-            hours = (hours + 1) % 24;
-        } else if (minutes < 0) {
-            minutes = 55;
-            hours = (hours - 1 + 24) % 24;
-        }
-        input.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-    }
+            // Функция для обновления календаря
+            function updateCalendar(year, month) {
+                console.log(`[updateCalendar] Starting update for ${year}-${month}`);
 
-    // Функция для обновления календаря
-    function updateCalendar(year, month) {
-        console.log(`[updateCalendar] Starting update for ${year}-${month}`);
-
-        document.querySelectorAll('.task-count-badge').forEach(badge => {
-            badge.classList.add('updating');
-        });
-
-        return fetch(`/tasks/${year}/${month}`, {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.error(`[updateCalendar] Network response not ok: ${response.status}`);
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(`[updateCalendar] Received data:`, data);
-
-            document.querySelectorAll('.day-link').forEach(link => {
-                const day = link.getAttribute('data-day');
-                console.log(`[updateCalendar] Processing day ${day}`);
-
-                if (day && data.tasksByDay && data.tasksByDay[day]) {
-                    const tasks = data.tasksByDay[day];
-                    console.log(`[updateCalendar] Found ${tasks.length} tasks for day ${day}`);
-
-                    let badge = link.querySelector('.task-count-badge');
-                    const dayCell = link.closest('.day-cell');
-
-                    if (tasks.length > 0) {
-                        if (!badge) {
-                            console.log(`[updateCalendar] Creating new badge for day ${day}`);
-                            badge = document.createElement('span');
-                            badge.className = 'task-count-badge';
-                            link.appendChild(badge);
-                        }
-
-                        let maxPriority = 1;
-                        tasks.forEach(task => {
-                            if (task.priority > maxPriority) maxPriority = task.priority;
-                        });
-
-                        badge.textContent = tasks.length;
-                        badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-
-                        if (maxPriority === 3) {
-                            badge.classList.add('priority-high');
-                        } else if (maxPriority === 2) {
-                            badge.classList.add('priority-medium');
-                        } else {
-                            badge.classList.add('priority-low');
-                        }
-
-                        dayCell.classList.add('has-tasks');
-                        console.log(`[updateCalendar] Updated badge for day ${day} with ${tasks.length} tasks`);
-                    } else {
-                        if (badge) {
-                            console.log(`[updateCalendar] Removing badge for day ${day}`);
-                            badge.remove();
-                        }
-                        dayCell.classList.remove('has-tasks');
-                    }
-                }
-            });
-        })
-        .catch(error => {
-            console.error('[updateCalendar] Error updating calendar:', error);
-            throw error;
-        })
-        .finally(() => {
-            console.log('[updateCalendar] Finished updating calendar');
-            document.querySelectorAll('.task-count-badge').forEach(badge => {
-                badge.classList.remove('updating');
-            });
-        });
-    }
-
-    // Функция для обновления цвета индикатора задач
-    function updateTaskPriorityIndicator(dayElement, tasks) {
-        console.log(`[updateTaskPriorityIndicator] Updating for day element`, dayElement);
-        const badge = dayElement.querySelector('.task-count-badge');
-        if (!badge) {
-            console.log('[updateTaskPriorityIndicator] No badge found');
-            return;
-        }
-        if (!tasks || tasks.length === 0) {
-            console.log('[updateTaskPriorityIndicator] No tasks provided');
-            dayElement.classList.remove('has-tasks');
-            badge.remove();
-            return;
-        }
-
-        let maxPriority = 1;
-        tasks.forEach(task => {
-            if (task.priority > maxPriority) maxPriority = task.priority;
-        });
-
-        badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-
-        if (maxPriority === 3) {
-            badge.classList.add('priority-high');
-        } else if (maxPriority === 2) {
-            badge.classList.add('priority-medium');
-        } else {
-            badge.classList.add('priority-low');
-        }
-
-        console.log(`[updateTaskPriorityIndicator] Updated priority to ${maxPriority}`);
-    }
-
-    // Функции для форматирования даты
-    function formatDateToRussian(dateStr) {
-        if (!dateStr) return '';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) {
-            const parts = dateStr.split('-');
-            if (parts.length === 3) {
-                return `${parts[2]}.${parts[1]}.${parts[0]}`;
-            }
-            return dateStr;
-        }
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}.${month}.${year}`;
-    }
-
-    function formatDateForInput(dateStr) {
-        if (!dateStr) return '';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) {
-            const parts = dateStr.split('.');
-            if (parts.length === 3) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`;
-            }
-            return dateStr;
-        }
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
-
-    let selectedDay = null;
-
-    // Обработчики кликов по дням календаря
-    document.querySelectorAll('.day-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const year = {{ year }};
-            const month = {{ month }};
-            const day = this.getAttribute('data-day');
-            console.log(`Day clicked: ${year}-${month}-${day}`);
-
-            if (!day || isNaN(day)) {
-                console.error('Invalid day value:', day);
-                return;
-            }
-
-            selectedDay = day;
-            const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-            console.log(`Fetching tasks for ${date}`);
-            fetch(`/tasks/${year}/${month}/${day}`, {
-                method: 'GET',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.error(`HTTP error! Status: ${response.status}`);
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Received tasks data:', data);
-                updateTasksSection(data.tasks, date, day, data.categories || []);
-                updateTaskPriorityIndicator(this.closest('.day-cell'), data.tasks);
-            })
-            .catch(error => {
-                console.error('Error loading tasks:', error);
-            });
-        });
-    });
-
-    // Функция обновления секции задач
-    function updateTasksSection(tasks, date, day, categories) {
-        console.log(`[updateTasksSection] Updating for date ${date}, day ${day}`);
-        const dateParts = date.split('-');
-        const year = dateParts[0];
-        const month = dateParts[1];
-        const dayNum = dateParts[2];
-        const formattedDate = `${dayNum.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
-
-        console.log(`[updateTasksSection] Formatted date: ${formattedDate}`);
-
-        const tasksSection = document.querySelector('.tasks-section');
-        tasksSection.innerHTML = `
-            <div class="calendar-filters">
-                <select id="category-filter">
-                    <option value="">Все категории</option>
-                    ${categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
-                </select>
-
-                <select id="priority-filter">
-                    <option value="">Все приоритеты</option>
-                    <option value="3">Высокий</option>
-                    <option value="2">Средний</option>
-                    <option value="1">Низкий</option>
-                </select>
-            </div>
-
-            <h3 class="task-date-header" style="color: inherit;">${formattedDate}</h3>
-            <form class="task-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
-                <input type="hidden" name="date" value="${date}">
-                <input type="text" name="task" class="task-input" placeholder="Добавить новую задачу..." required>
-                <div class="time-selector">
-                    <input type="text" id="task-time" name="time" class="time-input" value="12:00"
-                           pattern="[0-9]{2}:[0-9]{2}" title="Формат: ЧЧ:ММ (24 часа)">
-                    <div class="time-spinner">
-                        <button type="button" class="time-btn up">▲</button>
-                        <button type="button" class="time-btn down">▼</button>
-                    </div>
-                </div>
-                <div class="task-priority">
-                    <label>Приоритет:</label>
-                    <select name="priority">
-                        <option value="1">Низкий</option>
-                        <option value="2">Средний</option>
-                        <option value="3">Высокий</option>
-                    </select>
-                </div>
-                <div class="task-categories">
-                    <label>Категории:</label>
-                    <div class="category-options">
-                        ${categories.map(cat => `
-                            <label>
-                                <input type="checkbox" name="categories" value="${cat.id}">
-                                <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-                </div>
-                <button type="submit" class="task-button">Добавить задачу</button>
-            </form>
-            <ul class="task-list">
-                ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => `
-                    <li class="task-item" data-priority="${task.priority}" data-categories="${task.category_ids ? task.category_ids.join(',') : ''}">
-                        <div class="task-content">
-                            ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
-                            <span class="priority-marker"></span>
-                            <span class="task-text">${task.task}</span>
-                             ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
-                        </div>
-                        <div class="task-meta">
-                            ${task.priority == 3 ? '<span class="priority-high">❗ Высокий приоритет</span>' : ''}
-                            ${task.priority == 2 ? '<span class="priority-medium">🔹 Средний приоритет</span>' : ''}
-                            ${task.category_ids ? task.category_ids.map(cat_id => {
-                                const cat = categories.find(c => c.id == cat_id);
-                                return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
-                            }).join('') : ''}
-                        </div>
-                        <div class="task-actions">
-                            <button type="button" class="remind-btn" data-task-id="${task.id}">Напомнить</button>
-                            <button type="button" class="edit-btn" data-task-id="${task.id}">Редактировать</button>
-                            <button type="button" class="complete-btn" data-task-id="${task.id}">Выполнено</button>
-                            <button type="button" class="delete-btn" data-task-id="${task.id}">Удалить</button>
-                        </div>
-                        <form id="edit-form-${task.id}" class="edit-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
-                            <input type="hidden" name="task_id" value="${task.id}">
-                            <input type="text" name="task" class="task-input" value="${task.task}" required>
-                            <div class="time-selector">
-                                <input type="text" name="time" class="edit-time-input" value="${task.time || '12:00'}"
-                                       pattern="[0-9]{2}:[0-9]{2}">
-                                <div class="time-spinner">
-                                    <button type="button" class="time-btn up">▲</button>
-                                    <button type="button" class="time-btn down">▼</button>
-                                </div>
-                            </div>
-                            <div class="task-priority">
-                                <label>Приоритет:</label>
-                                <select name="priority">
-                                    <option value="1" ${task.priority == 1 ? 'selected' : ''}>Низкий</option>
-                                    <option value="2" ${task.priority == 2 ? 'selected' : ''}>Средний</option>
-                                    <option value="3" ${task.priority == 3 ? 'selected' : ''}>Высокий</option>
-                                </select>
-                            </div>
-                            <div class="task-categories">
-                                <label>Категории:</label>
-                                <div class="category-options">
-                                    ${categories.map(cat => `
-                                        <label>
-                                            <input type="checkbox" name="categories" value="${cat.id}"
-                                                   ${task.category_ids && task.category_ids.includes(cat.id) ? 'checked' : ''}>
-                                            <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
-                                        </label>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            <div class="repeat-options">
-                                <label>
-                                    <input type="checkbox" name="repeat_enabled" ${task.repeat_days !== null && task.repeat_days !== undefined ? 'checked' : ''}> Повторять задачу
-                                </label>
-                                <div class="repeat-details" style="${task.repeat_days !== null && task.repeat_days !== undefined ? '' : 'display: none;'}">
-                                    <div>
-                                        <span>Каждые</span>
-                                        <input type="number" name="repeat_days" min="1" max="365" value="${task.repeat_days || 1}" style="width: 50px;">
-                                        <span>дней</span>
-                                    </div>
-                                    <div>
-                                        <span>Начиная с</span>
-                                        <input type="date" name="repeat_start" value="${formatDateForInput(task.repeat_start || date)}">
-                                    </div>
-                                    <div>
-                                        <span>Заканчивая</span>
-                                        <input type="date" name="repeat_end" value="${formatDateForInput(task.repeat_end || '')}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="edit-buttons">
-                                <button type="submit" class="task-button">Сохранить</button>
-                                <button type="button" class="cancel-edit" data-task-id="${task.id}">Отмена</button>
-                            </div>
-                        </form>
-                        <form id="remind-form-${task.id}" class="remind-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}/remind">
-                            <input type="hidden" name="task_id" value="${task.id}">
-                            <div class="remind-options">
-                                <label class="remind-option">
-                                    <input type="checkbox" name="remind_time" value="15" checked> За 15 минут
-                                </label>
-                                <label class="remind-option">
-                                    <input type="checkbox" name="remind_time" value="120" checked> За 2 часа
-                                </label>
-                                <label class="remind-option">
-                                    <input type="checkbox" name="remind_time" value="1440" checked> За 24 часа
-                                </label>
-                            </div>
-                            <div class="remind-buttons">
-                                <button type="submit" class="remind-confirm-btn">Установить напоминание</button>
-                                <button type="button" class="cancel-remind" data-task-id="${task.id}">Отмена</button>
-                            </div>
-                        </form>
-                    </li>
-                `).join('')}
-            </ul>
-        `;
-
-        console.log('[updateTasksSection] Updated tasks section HTML');
-
-        document.querySelectorAll('input[name="repeat_enabled"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const details = this.closest('.repeat-options').querySelector('.repeat-details');
-                details.style.display = this.checked ? 'block' : 'none';
-
-                if (!this.checked) {
-                    details.querySelector('input[name="repeat_days"]').value = '';
-                    details.querySelector('input[name="repeat_start"]').value = '';
-                    details.querySelector('input[name="repeat_end"]').value = '';
-                } else {
-                    details.querySelector('input[name="repeat_days"]').value = '1';
-                    details.querySelector('input[name="repeat_start"]').value = formatDateForInput(date);
-                }
-            });
-        });
-
-        document.getElementById('category-filter').addEventListener('change', applyFilters);
-        document.getElementById('priority-filter').addEventListener('change', applyFilters);
-
-        bindTaskEventListeners(day);
-        console.log('[updateTasksSection] Finished updating tasks section');
-    }
-
-    // Функция для применения фильтров
-    function applyFilters() {
-        console.log('[applyFilters] Applying filters');
-        const categoryFilter = document.getElementById('category-filter').value;
-        const priorityFilter = document.getElementById('priority-filter').value;
-        console.log(`[applyFilters] Category: ${categoryFilter}, Priority: ${priorityFilter}`);
-
-        document.querySelectorAll('.task-item').forEach(item => {
-            const itemCategories = item.dataset.categories ? item.dataset.categories.split(',') : [];
-            const itemPriority = item.dataset.priority;
-
-            const categoryMatch = !categoryFilter || itemCategories.includes(categoryFilter);
-            const priorityMatch = !priorityFilter || itemPriority === priorityFilter;
-
-            item.style.display = (categoryMatch && priorityMatch) ? '' : 'none';
-        });
-    }
-
-    // Привязка обработчиков событий
-    function bindTaskEventListeners(day) {
-        console.log(`[bindTaskEventListeners] Binding events for day ${day}`);
-        const year = {{ year }};
-        const month = {{ month }};
-
-        // Привязка для формы добавления задачи
-        const taskTimeInput = document.getElementById('task-time');
-        if (taskTimeInput) {
-            taskTimeInput.value = validateTime(taskTimeInput.value);
-            taskTimeInput.addEventListener('input', function() { this.value = formatTimeInput(this.value); });
-            taskTimeInput.addEventListener('blur', function() { this.value = validateTime(this.value); });
-            taskTimeInput.addEventListener('focus', function() { this.select(); });
-            taskTimeInput.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                updateTime(this, e.deltaY > 0 ? -5 : 5);
-            });
-
-            const taskUpBtn = document.querySelector('.task-form .time-btn.up');
-            const taskDownBtn = document.querySelector('.task-form .time-btn.down');
-            if (taskUpBtn) taskUpBtn.addEventListener('click', () => updateTime(taskTimeInput, 5));
-            if (taskDownBtn) taskDownBtn.addEventListener('click', () => updateTime(taskTimeInput, -5));
-        }
-
-        // Обработчики напоминаний
-        document.querySelectorAll('.remind-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const taskId = this.dataset.taskId;
-                console.log(`Remind button clicked for task ${taskId}`);
-                document.querySelectorAll('.edit-form.active').forEach(form => {
-                    form.classList.remove('active');
-                });
-                const remindForm = document.getElementById(`remind-form-${taskId}`);
-                remindForm.classList.toggle('active');
-            });
-        });
-
-        document.querySelectorAll('.cancel-remind').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const taskId = this.dataset.taskId;
-                document.getElementById(`remind-form-${taskId}`).classList.remove('active');
-            });
-        });
-
-        document.querySelectorAll('.remind-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (!selectedDay) {
-                    console.log('No day selected for reminder');
-                    return;
-                }
-
-                const formData = new FormData(this);
-                const taskId = formData.get('task_id');
-                const remindTimes = [];
-
-                this.querySelectorAll('input[name="remind_time"]:checked').forEach(checkbox => {
-                    remindTimes.push(parseInt(checkbox.value));
+                document.querySelectorAll('.task-count-badge').forEach(badge => {
+                    badge.classList.add('updating');
                 });
 
-                if (remindTimes.length === 0) {
-                    alert('Выберите хотя бы одно напоминание!');
-                    return;
-                }
-
-                console.log(`Setting reminders for task ${taskId}: ${remindTimes.join(', ')}`);
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({
-                        task_id: taskId,
-                        remind_times: remindTimes
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Напоминания установлены!');
-                        document.getElementById(`remind-form-${taskId}`).classList.remove('active');
-                    } else {
-                        alert('Ошибка: ' + data.error);
-                    }
-                })
-                .catch(error => console.error('Ошибка:', error));
-            });
-        });
-
-        // Обработчик удаления задач
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                if (!selectedDay) {
-                    console.log('No day selected for deletion');
-                    return;
-                }
-
-                const taskId = this.dataset.taskId;
-                const year = {{ year }};
-                const month = {{ month }};
-                const day = selectedDay;
-                const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-                if (!confirm('Вы уверены, что хотите удалить эту задачу?')) {
-                    console.log('Deletion cancelled by user');
-                    return;
-                }
-
-                console.log(`Deleting task ${taskId} for date ${dateStr}`);
-                try {
-                    // Добавляем индикатор загрузки
-                    this.disabled = true;
-                    this.textContent = 'Удаление...';
-
-                    // 1. Отправляем запрос на удаление
-                    const deleteResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: `delete=${taskId}`
-                    });
-
-                    if (!deleteResponse.ok) {
-                        throw new Error(`Ошибка сервера: ${deleteResponse.status}`);
-                    }
-
-                    const deleteData = await deleteResponse.json();
-                    console.log('Delete response:', deleteData);
-
-                    // 2. Получаем обновленный список задач
-                    const tasksResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
-                        method: 'GET',
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    });
-
-                    if (!tasksResponse.ok) {
-                        throw new Error('Не удалось загрузить обновленный список задач');
-                    }
-
-                    const tasksData = await tasksResponse.json();
-                    console.log('Updated tasks data:', tasksData);
-
-                    // 3. Обновляем список задач и календарь
-                    updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories || []);
-                    await updateCalendar(year, month);
-
-                    // 4. Обновляем индикатор выбранного дня
-                    const dayElement = document.querySelector(`.day-link[data-day="${day}"]`);
-                    if (dayElement) {
-                        const dayCell = dayElement.closest('.day-cell');
-                        if (tasksData.tasks.length === 0) {
-                            dayCell.classList.remove('has-tasks');
-                            const badge = dayElement.querySelector('.task-count-badge');
-                            if (badge) {
-                                badge.remove();
-                            }
-                        } else {
-                            updateTaskPriorityIndicator(dayCell, tasksData.tasks);
-                        }
-                    }
-
-                } catch (error) {
-                    console.error('Ошибка при удалении задачи:', error);
-                    alert('Произошла ошибка при удалении задачи: ' + error.message);
-                } finally {
-                    // Восстанавливаем кнопку в любом случае
-                    const buttons = document.querySelectorAll(`.delete-btn[data-task-id="${taskId}"]`);
-                    buttons.forEach(btn => {
-                        btn.disabled = false;
-                        btn.textContent = 'Удалить';
-                    });
-                }
-            });
-        });
-
-        // Обработчики редактирования
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const taskId = this.dataset.taskId;
-                console.log(`Edit button clicked for task ${taskId}`);
-                const form = document.getElementById(`edit-form-${taskId}`);
-                form.classList.toggle('active');
-                const timeInput = form.querySelector('.edit-time-input');
-                if (timeInput) {
-                    timeInput.value = validateTime(timeInput.value);
-                    bindTimeSpinnerEvents(timeInput);
-                }
-            });
-        });
-
-        // Обработчик отправки формы добавления
-        document.querySelectorAll('.task-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (!selectedDay) {
-                    console.error('No day selected');
-                    alert('Пожалуйста, выберите день в календаре');
-                    return;
-                }
-
-                const formData = new FormData(this);
-                const year = {{ year }};
-                const month = {{ month }};
-                const day = selectedDay;
-
-                console.log(`Adding new task for ${year}-${month}-${day}`);
-                fetch(`/tasks/${year}/${month}/${day}`, {
-                    method: 'POST',
-                    body: formData,
+                return fetch(`/tasks/${year}/${month}`, {
+                    method: 'GET',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 })
                 .then(response => {
                     if (!response.ok) {
-                        console.error(`HTTP error! Status: ${response.status}`);
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        console.error(`[updateCalendar] Network response not ok: ${response.status}`);
+                        throw new Error('Network response was not ok');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    if (data.status === 'success') {
-                        console.log('Task added successfully');
-                        this.reset();
-                        const taskTimeInput = this.querySelector('.time-input');
-                        if (taskTimeInput) taskTimeInput.value = '12:00';
+                    console.log(`[updateCalendar] Received data:`, data);
 
-                        return Promise.all([
-                            updateCalendar(year, month),
-                            fetch(`/tasks/${year}/${month}/${day}`, {
-                                method: 'GET',
-                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                            })
-                        ]);
-                    }
-                })
-                .then(([_, tasksResponse]) => tasksResponse.json())
-                .then(data => {
-                    console.log('Updating tasks section after addition');
-                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories || []);
-                })
-                .catch(error => console.error('Ошибка при добавлении задачи:', error));
-            });
-        });
+                    document.querySelectorAll('.day-link').forEach(link => {
+                        const day = link.getAttribute('data-day');
+                        console.log(`[updateCalendar] Processing day ${day}`);
 
-        // Обработчик отправки формы редактирования
-        document.querySelectorAll('.edit-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (!selectedDay) {
-                    console.log('No day selected for edit');
-                    return;
-                }
+                        if (day && data.tasksByDay && data.tasksByDay[day]) {
+                            const tasks = data.tasksByDay[day];
+                            console.log(`[updateCalendar] Found ${tasks.length} tasks for day ${day}`);
 
-                const formData = new FormData(this);
-                const year = {{ year }};
-                const month = {{ month }};
-                const day = selectedDay;
-                const taskId = formData.get('task_id');
+                            let badge = link.querySelector('.task-count-badge');
+                            const dayCell = link.closest('.day-cell');
 
-                console.log(`Saving edited task ${taskId}`);
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        console.log('Task saved successfully');
-                        this.classList.remove('active');
-                        return Promise.all([
-                            updateCalendar(year, month),
-                            fetch(`/tasks/${year}/${month}/${day}`, {
-                                method: 'GET',
-                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                            })
-                        ]);
-                    } else {
-                        throw new Error('Ошибка при сохранении задачи');
-                    }
-                })
-                .then(([_, tasksResponse]) => tasksResponse.json())
-                .then(data => {
-                    console.log('Updating tasks section after edit');
-                    updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories || []);
+                            if (tasks.length > 0) {
+                                if (!badge) {
+                                    console.log(`[updateCalendar] Creating new badge for day ${day}`);
+                                    badge = document.createElement('span');
+                                    badge.className = 'task-count-badge';
+                                    link.appendChild(badge);
+                                }
+
+                                let maxPriority = 1;
+                                tasks.forEach(task => {
+                                    if (task.priority > maxPriority) maxPriority = task.priority;
+                                });
+
+                                badge.textContent = tasks.length;
+                                badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
+
+                                if (maxPriority === 3) {
+                                    badge.classList.add('priority-high');
+                                } else if (maxPriority === 2) {
+                                    badge.classList.add('priority-medium');
+                                } else {
+                                    badge.classList.add('priority-low');
+                                }
+
+                                dayCell.classList.add('has-tasks');
+                                console.log(`[updateCalendar] Updated badge for day ${day} with ${tasks.length} tasks`);
+                            } else {
+                                if (badge) {
+                                    console.log(`[updateCalendar] Removing badge for day ${day}`);
+                                    badge.remove();
+                                }
+                                dayCell.classList.remove('has-tasks');
+                            }
+                        }
+                    });
                 })
                 .catch(error => {
-                    console.error('Ошибка:', error);
-                    alert('Произошла ошибка при сохранении задачи');
-                });
-            });
-        });
-
-        document.querySelectorAll('.cancel-edit').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const taskId = this.dataset.taskId;
-                document.getElementById(`edit-form-${taskId}`).classList.remove('active');
-            });
-        });
-
-        // Обработчик для кнопки "Выполнено"
-        document.querySelectorAll('.complete-btn').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                if (!selectedDay) {
-                    console.log('No day selected for completion');
-                    return;
-                }
-
-                const taskId = this.dataset.taskId;
-                const year = {{ year }};
-                const month = {{ month }};
-                const day = selectedDay;
-                const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-                if (!confirm('Пометить задачу как выполненную?')) {
-                    console.log('Completion cancelled by user');
-                    return;
-                }
-
-                console.log(`Completing task ${taskId} for date ${dateStr}`);
-                try {
-                    this.disabled = true;
-                    this.textContent = 'Выполнение...';
-
-                    const response = await fetch(`/tasks/${year}/${month}/${day}/complete`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({ task_id: taskId })
+                    console.error('[updateCalendar] Error updating calendar:', error);
+                    throw error;
+                })
+                .finally(() => {
+                    console.log('[updateCalendar] Finished updating calendar');
+                    document.querySelectorAll('.task-count-badge').forEach(badge => {
+                        badge.classList.remove('updating');
                     });
+                });
+            }
 
-                    if (!response.ok) {
-                        throw new Error(`Ошибка сервера: ${response.status}`);
+            // Функция для обновления цвета индикатора задач
+            function updateTaskPriorityIndicator(dayElement, tasks) {
+                console.log(`[updateTaskPriorityIndicator] Updating for day element`, dayElement);
+                const badge = dayElement.querySelector('.task-count-badge');
+                if (!badge) {
+                    console.log('[updateTaskPriorityIndicator] No badge found');
+                    return;
+                }
+                if (!tasks || tasks.length === 0) {
+                    console.log('[updateTaskPriorityIndicator] No tasks provided');
+                    dayElement.classList.remove('has-tasks');
+                    badge.remove();
+                    return;
+                }
+
+                let maxPriority = 1;
+                tasks.forEach(task => {
+                    if (task.priority > maxPriority) maxPriority = task.priority;
+                });
+
+                badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
+
+                if (maxPriority === 3) {
+                    badge.classList.add('priority-high');
+                } else if (maxPriority === 2) {
+                    badge.classList.add('priority-medium');
+                } else {
+                    badge.classList.add('priority-low');
+                }
+
+                console.log(`[updateTaskPriorityIndicator] Updated priority to ${maxPriority}`);
+            }
+
+            // Обработчики кликов по дням календаря
+            document.querySelectorAll('.day-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const year = {{ year }};
+                    const month = {{ month }};
+                    const day = this.getAttribute('data-day');
+                    console.log(`Day clicked: ${year}-${month}-${day}`);
+
+                    if (!day || isNaN(day)) {
+                        console.error('Invalid day value:', day);
+                        return;
                     }
 
-                    const data = await response.json();
-                    console.log('Complete response:', data);
+                    selectedDay = day;
+                    const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-                    // Обновляем список задач
-                    const tasksResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
+                    console.log(`Fetching tasks for ${date}`);
+                    fetch(`/tasks/${year}/${month}/${day}`, {
                         method: 'GET',
                         headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error(`HTTP error! Status: ${response.status}`);
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Received tasks data:', data);
+                        updateTasksSection(data.tasks, date, day, data.categories || []);
+                        updateTaskPriorityIndicator(this.closest('.day-cell'), data.tasks);
+                    })
+                    .catch(error => {
+                        console.error('Error loading tasks:', error);
                     });
-
-                    if (!tasksResponse.ok) {
-                        throw new Error('Не удалось загрузить обновленный список задач');
-                    }
-
-                    const tasksData = await tasksResponse.json();
-                    updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories || []);
-                    await updateCalendar(year, month);
-
-                    // Показываем уведомление об успешном выполнении
-                    alert('Задача успешно выполнена и перенесена в статистику!');
-
-                } catch (error) {
-                    console.error('Ошибка при выполнении задачи:', error);
-                    alert('Произошла ошибка: ' + error.message);
-                } finally {
-                    const buttons = document.querySelectorAll(`.complete-btn[data-task-id="${taskId}"]`);
-                    buttons.forEach(btn => {
-                        btn.disabled = false;
-                        btn.textContent = 'Выполнено';
-                    });
-                }
+                });
             });
+
+            // Функция обновления секции задач
+            function updateTasksSection(tasks, date, day, categories) {
+                console.log(`[updateTasksSection] Updating for date ${date}, day ${day}`);
+                const dateParts = date.split('-');
+                const year = dateParts[0];
+                const month = dateParts[1];
+                const dayNum = dateParts[2];
+                const formattedDate = `${dayNum.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
+
+                console.log(`[updateTasksSection] Formatted date: ${formattedDate}`);
+
+                const tasksSection = document.querySelector('.tasks-section');
+                tasksSection.innerHTML = `
+                    <div class="calendar-filters">
+                        <select id="category-filter">
+                            <option value="">Все категории</option>
+                            ${categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
+                        </select>
+
+                        <select id="priority-filter">
+                            <option value="">Все приоритеты</option>
+                            <option value="3">Высокий</option>
+                            <option value="2">Средний</option>
+                            <option value="1">Низкий</option>
+                        </select>
+                    </div>
+
+                    <h3 class="task-date-header" style="color: inherit;">${formattedDate}</h3>
+                    <form class="task-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
+                        <input type="hidden" name="date" value="${date}">
+                        <input type="text" name="task" class="task-input" placeholder="Добавить новую задачу..." required>
+                        <div class="time-selector">
+                            <input type="text" id="task-time" name="time" class="time-input" value="12:00"
+                                   pattern="[0-9]{2}:[0-9]{2}" title="Формат: ЧЧ:ММ (24 часа)">
+                            <div class="time-spinner">
+                                <button type="button" class="time-btn up">▲</button>
+                                <button type="button" class="time-btn down">▼</button>
+                            </div>
+                        </div>
+                        <div class="task-priority">
+                            <label>Приоритет:</label>
+                            <select name="priority">
+                                <option value="1">Низкий</option>
+                                <option value="2">Средний</option>
+                                <option value="3">Высокий</option>
+                            </select>
+                        </div>
+                        <div class="task-categories">
+                            <label>Категории:</label>
+                            <div class="category-options">
+                                ${categories.map(cat => `
+                                    <label>
+                                        <input type="checkbox" name="categories" value="${cat.id}">
+                                        <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <button type="submit" class="task-button">Добавить задачу</button>
+                    </form>
+                    <ul class="task-list">
+                        ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => `
+                            <li class="task-item" data-priority="${task.priority}" data-categories="${task.category_ids ? task.category_ids.join(',') : ''}">
+                                <div class="task-content">
+                                    ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
+                                    <span class="priority-marker"></span>
+                                    <span class="task-text">${task.task}</span>
+                                     ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
+                                </div>
+                                <div class="task-meta">
+                                    ${task.priority == 3 ? '<span class="priority-high">❗ Высокий приоритет</span>' : ''}
+                                    ${task.priority == 2 ? '<span class="priority-medium">🔹 Средний приоритет</span>' : ''}
+                                    ${task.category_ids ? task.category_ids.map(cat_id => {
+                                        const cat = categories.find(c => c.id == cat_id);
+                                        return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
+                                    }).join('') : ''}
+                                </div>
+                                <div class="task-actions">
+                                    <button type="button" class="remind-btn" data-task-id="${task.id}">Напомнить</button>
+                                    <button type="button" class="edit-btn" data-task-id="${task.id}">Редактировать</button>
+                                    <button type="button" class="complete-btn" data-task-id="${task.id}">Выполнено</button>
+                                    <button type="button" class="delete-btn" data-task-id="${task.id}">Удалить</button>
+                                </div>
+                                <form id="edit-form-${task.id}" class="edit-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}">
+                                    <input type="hidden" name="task_id" value="${task.id}">
+                                    <input type="text" name="task" class="task-input" value="${task.task}" required>
+                                    <div class="time-selector">
+                                        <input type="text" name="time" class="edit-time-input" value="${task.time || '12:00'}"
+                                               pattern="[0-9]{2}:[0-9]{2}">
+                                        <div class="time-spinner">
+                                            <button type="button" class="time-btn up">▲</button>
+                                            <button type="button" class="time-btn down">▼</button>
+                                        </div>
+                                    </div>
+                                    <div class="task-priority">
+                                        <label>Приоритет:</label>
+                                        <select name="priority">
+                                            <option value="1" ${task.priority == 1 ? 'selected' : ''}>Низкий</option>
+                                            <option value="2" ${task.priority == 2 ? 'selected' : ''}>Средний</option>
+                                            <option value="3" ${task.priority == 3 ? 'selected' : ''}>Высокий</option>
+                                        </select>
+                                    </div>
+                                    <div class="task-categories">
+                                        <label>Категории:</label>
+                                        <div class="category-options">
+                                            ${categories.map(cat => `
+                                                <label>
+                                                    <input type="checkbox" name="categories" value="${cat.id}"
+                                                           ${task.category_ids && task.category_ids.includes(cat.id) ? 'checked' : ''}>
+                                                    <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                                                </label>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="repeat-options">
+                                        <label>
+                                            <input type="checkbox" name="repeat_enabled" ${task.repeat_days !== null && task.repeat_days !== undefined ? 'checked' : ''}> Повторять задачу
+                                        </label>
+                                        <div class="repeat-details" style="${task.repeat_days !== null && task.repeat_days !== undefined ? '' : 'display: none;'}">
+                                            <div>
+                                                <span>Каждые</span>
+                                                <input type="number" name="repeat_days" min="1" max="365" value="${task.repeat_days || 1}" style="width: 50px;">
+                                                <span>дней</span>
+                                            </div>
+                                            <div>
+                                                <span>Начиная с</span>
+                                                <input type="date" name="repeat_start" value="${formatDateForInput(task.repeat_start || date)}">
+                                            </div>
+                                            <div>
+                                                <span>Заканчивая</span>
+                                                <input type="date" name="repeat_end" value="${formatDateForInput(task.repeat_end || '')}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="edit-buttons">
+                                        <button type="submit" class="task-button">Сохранить</button>
+                                        <button type="button" class="cancel-edit" data-task-id="${task.id}">Отмена</button>
+                                    </div>
+                                </form>
+                                <form id="remind-form-${task.id}" class="remind-form" method="POST" action="/tasks/{{ year }}/{{ month }}/${day}/remind">
+                                    <input type="hidden" name="task_id" value="${task.id}">
+                                    <div class="remind-options">
+                                        <label class="remind-option">
+                                            <input type="checkbox" name="remind_time" value="15" checked> За 15 минут
+                                        </label>
+                                        <label class="remind-option">
+                                            <input type="checkbox" name="remind_time" value="120" checked> За 2 часа
+                                        </label>
+                                        <label class="remind-option">
+                                            <input type="checkbox" name="remind_time" value="1440" checked> За 24 часа
+                                        </label>
+                                    </div>
+                                    <div class="remind-buttons">
+                                        <button type="submit" class="remind-confirm-btn">Установить напоминание</button>
+                                        <button type="button" class="cancel-remind" data-task-id="${task.id}">Отмена</button>
+                                    </div>
+                                </form>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+
+                console.log('[updateTasksSection] Updated tasks section HTML');
+
+                document.querySelectorAll('input[name="repeat_enabled"]').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const details = this.closest('.repeat-options').querySelector('.repeat-details');
+                        details.style.display = this.checked ? 'block' : 'none';
+
+                        if (!this.checked) {
+                            details.querySelector('input[name="repeat_days"]').value = '';
+                            details.querySelector('input[name="repeat_start"]').value = '';
+                            details.querySelector('input[name="repeat_end"]').value = '';
+                        } else {
+                            details.querySelector('input[name="repeat_days"]').value = '1';
+                            details.querySelector('input[name="repeat_start"]').value = formatDateForInput(date);
+                        }
+                    });
+                });
+
+                document.getElementById('category-filter').addEventListener('change', applyFilters);
+                document.getElementById('priority-filter').addEventListener('change', applyFilters);
+
+                bindTaskEventListeners(day);
+                console.log('[updateTasksSection] Finished updating tasks section');
+            }
+
+            // Функция для применения фильтров
+            function applyFilters() {
+                console.log('[applyFilters] Applying filters');
+                const categoryFilter = document.getElementById('category-filter').value;
+                const priorityFilter = document.getElementById('priority-filter').value;
+                console.log(`[applyFilters] Category: ${categoryFilter}, Priority: ${priorityFilter}`);
+
+                document.querySelectorAll('.task-item').forEach(item => {
+                    const itemCategories = item.dataset.categories ? item.dataset.categories.split(',') : [];
+                    const itemPriority = item.dataset.priority;
+
+                    const categoryMatch = !categoryFilter || itemCategories.includes(categoryFilter);
+                    const priorityMatch = !priorityFilter || itemPriority === priorityFilter;
+
+                    item.style.display = (categoryMatch && priorityMatch) ? '' : 'none';
+                });
+            }
+
+            // Привязка обработчиков событий
+            function bindTaskEventListeners(day) {
+                console.log(`[bindTaskEventListeners] Binding events for day ${day}`);
+                const year = {{ year }};
+                const month = {{ month }};
+
+                // Привязка для формы добавления задачи
+                const taskTimeInput = document.getElementById('task-time');
+                if (taskTimeInput) {
+                    taskTimeInput.value = validateTime(taskTimeInput.value);
+                    taskTimeInput.addEventListener('input', function() { this.value = formatTimeInput(this.value); });
+                    taskTimeInput.addEventListener('blur', function() { this.value = validateTime(this.value); });
+                    taskTimeInput.addEventListener('focus', function() { this.select(); });
+                    taskTimeInput.addEventListener('wheel', function(e) {
+                        e.preventDefault();
+                        updateTime(this, e.deltaY > 0 ? -5 : 5);
+                    });
+
+                    const taskUpBtn = document.querySelector('.task-form .time-btn.up');
+                    const taskDownBtn = document.querySelector('.task-form .time-btn.down');
+                    if (taskUpBtn) taskUpBtn.addEventListener('click', () => updateTime(taskTimeInput, 5));
+                    if (taskDownBtn) taskDownBtn.addEventListener('click', () => updateTime(taskTimeInput, -5));
+                }
+
+                // Обработчики напоминаний
+                document.querySelectorAll('.remind-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const taskId = this.dataset.taskId;
+                        console.log(`Remind button clicked for task ${taskId}`);
+                        document.querySelectorAll('.edit-form.active').forEach(form => {
+                            form.classList.remove('active');
+                        });
+                        const remindForm = document.getElementById(`remind-form-${taskId}`);
+                        remindForm.classList.toggle('active');
+                    });
+                });
+
+                document.querySelectorAll('.cancel-remind').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const taskId = this.dataset.taskId;
+                        document.getElementById(`remind-form-${taskId}`).classList.remove('active');
+                    });
+                });
+
+                document.querySelectorAll('.remind-form').forEach(form => {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        if (!selectedDay) {
+                            console.log('No day selected for reminder');
+                            return;
+                        }
+
+                        const formData = new FormData(this);
+                        const taskId = formData.get('task_id');
+                        const remindTimes = [];
+
+                        this.querySelectorAll('input[name="remind_time"]:checked').forEach(checkbox => {
+                            remindTimes.push(parseInt(checkbox.value));
+                        });
+
+                        if (remindTimes.length === 0) {
+                            alert('Выберите хотя бы одно напоминание!');
+                            return;
+                        }
+
+                        console.log(`Setting reminders for task ${taskId}: ${remindTimes.join(', ')}`);
+                        fetch(this.action, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                task_id: taskId,
+                                remind_times: remindTimes
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Напоминания установлены!');
+                                document.getElementById(`remind-form-${taskId}`).classList.remove('active');
+                            } else {
+                                alert('Ошибка: ' + data.error);
+                            }
+                        })
+                        .catch(error => console.error('Ошибка:', error));
+                    });
+                });
+
+                // Обработчик удаления задач
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        if (!selectedDay) {
+                            console.log('No day selected for deletion');
+                            return;
+                        }
+
+                        const taskId = this.dataset.taskId;
+                        const year = {{ year }};
+                        const month = {{ month }};
+                        const day = selectedDay;
+                        const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+                        if (!confirm('Вы уверены, что хотите удалить эту задачу?')) {
+                            console.log('Deletion cancelled by user');
+                            return;
+                        }
+
+                        console.log(`Deleting task ${taskId} for date ${dateStr}`);
+                        try {
+                            // Добавляем индикатор загрузки
+                            this.disabled = true;
+                            this.textContent = 'Удаление...';
+
+                            // 1. Отправляем запрос на удаление
+                            const deleteResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: `delete=${taskId}`
+                            });
+
+                            if (!deleteResponse.ok) {
+                                throw new Error(`Ошибка сервера: ${deleteResponse.status}`);
+                            }
+
+                            const deleteData = await deleteResponse.json();
+                            console.log('Delete response:', deleteData);
+
+                            // 2. Получаем обновленный список задач
+                            const tasksResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
+                                method: 'GET',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                            });
+
+                            if (!tasksResponse.ok) {
+                                throw new Error('Не удалось загрузить обновленный список задач');
+                            }
+
+                            const tasksData = await tasksResponse.json();
+                            console.log('Updated tasks data:', tasksData);
+
+                            // 3. Обновляем список задач и календарь
+                            updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories || []);
+                            await updateCalendar(year, month);
+
+                            // 4. Обновляем индикатор выбранного дня
+                            const dayElement = document.querySelector(`.day-link[data-day="${day}"]`);
+                            if (dayElement) {
+                                const dayCell = dayElement.closest('.day-cell');
+                                if (tasksData.tasks.length === 0) {
+                                    dayCell.classList.remove('has-tasks');
+                                    const badge = dayElement.querySelector('.task-count-badge');
+                                    if (badge) {
+                                        badge.remove();
+                                    }
+                                } else {
+                                    updateTaskPriorityIndicator(dayCell, tasksData.tasks);
+                                }
+                            }
+
+                        } catch (error) {
+                            console.error('Ошибка при удалении задачи:', error);
+                            alert('Произошла ошибка при удалении задачи: ' + error.message);
+                        } finally {
+                            // Восстанавливаем кнопку в любом случае
+                            const buttons = document.querySelectorAll(`.delete-btn[data-task-id="${taskId}"]`);
+                            buttons.forEach(btn => {
+                                btn.disabled = false;
+                                btn.textContent = 'Удалить';
+                            });
+                        }
+                    });
+                });
+
+                // Обработчики редактирования
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const taskId = this.dataset.taskId;
+                        console.log(`Edit button clicked for task ${taskId}`);
+                        const form = document.getElementById(`edit-form-${taskId}`);
+                        form.classList.toggle('active');
+                        const timeInput = form.querySelector('.edit-time-input');
+                        if (timeInput) {
+                            timeInput.value = validateTime(timeInput.value);
+                            bindTimeSpinnerEvents(timeInput);
+                        }
+                    });
+                });
+
+                // Обработчик отправки формы добавления
+                document.querySelectorAll('.task-form').forEach(form => {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        if (!selectedDay) {
+                            console.error('No day selected');
+                            alert('Пожалуйста, выберите день в календаре');
+                            return;
+                        }
+
+                        const formData = new FormData(this);
+                        const year = {{ year }};
+                        const month = {{ month }};
+                        const day = selectedDay;
+
+                        console.log(`Adding new task for ${year}-${month}-${day}`);
+                        fetch(`/tasks/${year}/${month}/${day}`, {
+                            method: 'POST',
+                            body: formData,
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                console.error(`HTTP error! Status: ${response.status}`);
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'success') {
+                                console.log('Task added successfully');
+                                this.reset();
+                                const taskTimeInput = this.querySelector('.time-input');
+                                if (taskTimeInput) taskTimeInput.value = '12:00';
+
+                                return Promise.all([
+                                    updateCalendar(year, month),
+                                    fetch(`/tasks/${year}/${month}/${day}`, {
+                                        method: 'GET',
+                                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                                    })
+                                ]);
+                            }
+                        })
+                        .then(([_, tasksResponse]) => tasksResponse.json())
+                        .then(data => {
+                            console.log('Updating tasks section after addition');
+                            updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories || []);
+                        })
+                        .catch(error => console.error('Ошибка при добавлении задачи:', error));
+                    });
+                });
+
+                // Обработчик отправки формы редактирования
+                document.querySelectorAll('.edit-form').forEach(form => {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        if (!selectedDay) {
+                            console.log('No day selected for edit');
+                            return;
+                        }
+
+                        const formData = new FormData(this);
+                        const year = {{ year }};
+                        const month = {{ month }};
+                        const day = selectedDay;
+                        const taskId = formData.get('task_id');
+
+                        console.log(`Saving edited task ${taskId}`);
+                        fetch(this.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                console.log('Task saved successfully');
+                                this.classList.remove('active');
+                                return Promise.all([
+                                    updateCalendar(year, month),
+                                    fetch(`/tasks/${year}/${month}/${day}`, {
+                                        method: 'GET',
+                                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                                    })
+                                ]);
+                            } else {
+                                throw new Error('Ошибка при сохранении задачи');
+                            }
+                        })
+                        .then(([_, tasksResponse]) => tasksResponse.json())
+                        .then(data => {
+                            console.log('Updating tasks section after edit');
+                            updateTasksSection(data.tasks, `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`, day, data.categories || []);
+                        })
+                        .catch(error => {
+                            console.error('Ошибка:', error);
+                            alert('Произошла ошибка при сохранении задачи');
+                        });
+                    });
+                });
+
+                document.querySelectorAll('.cancel-edit').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const taskId = this.dataset.taskId;
+                        document.getElementById(`edit-form-${taskId}`).classList.remove('active');
+                    });
+                });
+
+                // Обработчик для кнопки "Выполнено"
+                document.querySelectorAll('.complete-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        if (!selectedDay) {
+                            console.log('No day selected for completion');
+                            return;
+                        }
+
+                        const taskId = this.dataset.taskId;
+                        const year = {{ year }};
+                        const month = {{ month }};
+                        const day = selectedDay;
+                        const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+                        if (!confirm('Пометить задачу как выполненную?')) {
+                            console.log('Completion cancelled by user');
+                            return;
+                        }
+
+                        console.log(`Completing task ${taskId} for date ${dateStr}`);
+                        try {
+                            this.disabled = true;
+                            this.textContent = 'Выполнение...';
+
+                            const response = await fetch(`/tasks/${year}/${month}/${day}/complete`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: JSON.stringify({ task_id: taskId })
+                            });
+
+                            if (!response.ok) {
+                                throw new Error(`Ошибка сервера: ${response.status}`);
+                            }
+
+                            const data = await response.json();
+                            console.log('Complete response:', data);
+
+                            // Обновляем список задач
+                            const tasksResponse = await fetch(`/tasks/${year}/${month}/${day}`, {
+                                method: 'GET',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                            });
+
+                            if (!tasksResponse.ok) {
+                                throw new Error('Не удалось загрузить обновленный список задач');
+                            }
+
+                            const tasksData = await tasksResponse.json();
+                            updateTasksSection(tasksData.tasks, dateStr, day, tasksData.categories || []);
+                            await updateCalendar(year, month);
+
+                            // Показываем уведомление об успешном выполнении
+                            alert('Задача успешно выполнена и перенесена в статистику!');
+
+                        } catch (error) {
+                            console.error('Ошибка при выполнении задачи:', error);
+                            alert('Произошла ошибка: ' + error.message);
+                        } finally {
+                            const buttons = document.querySelectorAll(`.complete-btn[data-task-id="${taskId}"]`);
+                            buttons.forEach(btn => {
+                                btn.disabled = false;
+                                btn.textContent = 'Выполнено';
+                            });
+                        }
+                    });
+                });
+            }
+
+            // Инициализация
+            console.log('Initializing calendar...');
+            updateCalendar({{ year }}, {{ month }})
+                .then(() => console.log('Calendar initialized'))
+                .catch(err => console.error('Error initializing calendar:', err));
+
+            bindTaskEventListeners(null);
+            console.log('Event listeners bound');
         });
-    }
-
-    // Вспомогательная функция для привязки событий спиннера времени
-    function bindTimeSpinnerEvents(timeInput) {
-        timeInput.addEventListener('input', function() { this.value = formatTimeInput(this.value); });
-        timeInput.addEventListener('blur', function() { this.value = validateTime(this.value); });
-        timeInput.addEventListener('focus', function() { this.select(); });
-        timeInput.addEventListener('wheel', function(e) {
-            e.preventDefault();
-            updateTime(this, e.deltaY > 0 ? -5 : 5);
-        });
-
-        const upBtn = timeInput.parentElement.querySelector('.time-btn.up');
-        const downBtn = timeInput.parentElement.querySelector('.time-btn.down');
-        if (upBtn) upBtn.addEventListener('click', () => updateTime(timeInput, 5));
-        if (downBtn) downBtn.addEventListener('click', () => updateTime(timeInput, -5));
-    }
-
-    // Инициализация
-    console.log('Initializing calendar...');
-    updateCalendar({{ year }}, {{ month }})
-        .then(() => console.log('Calendar initialized'))
-        .catch(err => console.error('Error initializing calendar:', err));
-
-    bindTaskEventListeners(null);
-    console.log('Event listeners bound');
-});
-</script>
+    </script>
 {% endblock %}
 
 {% block content %}

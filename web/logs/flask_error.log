@@ -919,3 +919,20 @@ NameError: name 'sync_google_calendar_for_all_users' is not defined
 2025-04-05 14:08:48 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
 2025-04-05 14:09:13 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
 2025-04-05 14:10:25 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 14:17:37 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 14:19:48 | ERROR    | app                  | app.py:486 | Ошибка при выполнении задачи: table completed_tasks has no column named categories
+2025-04-05 14:30:14 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 14:31:07 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 14:35:16 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 14:35:42 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 14:56:35 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 14:58:03 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:06:22 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:20:17 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:25:18 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:25:51 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:26:53 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:29:20 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:38:05 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:38:22 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-05 15:38:35 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
