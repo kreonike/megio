@@ -284,14 +284,14 @@
 /* Кнопки действий */
 .task-actions {
     display: flex;
-    flex-wrap: wrap; /* Добавляем перенос на новую строку */
+    flex-wrap: wrap;
     gap: 8px;
     margin-top: 8px;
     width: 100%;
 }
 
 .task-actions > * {
-    flex: 1 0 calc(50% - 4px); /* Каждый элемент занимает 50% ширины минус отступ */
+    flex: 1 0 calc(50% - 4px);
     min-width: 0;
     box-sizing: border-box;
 }
@@ -470,40 +470,50 @@
     border-radius: 5px;
 }
 
-/* Темная тема */
-.dark-mode {
-    .task-time {
-        color: #dbeafe;
-        background-color: rgba(96, 165, 250, 0.2);
-    }
+/* Стили для выполненных задач */
+.completed-tasks-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--bg-secondary-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
 
-    .edit-btn {
-        background-color: #ff6d00;
-        border-color: #e65100;
-    }
+.completed-tasks-section h4 {
+    margin: 0 0 10px 0;
+    color: var(--success-color);
+    font-size: 1.1em;
+}
 
-    .delete-btn {
-        background-color: #e53935;
-        border-color: #c62828;
-    }
+.completed-task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
-    .remind-btn {
-        background-color: #2E7D32;
-    }
+.completed-task-item {
+    padding: 8px;
+    background-color: var(--bg-color);
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    .complete-btn {
-        background-color: #1565C0;
-        border-color: #0D47A1;
-    }
+.completed-task-text {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    flex-grow: 1;
+}
 
-    .task-repeat-badge {
-        background-color: rgba(75, 192, 192, 0.3);
-        color: #e2e8f0;
-    }
-
-    .tasks-sidebar .task-date-header {
-        color: #90cdf4 !important;
-    }
+.completion-date {
+    font-size: 0.8em;
+    color: var(--success-color);
+    margin-left: 10px;
+    white-space: nowrap;
 }
 
 /* Стили для категорий и приоритетов */
@@ -586,19 +596,86 @@
     color: white;
 }
 
+/* Стили для дней с выполненными задачами */
+.day-cell.all-tasks-completed {
+    background-color: rgba(76, 175, 80, 0.15) !important;
+    border: 1px solid rgba(76, 175, 80, 0.5) !important;
+}
+
+.day-cell.all-tasks-completed .day-number {
+    color: #2E7D32 !important;
+    font-weight: bold;
+}
+
+.day-cell.has-overdue-tasks {
+    background-color: rgba(244, 67, 54, 0.15) !important;
+    border: 1px solid rgba(244, 67, 54, 0.5) !important;
+}
+
+.day-cell.has-overdue-tasks .day-number {
+    color: #C62828 !important;
+    font-weight: bold;
+}
+
 /* Темная тема */
-.dark-mode .task-count-badge.priority-low {
-    background-color: #388E3C;
+.dark-mode {
+    .task-time {
+        color: #dbeafe;
+        background-color: rgba(96, 165, 250, 0.2);
+    }
+
+    .edit-btn {
+        background-color: #ff6d00;
+        border-color: #e65100;
+    }
+
+    .delete-btn {
+        background-color: #e53935;
+        border-color: #c62828;
+    }
+
+    .remind-btn {
+        background-color: #2E7D32;
+    }
+
+    .complete-btn {
+        background-color: #1565C0;
+        border-color: #0D47A1;
+    }
+
+    .task-repeat-badge {
+        background-color: rgba(75, 192, 192, 0.3);
+        color: #e2e8f0;
+    }
+
+    .tasks-sidebar .task-date-header {
+        color: #90cdf4 !important;
+    }
+
+    .completed-task-text {
+        color: #a0aec0;
+    }
+
+    .day-cell.all-tasks-completed {
+        background-color: rgba(56, 142, 60, 0.2) !important;
+        border-color: rgba(56, 142, 60, 0.5) !important;
+    }
+
+    .day-cell.all-tasks-completed .day-number {
+        color: #81C784 !important;
+    }
+
+    .day-cell.has-overdue-tasks {
+        background-color: rgba(211, 47, 47, 0.2) !important;
+        border-color: rgba(211, 47, 47, 0.5) !important;
+    }
+
+    .day-cell.has-overdue-tasks .day-number {
+        color: #EF9A9A !important;
+    }
 }
 
-.dark-mode .task-count-badge.priority-medium {
-    background-color: #F57C00;
-}
-
-.dark-mode .task-count-badge.priority-high {
-    background-color: #D32F2F;
-}
-
+/* Анимации */
 .day-cell, .task-count-badge {
     transition: all 0.3s ease;
 }
@@ -674,49 +751,13 @@
         flex-grow: 1;
     }
 
-    .task-actions > * {
-        min-width: calc(50% - 4px);
+    .completed-task-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
     }
-}
 
-####
-
-/* Добавьте эти стили в calendar.css */
-.day-cell.has-overdue-tasks {
-    background-color: #ffebee !important; /* Светло-красный фон */
-    border: 2px solid #f44336 !important; /* Красная рамка */
-}
-
-.day-cell.all-tasks-completed {
-    background-color: #e8f5e9 !important; /* Светло-зеленый фон */
-    border: 2px solid #4caf50 !important; /* Зеленая рамка */
-}
-
-/* Для темной темы */
-.dark-mode .day-cell.has-overdue-tasks {
-    background-color: #3d1a1a !important;
-    border-color: #d32f2f !important;
-}
-
-.dark-mode .day-cell.all-tasks-completed {
-    background-color: #1a3d1a !important;
-    border-color: #388e3c !important;
-}
-
-/* Добавьте эти стили в раздел "Стили дней" или в конец файла */
-.day-cell.has-overdue-tasks .day-number {
-    color: white !important;
-}
-
-/* Для темной темы */
-.dark-mode .day-cell.has-overdue-tasks .day-number {
-    color: white !important;
-}
-
-.day-cell.all-tasks-completed .day-number {
-    color: white !important;
-}
-
-.dark-mode .day-cell.all-tasks-completed .day-number {
-    color: white !important;
+    .completion-date {
+        margin-left: 0;
+    }
 }
