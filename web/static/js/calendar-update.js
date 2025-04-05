@@ -238,6 +238,53 @@ export function updateTasksSection(tasks, date, day, categories) {
     // Rebind filter events
     document.getElementById('category-filter')?.addEventListener('change', applyFilters);
     document.getElementById('priority-filter')?.addEventListener('change', applyFilters);
+
+    // Bind task form submit handler
+    const taskForm = document.querySelector('.task-form');
+    if (taskForm) {
+        taskForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const selectedDay = document.querySelector('.day-link.selected')?.getAttribute('data-day');
+            if (!selectedDay) {
+                console.error('No day selected');
+                alert('Пожалуйста, выберите день в календаре');
+                return;
+            }
+
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    this.reset();
+                    const taskTimeInput = this.querySelector('.time-input');
+                    if (taskTimeInput) taskTimeInput.value = '12:00';
+
+                    return Promise.all([
+                        updateCalendar(yearNum, monthNum),
+                        fetch(`/tasks/${yearNum}/${monthNum}/${selectedDay}`, {
+                            method: 'GET',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        })
+                    ]);
+                }
+            })
+            .then(([_, tasksResponse]) => tasksResponse.json())
+            .then(data => {
+                updateTasksSection(data.tasks, `${yearNum}-${String(monthNum).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`, selectedDay, data.categories || []);
+            })
+            .catch(error => console.error('Ошибка при добавлении задачи:', error));
+        });
+    }
 }
 
 function applyFilters() {
