@@ -21,7 +21,6 @@ from web.routes.login import login_routes
 from web.routes.logout import logout_routes
 from web.routes.google import google_routes, google_sync_scheduler
 #from web.routes.categories import categories_routes
-from web.config.config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, SCOPES
 
 import atexit
 
@@ -31,13 +30,18 @@ from web.config.config import (
 )
 
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
-app.secret_key = SECRET_KEY
+
+from web.config.config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, SCOPES
 
 app.config['GOOGLE_CLIENT_ID'] = GOOGLE_CLIENT_ID
 app.config['GOOGLE_CLIENT_SECRET'] = GOOGLE_CLIENT_SECRET
 app.config['GOOGLE_REDIRECT_URI'] = GOOGLE_REDIRECT_URI
 app.config['SCOPES'] = SCOPES
+
+bcrypt = Bcrypt(app)
+app.secret_key = SECRET_KEY
+
+
 
 # Настройка логирования
 configure_logging(app)
