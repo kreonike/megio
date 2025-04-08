@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="08.04.2025 3" />
+    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="08.04.2025 bot 3">
+      <change afterPath="$PROJECT_DIR$/bot/utils/calendar.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,7 +23,7 @@
     <branch-grouping />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="recovered" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -47,18 +49,19 @@
     "Python.mig.executor": "Run",
     "Python.routes.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "test",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/kreon/Dropbox/python_advanced_final",
-    "settings.editor.selected.configurable": "vcs.Git"
+    "last_opened_file_path": "C:/Users/kreon/Dropbox/python_advanced_final/bot/locales/en",
+    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\locales\en" />
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\config" />
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\routes" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\static\css" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\static\js" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\locales\en" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\routes" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\models" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\routes" />
@@ -83,6 +86,28 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="python_advanced_final" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/web" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/web/app.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -127,28 +152,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/web/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="python_advanced_final" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bot" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\kreon\Dropbox\python_advanced_final\main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -249,11 +252,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main (1)" />
+        <item itemvalue="Python.app" />
         <item itemvalue="Python.routes" />
         <item itemvalue="Python.mig" />
         <item itemvalue="Python.main (2)" />
-        <item itemvalue="Python.main (1)" />
-        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -272,62 +275,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1743005307087</updated>
-    </task>
-    <task id="LOCAL-00001" summary="02.04.2025">
-      <option name="closed" value="true" />
-      <created>1743575397522</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1743575397522</updated>
-    </task>
-    <task id="LOCAL-00002" summary="02.04.2025 2">
-      <option name="closed" value="true" />
-      <created>1743591985851</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1743591985851</updated>
-    </task>
-    <task id="LOCAL-00003" summary="02.04.2025 3">
-      <option name="closed" value="true" />
-      <created>1743603798467</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1743603798467</updated>
-    </task>
-    <task id="LOCAL-00004" summary="02.04.2025 4">
-      <option name="closed" value="true" />
-      <created>1743608094763</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1743608094763</updated>
-    </task>
-    <task id="LOCAL-00005" summary="02.04.2025 5">
-      <option name="closed" value="true" />
-      <created>1743610028363</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1743610028363</updated>
-    </task>
-    <task id="LOCAL-00006" summary="02.04.2025 6">
-      <option name="closed" value="true" />
-      <created>1743621566629</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1743621566629</updated>
-    </task>
-    <task id="LOCAL-00007" summary="03.04.2025 1">
-      <option name="closed" value="true" />
-      <created>1743680974350</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1743680974350</updated>
     </task>
     <task id="LOCAL-00008" summary="04.04.2025 1">
       <option name="closed" value="true" />
@@ -601,7 +548,127 @@
       <option name="project" value="LOCAL" />
       <updated>1744067674774</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="08.04.2025">
+      <option name="closed" value="true" />
+      <created>1744075265866</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1744075265866</updated>
+    </task>
+    <task id="LOCAL-00043" summary="08.04.2025 1">
+      <option name="closed" value="true" />
+      <created>1744080131271</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1744080131271</updated>
+    </task>
+    <task id="LOCAL-00044" summary="08.04.2025 2">
+      <option name="closed" value="true" />
+      <created>1744090314626</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1744090314626</updated>
+    </task>
+    <task id="LOCAL-00045" summary="08.04.2025 3">
+      <option name="closed" value="true" />
+      <created>1744108220850</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1744108220850</updated>
+    </task>
+    <task id="LOCAL-00046" summary="08.04.2025 4">
+      <option name="closed" value="true" />
+      <created>1744111668084</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1744111668084</updated>
+    </task>
+    <task id="LOCAL-00047" summary="08.04.2025 5">
+      <option name="closed" value="true" />
+      <created>1744113331858</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1744113331858</updated>
+    </task>
+    <task id="LOCAL-00048" summary="08.04.2025 6">
+      <option name="closed" value="true" />
+      <created>1744118553696</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1744118553696</updated>
+    </task>
+    <task id="LOCAL-00049" summary="08.04.2025 7">
+      <option name="closed" value="true" />
+      <created>1744126577628</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1744126577628</updated>
+    </task>
+    <task id="LOCAL-00050" summary="08.04.2025 7">
+      <option name="closed" value="true" />
+      <created>1744126598018</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1744126598018</updated>
+    </task>
+    <task id="LOCAL-00051" summary="08.04.2025 7">
+      <option name="closed" value="true" />
+      <created>1744127877730</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1744127877732</updated>
+    </task>
+    <task id="LOCAL-00052" summary="08.04.2025 8">
+      <option name="closed" value="true" />
+      <created>1744128003633</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1744128003633</updated>
+    </task>
+    <task id="LOCAL-00053" summary="08.04.2025 9">
+      <option name="closed" value="true" />
+      <created>1744129712845</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1744129712845</updated>
+    </task>
+    <task id="LOCAL-00054" summary="08.04.2025 bot 1">
+      <option name="closed" value="true" />
+      <created>1744140583999</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1744140583999</updated>
+    </task>
+    <task id="LOCAL-00055" summary="08.04.2025 bot 2">
+      <option name="closed" value="true" />
+      <created>1744143429452</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1744143429452</updated>
+    </task>
+    <task id="LOCAL-00056" summary="08.04.2025 bot 3">
+      <option name="closed" value="true" />
+      <created>1744143969848</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1744143969848</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -630,17 +697,6 @@
                   <entry key="Show.Git.Branches" value="true" />
                 </map>
               </option>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="recovered" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="HIGHLIGHTERS">
                 <map>
                   <entry key="CURRENT_BRANCH" value="true" />
@@ -654,15 +710,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="04.04.2025 3" />
-    <MESSAGE value="04.04.2025 4" />
-    <MESSAGE value="04.04.2025 5" />
-    <MESSAGE value="05.04.2025 динамический всё обновляется" />
-    <MESSAGE value="05.04.2025 динамический всё обновляется 2" />
-    <MESSAGE value="05.04.2025 динамический всё обновляется 3" />
-    <MESSAGE value="05.04.2025 динамический всё обновляется 4" />
-    <MESSAGE value="05.04.2025 динамический всё обновляется 5" />
-    <MESSAGE value="05.04.2025 динамический всё обновляется 6" />
     <MESSAGE value="05.04.2025 динамический всё обновляется 7" />
     <MESSAGE value="05.04.2025 динамический всё обновляется 8" />
     <MESSAGE value="05.04.2025 динамический всё обновляется 9" />
@@ -674,12 +721,21 @@
     <MESSAGE value="06.04.2025 4" />
     <MESSAGE value="06.04.2025 done" />
     <MESSAGE value="07.04.2025 1" />
+    <MESSAGE value="08.04.2025 test" />
     <MESSAGE value="08.04.2025" />
     <MESSAGE value="08.04.2025 1" />
     <MESSAGE value="08.04.2025 2" />
-    <MESSAGE value="08.04.2025 test" />
     <MESSAGE value="08.04.2025 3" />
-    <option name="LAST_COMMIT_MESSAGE" value="08.04.2025 3" />
+    <MESSAGE value="08.04.2025 4" />
+    <MESSAGE value="08.04.2025 5" />
+    <MESSAGE value="08.04.2025 6" />
+    <MESSAGE value="08.04.2025 7" />
+    <MESSAGE value="08.04.2025 8" />
+    <MESSAGE value="08.04.2025 9" />
+    <MESSAGE value="08.04.2025 bot 1" />
+    <MESSAGE value="08.04.2025 bot 2" />
+    <MESSAGE value="08.04.2025 bot 3" />
+    <option name="LAST_COMMIT_MESSAGE" value="08.04.2025 bot 3" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
