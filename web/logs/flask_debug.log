@@ -958,3 +958,23 @@
 2025-04-08 12:58:26 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
 2025-04-08 12:58:26 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-15: []
 2025-04-08 12:59:45 | INFO     | app                  | app.py:65 | Initializing Google Scheduler...
+2025-04-08 13:06:06 | INFO     | app                  | app.py:65 | Initializing Google Scheduler...
+2025-04-08 13:06:07 | INFO     | app                  | app.py:65 | Initializing Google Scheduler...
+2025-04-08 13:06:12 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
+2025-04-08 13:06:12 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-15: []
+2025-04-08 13:06:14 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
+2025-04-08 13:06:14 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-8: []
+2025-04-08 13:06:15 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
+2025-04-08 13:06:15 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-14: [{'id': 47, 'task': 'брекеты', 'time': None, 'created': '2025-04-08 05:18:55.445430', 'repeat_days': None, 'repeat_start': None, 'repeat_end': None, 'priority': 1, 'category_ids': []}]
+2025-04-08 13:08:42 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
+2025-04-08 13:08:42 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-14: [{'id': 33, 'task': 'брекеты', 'time': None, 'created': '2025-04-08 10:08:42', 'repeat_days': None, 'repeat_start': None, 'repeat_end': None, 'priority': 2, 'category_ids': []}, {'id': 47, 'task': 'брекеты', 'time': None, 'created': '2025-04-08 05:18:55.445430', 'repeat_days': None, 'repeat_start': None, 'repeat_end': None, 'priority': 1, 'category_ids': []}]
+2025-04-08 13:08:45 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
+2025-04-08 13:08:45 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-14: [{'id': 47, 'task': 'брекеты', 'time': None, 'created': '2025-04-08 05:18:55.445430', 'repeat_days': None, 'repeat_start': None, 'repeat_end': None, 'priority': 1, 'category_ids': []}]
+2025-04-08 14:10:18 | INFO     | app                  | app.py:65 | Initializing Google Scheduler...
+2025-04-08 14:10:19 | INFO     | app                  | app.py:65 | Initializing Google Scheduler...
+2025-04-08 14:10:25 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
+2025-04-08 14:10:25 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-15: []
+2025-04-08 14:10:26 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
+2025-04-08 14:10:26 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-16: [{'id': 43, 'task': '5yrty', 'time': '12:00', 'created': '2025-04-08 02:12:11', 'repeat_days': None, 'repeat_start': None, 'repeat_end': None, 'priority': 1, 'category_ids': []}]
+2025-04-08 14:10:29 | INFO     | app                  | app.py:212 | Received task form data: ImmutableMultiDict([])
+2025-04-08 14:10:29 | INFO     | app                  | app.py:336 | Tasks data for day 2025-4-15: []

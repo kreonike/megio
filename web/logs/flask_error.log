@@ -1119,3 +1119,5 @@ NameError: name 'sync_google_calendar_for_all_users' is not defined
 2025-04-08 12:56:05 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
 2025-04-08 12:57:56 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
 2025-04-08 12:59:45 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-08 13:06:08 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-08 14:10:19 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!

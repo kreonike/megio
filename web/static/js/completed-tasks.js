@@ -34,8 +34,6 @@ export function updateCompletedTasksSection(completedTasks, year, month, day) {
                             ${task.categories ?
                                 `<span class="completed-categories">${task.categories}</span>` : ''
                             }
-                        </div>
-                        <div class="completed-task-actions">
                             <button type="button" class="restore-btn" data-completed-task-id="${task.id}">Вернуть</button>
                         </div>
                     </li>

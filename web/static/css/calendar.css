@@ -887,3 +887,248 @@
     font-size: 1.2em;
     margin-bottom: 10px;
 }
+
+/* Стили для секции выполненных задач */
+.completed-tasks-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.completed-tasks-header {
+    color: var(--text-primary);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.completed-tasks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.completed-task-item {
+    padding: 10px;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.completed-task-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; /* Добавляем промежуток между элементами */
+}
+
+.completed-task-text {
+    color: var(--text-color);
+    text-decoration: line-through;
+    flex-grow: 1; /* Текст задачи растягивается, занимая доступное пространство */
+}
+
+.completed-time {
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.7;
+    white-space: nowrap; /* Время не переносится на новую строку */
+}
+
+.completed-task-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.restore-btn {
+    padding: 6px 12px;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: 500;
+    white-space: nowrap; /* Кнопка не переносится */
+}
+
+.restore-btn:hover {
+    background-color: #fb8c00;
+}
+
+.priority-indicator {
+    font-size: 0.8em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: white;
+}
+
+.priority-indicator.priority-3 {
+    background-color: #f44336;
+}
+
+.priority-indicator.priority-2 {
+    background-color: #ff9800;
+}
+
+.priority-indicator.priority-1 {
+    background-color: #4caf50;
+}
+
+.completed-categories {
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.no-completed-tasks {
+    color: var(--text-color);
+    font-style: italic;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Темная тема */
+.dark-mode .completed-task-item {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+
+.dark-mode .completed-task-text {
+    color: #e2e8f0;
+}
+
+.dark-mode .restore-btn {
+    background-color: #f57c00;
+}
+
+.dark-mode .restore-btn:hover {
+    background-color: #ef6c00;
+}
+/* Стили для секции выполненных задач */
+.completed-tasks-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.completed-tasks-header {
+    color: var(--text-primary);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.completed-tasks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.completed-task-item {
+    padding: 10px;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative; /* Для позиционирования кнопки */
+}
+
+.completed-task-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.completed-task-text {
+    color: var(--text-color);
+    text-decoration: line-through;
+    flex-grow: 1;
+}
+
+.completed-time {
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.completed-task-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start; /* Выравнивание элементов слева */
+    position: relative;
+}
+
+.priority-indicator {
+    font-size: 0.8em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: white;
+    line-height: 1.2; /* Для одинаковой высоты с кнопкой */
+}
+
+.priority-indicator.priority-3 {
+    background-color: #f44336;
+}
+
+.priority-indicator.priority-2 {
+    background-color: #ff9800;
+}
+
+.priority-indicator.priority-1 {
+    background-color: #4caf50;
+}
+
+.completed-categories {
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.restore-btn {
+    font-size: 0.8em; /* Такой же размер шрифта, как у priority-indicator */
+    padding: 2px 6px; /* Такой же отступ, как у priority-indicator */
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    line-height: 1.2; /* Для одинаковой высоты с priority-indicator */
+    margin-left: auto; /* Прижимаем кнопку вправо */
+}
+
+.restore-btn:hover {
+    background-color: #fb8c00;
+}
+
+.no-completed-tasks {
+    color: var(--text-color);
+    font-style: italic;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Темная тема */
+.dark-mode .completed-task-item {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+
+.dark-mode .completed-task-text {
+    color: #e2e8f0;
+}
+
+.dark-mode .restore-btn {
+    background-color: #f57c00;
+}
+
+.dark-mode .restore-btn:hover {
+    background-color: #ef6c00;
+}
