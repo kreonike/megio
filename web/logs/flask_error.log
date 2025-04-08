@@ -1092,3 +1092,25 @@ NameError: name 'sync_google_calendar_for_all_users' is not defined
 2025-04-08 05:36:45 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
 2025-04-08 05:37:34 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
 2025-04-08 05:39:40 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-08 05:41:26 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-08 08:23:49 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-08 08:24:03 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-08 08:28:14 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-08 08:28:18 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:28:18 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:28:20 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:28:20 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:28:25 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:28:25 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:28:28 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:28:28 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:28:30 | ERROR    | app                  | app.py:526 | Ошибка при выполнении задачи: table completed_tasks has no column named year
+2025-04-08 08:29:29 | WARNING  | werkzeug             | _internal.py:97 |  * Debugger is active!
+2025-04-08 08:29:32 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:29:32 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:29:36 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:29:36 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:29:38 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:29:43 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:29:43 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year
+2025-04-08 08:29:47 | ERROR    | app                  | app.py:551 | Error fetching completed tasks: no such column: year

@@ -6,10 +6,11 @@ import {
 } from "./time.js";
 
 import { bindAllTaskHandlers } from './tasks.js';
+import { updateCompletedTasksSection, fetchCompletedTasks } from './completed-tasks.js';
 
 export function updateTasksSection(tasks, date, day, categories) {
     console.log(`[updateTasksSection] Updating for date ${date}, day ${day}`);
-    console.log(`[updateTasksSection] Received tasks:`, tasks); // Логируем все задачи
+    console.log(`[updateTasksSection] Received tasks:`, tasks);
     const dateParts = date.split('-');
     const year = dateParts[0];
     const month = dateParts[1];
@@ -238,6 +239,9 @@ export function updateTasksSection(tasks, date, day, categories) {
     // Rebind filter events
     document.getElementById('category-filter')?.addEventListener('change', applyFilters);
     document.getElementById('priority-filter')?.addEventListener('change', applyFilters);
+
+    // После обновления активных задач загружаем выполненные
+    fetchCompletedTasks(yearNum, monthNum, day);
 }
 
 function applyFilters() {
@@ -284,7 +288,6 @@ export function updateCalendar(year, month) {
             const dayCell = link.closest('.day-cell');
             let badge = link.querySelector('.task-count-badge');
 
-            // Проверяем, есть ли задачи для этого дня
             if (day && data.tasksByDay.hasOwnProperty(day)) {
                 const tasks = data.tasksByDay[day];
                 console.log(`[updateCalendar] Found ${tasks.length} tasks for day ${day}`);
@@ -340,7 +343,6 @@ export function updateCalendar(year, month) {
                     dayCell.classList.add('has-tasks');
                     console.log(`[updateCalendar] Updated badge for day ${day} with ${tasks.length} tasks`);
                 } else {
-                    // Удаляем значок, если задач нет
                     if (badge) {
                         console.log(`[updateCalendar] Removing badge for day ${day} as no tasks remain`);
                         badge.remove();

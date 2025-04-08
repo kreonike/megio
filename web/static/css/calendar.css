@@ -284,14 +284,14 @@
 /* Кнопки действий */
 .task-actions {
     display: flex;
-    flex-wrap: wrap; /* Добавляем перенос на новую строку */
+    flex-wrap: wrap;
     gap: 8px;
     margin-top: 8px;
     width: 100%;
 }
 
 .task-actions > * {
-    flex: 1 0 calc(50% - 4px); /* Каждый элемент занимает 50% ширины минус отступ */
+    flex: 1 0 calc(50% - 4px);
     min-width: 0;
     box-sizing: border-box;
 }
@@ -679,17 +679,15 @@
     }
 }
 
-####
-
-/* Добавьте эти стили в calendar.css */
+/* Стили для просроченных и выполненных задач */
 .day-cell.has-overdue-tasks {
-    background-color: #ffebee !important; /* Светло-красный фон */
-    border: 2px solid #f44336 !important; /* Красная рамка */
+    background-color: #ffebee !important;
+    border: 2px solid #f44336 !important;
 }
 
 .day-cell.all-tasks-completed {
-    background-color: #e8f5e9 !important; /* Светло-зеленый фон */
-    border: 2px solid #4caf50 !important; /* Зеленая рамка */
+    background-color: #e8f5e9 !important;
+    border: 2px solid #4caf50 !important;
 }
 
 /* Для темной темы */
@@ -703,12 +701,10 @@
     border-color: #388e3c !important;
 }
 
-/* Добавьте эти стили в раздел "Стили дней" или в конец файла */
 .day-cell.has-overdue-tasks .day-number {
     color: white !important;
 }
 
-/* Для темной темы */
 .dark-mode .day-cell.has-overdue-tasks .day-number {
     color: white !important;
 }
@@ -719,4 +715,97 @@
 
 .dark-mode .day-cell.all-tasks-completed .day-number {
     color: white !important;
+}
+
+/* Стили для секции выполненных задач */
+.completed-tasks-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.completed-tasks-header {
+    color: var(--text-primary);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.completed-tasks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.completed-task-item {
+    padding: 10px;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.completed-task-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.completed-task-text {
+    color: var(--text-color);
+    text-decoration: line-through;
+}
+
+.completed-time {
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.completed-task-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.priority-indicator {
+    font-size: 0.8em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: white;
+}
+
+.priority-indicator.priority-3 {
+    background-color: #f44336;
+}
+
+.priority-indicator.priority-2 {
+    background-color: #ff9800;
+}
+
+.priority-indicator.priority-1 {
+    background-color: #4caf50;
+}
+
+.completed-categories {
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.no-completed-tasks {
+    color: var(--text-color);
+    font-style: italic;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Темная тема */
+.dark-mode .completed-task-item {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+
+.dark-mode .completed-task-text {
+    color: #e2e8f0;
 }
