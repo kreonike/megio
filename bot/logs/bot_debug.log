@@ -9668,3 +9668,39 @@ TypeError: check_reminders() missing 1 required positional argument: 'session'
 [SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
 [parameters: (2025, 4, 9)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:28:22 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:28:52 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:29:22 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:29:52 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:30:22 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:30:52 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:31:22 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:31:52 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-08 23:32:22 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 9)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
