@@ -91,6 +91,7 @@ export function updateTasksSection(tasks, date, day, categories) {
             </div>
             <button type="submit" class="task-button">Добавить задачу</button>
         </form>
+        <h4 class="active-tasks-header">Активные задачи</h4>
         <ul class="task-list">
             ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => {
                 console.log(`[updateTasksSection] Rendering task ${task.id} with repeat_days: ${task.repeat_days}`);
