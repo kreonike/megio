@@ -7,9 +7,9 @@ import {
 
 import { bindAllTaskHandlers } from './tasks.js';
 
-// Функция для обновления секции задач
 export function updateTasksSection(tasks, date, day, categories) {
     console.log(`[updateTasksSection] Updating for date ${date}, day ${day}`);
+    console.log(`[updateTasksSection] Received tasks:`, tasks); // Логируем все задачи
     const dateParts = date.split('-');
     const year = dateParts[0];
     const month = dateParts[1];
@@ -28,7 +28,6 @@ export function updateTasksSection(tasks, date, day, categories) {
                 <option value="">Все категории</option>
                 ${categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
             </select>
-
             <select id="priority-filter">
                 <option value="">Все приоритеты</option>
                 <option value="3">Высокий</option>
@@ -92,91 +91,94 @@ export function updateTasksSection(tasks, date, day, categories) {
             <button type="submit" class="task-button">Добавить задачу</button>
         </form>
         <ul class="task-list">
-            ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => `
-                <li class="task-item" data-priority="${task.priority}" data-categories="${task.category_ids ? task.category_ids.join(',') : ''}">
-                    <div class="task-content">
-                        ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
-                        <span class="priority-marker"></span>
-                        <span class="task-text">${task.task}</span>
-                        ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
-                    </div>
-                    <div class="task-meta">
-                        ${task.priority == 3 ? '<span class="priority-high">❗ Высокий приоритет</span>' : ''}
-                        ${task.priority == 2 ? '<span class="priority-medium">🔹 Средний приоритет</span>' : ''}
-                        ${task.category_ids ? task.category_ids.map(cat_id => {
-                            const cat = categories.find(c => c.id == cat_id);
-                            return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
-                        }).join('') : ''}
-                    </div>
-                    <div class="task-actions">
-                        <button type="button" class="remind-btn" data-task-id="${task.id}">Напомнить</button>
-                        <button type="button" class="edit-btn" data-task-id="${task.id}">Редактировать</button>
-                        <button type="button" class="complete-btn" data-task-id="${task.id}">Выполнено</button>
-                        <button type="button" class="delete-btn" data-task-id="${task.id}">Удалить</button>
-                    </div>
-                    <form id="edit-form-${task.id}" class="edit-form" method="POST" action="/tasks/${year}/${month}/${day}">
-                        <input type="hidden" name="task_id" value="${task.id}">
-                        <input type="text" name="task" class="task-input" value="${task.task}" required>
-                        <div class="time-selector">
-                            <input type="text" name="time" class="edit-time-input" value="${task.time || '12:00'}"
-                                   pattern="[0-9]{2}:[0-9]{2}">
-                            <div class="time-spinner">
-                                <button type="button" class="time-btn up">▲</button>
-                                <button type="button" class="time-btn down">▼</button>
-                            </div>
+            ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => {
+                console.log(`[updateTasksSection] Rendering task ${task.id} with repeat_days: ${task.repeat_days}`);
+                return `
+                    <li class="task-item" data-priority="${task.priority}" data-categories="${task.category_ids ? task.category_ids.join(',') : ''}">
+                        <div class="task-content">
+                            ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
+                            <span class="priority-marker"></span>
+                            <span class="task-text">${task.task}</span>
+                            ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
                         </div>
-                        <div class="task-priority">
-                            <label>Приоритет:</label>
-                            <select name="priority">
-                                <option value="1" ${task.priority == 1 ? 'selected' : ''}>Низкий</option>
-                                <option value="2" ${task.priority == 2 ? 'selected' : ''}>Средний</option>
-                                <option value="3" ${task.priority == 3 ? 'selected' : ''}>Высокий</option>
-                            </select>
+                        <div class="task-meta">
+                            ${task.priority == 3 ? '<span class="priority-high">❗ Высокий приоритет</span>' : ''}
+                            ${task.priority == 2 ? '<span class="priority-medium">🔹 Средний приоритет</span>' : ''}
+                            ${task.category_ids ? task.category_ids.map(cat_id => {
+                                const cat = categories.find(c => c.id == cat_id);
+                                return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
+                            }).join('') : ''}
                         </div>
-                        <div class="task-categories">
-                            <label>Категории:</label>
-                            <div class="category-options">
-                                ${categories.map(cat => `
-                                    <label>
-                                        <input type="checkbox" name="categories" value="${cat.id}"
-                                               ${task.category_ids && task.category_ids.includes(cat.id) ? 'checked' : ''}>
-                                        <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
-                                    </label>
-                                `).join('')}
-                            </div>
+                        <div class="task-actions">
+                            <button type="button" class="remind-btn" data-task-id="${task.id}">Напомнить</button>
+                            <button type="button" class="edit-btn" data-task-id="${task.id}">Редактировать</button>
+                            <button type="button" class="complete-btn" data-task-id="${task.id}">Выполнено</button>
+                            <button type="button" class="delete-btn" data-task-id="${task.id}">Удалить</button>
                         </div>
-                        <div class="repeat-options">
-                            <label>
-                                <input type="checkbox" name="repeat_enabled" class="edit-repeat-checkbox"
-                                    ${task.repeat_days ? 'checked' : ''}>
-                                Повторять задачу
-                            </label>
-                            <div class="repeat-details" style="${task.repeat_days ? '' : 'display: none;'}">
-                                <div>
-                                    <span>Каждые</span>
-                                    <input type="number" name="repeat_days" min="1" max="365"
-                                        value="${task.repeat_days || 1}" style="width: 50px;">
-                                    <span>дней</span>
-                                </div>
-                                <div>
-                                    <span>Начиная с</span>
-                                    <input type="date" name="repeat_start"
-                                        value="${formatDateForInput(task.repeat_start || date)}">
-                                </div>
-                                <div>
-                                    <span>Заканчивая</span>
-                                    <input type="date" name="repeat_end"
-                                        value="${formatDateForInput(task.repeat_end || '')}">
+                        <form id="edit-form-${task.id}" class="edit-form" method="POST" action="/tasks/${year}/${month}/${day}">
+                            <input type="hidden" name="task_id" value="${task.id}">
+                            <input type="text" name="task" class="task-input" value="${task.task}" required>
+                            <div class="time-selector">
+                                <input type="text" name="time" class="edit-time-input" value="${task.time || '12:00'}"
+                                       pattern="[0-9]{2}:[0-9]{2}">
+                                <div class="time-spinner">
+                                    <button type="button" class="time-btn up">▲</button>
+                                    <button type="button" class="time-btn down">▼</button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="edit-buttons">
-                            <button type="submit" class="task-button">Сохранить</button>
-                            <button type="button" class="cancel-edit" data-task-id="${task.id}">Отмена</button>
-                        </div>
-                    </form>
-                </li>
-            `).join('')}
+                            <div class="task-priority">
+                                <label>Приоритет:</label>
+                                <select name="priority">
+                                    <option value="1" ${task.priority == 1 ? 'selected' : ''}>Низкий</option>
+                                    <option value="2" ${task.priority == 2 ? 'selected' : ''}>Средний</option>
+                                    <option value="3" ${task.priority == 3 ? 'selected' : ''}>Высокий</option>
+                                </select>
+                            </div>
+                            <div class="task-categories">
+                                <label>Категории:</label>
+                                <div class="category-options">
+                                    ${categories.map(cat => `
+                                        <label>
+                                            <input type="checkbox" name="categories" value="${cat.id}"
+                                                   ${task.category_ids && task.category_ids.includes(cat.id) ? 'checked' : ''}>
+                                            <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="repeat-options">
+                                <label>
+                                    <input type="checkbox" name="repeat_enabled" class="edit-repeat-checkbox"
+                                        ${task.repeat_days !== null && task.repeat_days > 0 ? 'checked' : ''}>
+                                    Повторять задачу
+                                </label>
+                                <div class="repeat-details" style="${task.repeat_days !== null && task.repeat_days > 0 ? 'display: block;' : 'display: none;'}">
+                                    <div>
+                                        <span>Каждые</span>
+                                        <input type="number" name="repeat_days" min="1" max="365"
+                                            value="${task.repeat_days || 1}" style="width: 50px;">
+                                        <span>дней</span>
+                                    </div>
+                                    <div>
+                                        <span>Начиная с</span>
+                                        <input type="date" name="repeat_start"
+                                            value="${formatDateForInput(task.repeat_start || date)}">
+                                    </div>
+                                    <div>
+                                        <span>Заканчивая</span>
+                                        <input type="date" name="repeat_end"
+                                            value="${formatDateForInput(task.repeat_end || '')}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="edit-buttons">
+                                <button type="submit" class="task-button">Сохранить</button>
+                                <button type="button" class="cancel-edit" data-task-id="${task.id}">Отмена</button>
+                            </div>
+                        </form>
+                    </li>
+                `;
+            }).join('')}
         </ul>
     `;
 
@@ -205,7 +207,6 @@ export function updateTasksSection(tasks, date, day, categories) {
             const details = this.closest('.repeat-options').querySelector('.repeat-details');
             if (details) {
                 details.style.display = this.checked ? 'block' : 'none';
-
                 if (!this.checked) {
                     details.querySelector('input[name="repeat_days"]').value = '1';
                     details.querySelector('input[name="repeat_start"]').value = date;
@@ -224,7 +225,6 @@ export function updateTasksSection(tasks, date, day, categories) {
             const details = this.closest('.repeat-options').querySelector('.repeat-details');
             if (details) {
                 details.style.display = this.checked ? 'block' : 'none';
-
                 if (!this.checked) {
                     details.querySelector('input[name="repeat_days"]').value = '1';
                     const dateInput = details.querySelector('input[name="repeat_start"]');
@@ -238,53 +238,6 @@ export function updateTasksSection(tasks, date, day, categories) {
     // Rebind filter events
     document.getElementById('category-filter')?.addEventListener('change', applyFilters);
     document.getElementById('priority-filter')?.addEventListener('change', applyFilters);
-
-    // Bind task form submit handler
-    const taskForm = document.querySelector('.task-form');
-    if (taskForm) {
-        taskForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const selectedDay = document.querySelector('.day-link.selected')?.getAttribute('data-day');
-            if (!selectedDay) {
-                console.error('No day selected');
-                alert('Пожалуйста, выберите день в календаре');
-                return;
-            }
-
-            const formData = new FormData(this);
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    this.reset();
-                    const taskTimeInput = this.querySelector('.time-input');
-                    if (taskTimeInput) taskTimeInput.value = '12:00';
-
-                    return Promise.all([
-                        updateCalendar(yearNum, monthNum),
-                        fetch(`/tasks/${yearNum}/${monthNum}/${selectedDay}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                    ]);
-                }
-            })
-            .then(([_, tasksResponse]) => tasksResponse.json())
-            .then(data => {
-                updateTasksSection(data.tasks, `${yearNum}-${String(monthNum).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`, selectedDay, data.categories || []);
-            })
-            .catch(error => console.error('Ошибка при добавлении задачи:', error));
-        });
-    }
 }
 
 function applyFilters() {
@@ -324,23 +277,21 @@ export function updateCalendar(year, month) {
     })
     .then(data => {
         console.log(`[updateCalendar] Received data:`, data);
-
         document.querySelectorAll('.day-link').forEach(link => {
             const day = link.getAttribute('data-day');
             console.log(`[updateCalendar] Processing day ${day}`);
 
-            if (day && data.tasksByDay && data.tasksByDay[day]) {
+            const dayCell = link.closest('.day-cell');
+            let badge = link.querySelector('.task-count-badge');
+
+            // Проверяем, есть ли задачи для этого дня
+            if (day && data.tasksByDay.hasOwnProperty(day)) {
                 const tasks = data.tasksByDay[day];
                 console.log(`[updateCalendar] Found ${tasks.length} tasks for day ${day}`);
 
-                let badge = link.querySelector('.task-count-badge');
-                const dayCell = link.closest('.day-cell');
-
-                // Удаляем предыдущие классы статуса
                 dayCell.classList.remove('has-overdue-tasks', 'all-tasks-completed');
 
                 if (tasks.length > 0) {
-                    // Проверяем статус задач
                     const now = new Date();
                     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     const taskDate = new Date(year, month - 1, day);
@@ -349,17 +300,14 @@ export function updateCalendar(year, month) {
                     let allCompleted = true;
 
                     tasks.forEach(task => {
-                        // Проверяем просроченные задачи (старше 1 дня)
                         if (taskDate < today && !task.completed) {
                             hasOverdue = true;
                         }
-                        // Проверяем выполненные задачи
                         if (!task.completed) {
                             allCompleted = false;
                         }
                     });
 
-                    // Добавляем соответствующие классы
                     if (hasOverdue) {
                         dayCell.classList.add('has-overdue-tasks');
                     } else if (allCompleted) {
@@ -392,8 +340,9 @@ export function updateCalendar(year, month) {
                     dayCell.classList.add('has-tasks');
                     console.log(`[updateCalendar] Updated badge for day ${day} with ${tasks.length} tasks`);
                 } else {
+                    // Удаляем значок, если задач нет
                     if (badge) {
-                        console.log(`[updateCalendar] Removing badge for day ${day}`);
+                        console.log(`[updateCalendar] Removing badge for day ${day} as no tasks remain`);
                         badge.remove();
                     }
                     dayCell.classList.remove('has-tasks');

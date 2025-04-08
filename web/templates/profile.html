@@ -20,17 +20,26 @@
                    style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;">
         </div>
 
+        <!-- Добавляем выбор временной зоны -->
+        <div>
+            <label for="timezone" style="display: block; margin-bottom: 5px;">Временная зона:</label>
+            <select id="timezone" name="timezone" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;">
+                {% for tz in timezones %}
+                    <option value="{{ tz }}" {% if tz == user.timezone %}selected{% endif %}>{{ tz }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <button type="submit"
                 style="padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Обновить email
+            Обновить профиль
         </button>
     </form>
 
-    <!-- Секция для привязки Telegram -->
+     <!-- Секция для привязки Telegram -->
     <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
         <h3 style="margin-bottom: 15px;">Привязка Telegram</h3>
 
-        <!-- Статус привязки -->
         {% if user.is_telegram_linked() %}
         <div class="telegram-status telegram-linked" style="margin-bottom: 15px;">
             Telegram аккаунт привязан
@@ -79,7 +88,6 @@
     <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
         <h3 style="margin-bottom: 15px;">Google Calendar</h3>
 
-        <!-- Статус подключения -->
         {% if user.google_token %}
         <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
             <div style="color: green;">
@@ -96,6 +104,10 @@
         <div style="margin-bottom: 15px; color: var(--text-secondary);">
             Google Calendar не подключен
         </div>
+        <a href="{{ url_for('connect_google') }}"
+           style="display: inline-block; padding: 8px 12px; background-color: #4285F4; color: white; border-radius: 4px; text-decoration: none; margin-bottom: 15px;">
+            Подключить Google Calendar
+        </a>
         {% endif %}
 
         {% with messages = get_flashed_messages(category_filter=["google"]) %}
@@ -120,7 +132,7 @@
     </div>
 
     <div style="margin-top: 20px;">
-        <a href="{{ url_for('show_calendar') }}" 
+        <a href="{{ url_for('show_calendar') }}"
            style="display: inline-block; padding: 10px; background-color: var(--bg-color); color: var(--primary-color); border: 1px solid var(--primary-color); border-radius: 4px; text-decoration: none;">
             ← Вернуться к календарю
         </a>

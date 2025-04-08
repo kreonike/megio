@@ -1,27 +1,19 @@
-from logging_config import configure_logging
-from flask import Flask, render_template, request, redirect, url_for, flash, g, session, json, jsonify
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from flask_bcrypt import Bcrypt
-import sqlite3
-from datetime import datetime
 import calendar
 import os
+from datetime import datetime
+
+from flask import Flask, render_template, request, redirect, flash, json, jsonify
 from flask import url_for
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_required, current_user
+
+from web.logging_config import configure_logging
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-from pathlib import Path
-import secrets
-import logging
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import Flow
-from googleapiclient.discovery import build
-from google.auth.transport.requests import Request
 import datetime as dt
-from dotenv import load_dotenv
-import re
-from config.config import init_db
+from web.config.config import init_db
 
-from models.models import User
+from web.models.models import User
 from web.routes.profile import profile_routes
 from web.routes.telegram import telegram_routes
 from web.routes.register import register_routes
@@ -29,20 +21,23 @@ from web.routes.login import login_routes
 from web.routes.logout import logout_routes
 from web.routes.google import google_routes, google_sync_scheduler
 #from web.routes.categories import categories_routes
+from web.config.config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, SCOPES
 
-from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 
 # Импорт конфигурации
-from config.config import (
-    SECRET_KEY, DB_PATH, BASE_DIR,
-    GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, SCOPES,
-    MONTH_NAMES, get_db, close_db
+from web.config.config import (
+    SECRET_KEY, MONTH_NAMES, get_db, close_db
 )
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.secret_key = SECRET_KEY
+
+app.config['GOOGLE_CLIENT_ID'] = GOOGLE_CLIENT_ID
+app.config['GOOGLE_CLIENT_SECRET'] = GOOGLE_CLIENT_SECRET
+app.config['GOOGLE_REDIRECT_URI'] = GOOGLE_REDIRECT_URI
+app.config['SCOPES'] = SCOPES
 
 # Настройка логирования
 configure_logging(app)
@@ -210,112 +205,142 @@ def show_calendar():
 @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
 @login_required
 def day_tasks(year, month, day):
+    logger.info(f"Received task form data: {request.form}")
     db = get_db()
     cursor = db.cursor()
 
-    # Получаем категории пользователя
-    cursor.execute('SELECT id, name, color FROM categories WHERE user_id = ?', (current_user.id,))
-    categories = cursor.fetchall()
+    try:
+        cursor.execute('SELECT id, name, color FROM categories WHERE user_id = ?', (current_user.id,))
+        categories = cursor.fetchall()
 
-    if request.method == 'POST':
-        if 'delete' in request.form:
-            task_id = request.form.get('delete')
-            cursor.execute('DELETE FROM tasks WHERE id = ? AND user_id = ?', (task_id, current_user.id))
-            cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
-            db.commit()
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return json.jsonify({'status': 'success'})
-            flash('Задача удалена', 'success')
-
-        elif 'task_id' in request.form:
-            task_id = request.form.get('task_id')
-            new_task = request.form.get('task')
-            new_time = request.form.get('time')
-            priority = request.form.get('priority', 1)
-            category_ids = request.form.getlist('categories')
-            repeat_days = request.form.get('repeat_days')
-            repeat_start = request.form.get('repeat_start')
-            repeat_end = request.form.get('repeat_end')
-
-            if new_task:
-                cursor.execute('''
-                    UPDATE tasks 
-                    SET task = ?, time = ?, 
-                        repeat_days = ?, 
-                        repeat_start = ?, 
-                        repeat_end = ?,
-                        priority = ?
-                    WHERE id = ? AND user_id = ?
-                ''', (
-                    new_task,
-                    new_time,
-                    repeat_days if repeat_days and int(repeat_days) > 0 else None,
-                    repeat_start if repeat_days and int(repeat_days) > 0 else None,
-                    repeat_end if repeat_days and int(repeat_days) > 0 else None,
-                    priority,
-                    task_id,
-                    current_user.id
-                ))
-
-                # Обновляем категории задачи
+        if request.method == 'POST':
+            # Удаление задачи
+            if 'delete' in request.form:
+                task_id = request.form.get('delete')
+                cursor.execute('DELETE FROM tasks WHERE id = ? AND user_id = ?', (task_id, current_user.id))
                 cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
-                for cat_id in category_ids:
-                    cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)',
-                                   (task_id, cat_id))
-
                 db.commit()
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                    return json.jsonify({'status': 'success'})
-                flash('Задача обновлена', 'success')
+                    return jsonify({'status': 'success'})
+                flash('Задача удалена', 'success')
 
-        else:  # Добавление новой задачи
-            task = request.form.get('task')
-            time = request.form.get('time')
-            priority = request.form.get('priority', 1)
-            category_ids = request.form.getlist('categories')
+            # Редактирование задачи
+            elif 'task_id' in request.form:
+                task_id = request.form.get('task_id')
+                new_task = request.form.get('task')
+                new_time = request.form.get('time')
+                priority = request.form.get('priority', 1)
+                category_ids = request.form.getlist('categories')
+                repeat_enabled = 'repeat_enabled' in request.form
+                repeat_days = request.form.get('repeat_days') if repeat_enabled else None
+                repeat_start = request.form.get('repeat_start') if repeat_enabled else None
+                repeat_end = request.form.get('repeat_end') if repeat_enabled else None
 
-            if task:
-                cursor.execute('''
-                    INSERT INTO tasks (user_id, year, month, day, task, time, created, priority)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (current_user.id, year, month, day, task, time, dt.datetime.now(), priority))
-                task_id = cursor.lastrowid
+                if new_task:
+                    cursor.execute('''
+                        UPDATE tasks 
+                        SET task = ?, time = ?, 
+                            repeat_days = ?, 
+                            repeat_start = ?, 
+                            repeat_end = ?,
+                            priority = ?
+                        WHERE id = ? AND user_id = ?
+                    ''', (
+                        new_task,
+                        new_time,
+                        int(repeat_days) if repeat_enabled and repeat_days and int(repeat_days) > 0 else None,
+                        repeat_start if repeat_enabled and repeat_days and int(repeat_days) > 0 else None,
+                        repeat_end if repeat_enabled and repeat_days and int(repeat_days) > 0 else None,
+                        priority,
+                        task_id,
+                        current_user.id
+                    ))
 
-                # Добавляем категории к задаче
-                for cat_id in category_ids:
-                    cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)',
-                                   (task_id, cat_id))
+                    cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
+                    for cat_id in category_ids:
+                        cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)',
+                                       (task_id, cat_id))
 
-                db.commit()
-                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                    return json.jsonify({'status': 'success'})
-                flash('Задача добавлена', 'success')
+                    db.commit()
+                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                        return jsonify({'status': 'success'})
+                    flash('Задача обновлена', 'success')
 
-        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-            return redirect(url_for('day_tasks', year=year, month=month, day=day))
+            # Добавление новой задачи
+            elif 'task' in request.form and 'date' in request.form:
+                task_text = request.form.get('task')
+                task_time = request.form.get('time')
+                priority = request.form.get('priority', 1)
+                category_ids = request.form.getlist('categories')
+                repeat_enabled = 'repeat_enabled' in request.form
+                repeat_days = request.form.get('repeat_days') if repeat_enabled else None
+                repeat_start = request.form.get('repeat_start') if repeat_enabled else None
+                repeat_end = request.form.get('repeat_end') if repeat_enabled else None
+                date = request.form.get('date')
+                date_parts = date.split('-')
+                year, month, day = map(int, date_parts)
 
-    # GET-запрос
-    cursor.execute('''
-        SELECT t.id, t.task, t.time, t.created, t.repeat_days, t.repeat_start, t.repeat_end, t.priority,
-               GROUP_CONCAT(tc.category_id) AS category_ids
-        FROM tasks t
-        LEFT JOIN task_categories tc ON t.id = tc.task_id
-        WHERE t.user_id = ? AND t.year = ? AND t.month = ? AND t.day = ?
-        GROUP BY t.id
-        ORDER BY t.priority DESC, t.time, t.created
-    ''', (current_user.id, year, month, day))
-    tasks = []
-    for row in cursor.fetchall():
-        task = dict(row)
-        task['category_ids'] = list(map(int, task['category_ids'].split(','))) if task['category_ids'] else []
-        tasks.append(task)
+                if task_text:
+                    cursor.execute('''
+                        INSERT INTO tasks (user_id, year, month, day, task, time, repeat_days, repeat_start, repeat_end, priority)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (
+                        current_user.id,
+                        year,
+                        month,
+                        day,
+                        task_text,
+                        task_time,
+                        int(repeat_days) if repeat_enabled and repeat_days and int(repeat_days) > 0 else None,
+                        repeat_start if repeat_enabled and repeat_days and int(repeat_days) > 0 else None,
+                        repeat_end if repeat_enabled and repeat_days and int(repeat_days) > 0 else None,
+                        priority
+                    ))
 
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return json.jsonify({'tasks': tasks, 'date': f"{year}-{month:02d}-{day:02d}", 'categories': categories})
+                    task_id = cursor.lastrowid
+                    for cat_id in category_ids:
+                        cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)',
+                                       (task_id, cat_id))
 
-    date_str = f"{day:02d}.{month:02d}.{year}"
-    return render_template('tasks.html', year=year, month=month, day=day, date_str=date_str,
-                           tasks=tasks, categories=categories)
+                    db.commit()
+                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                        return jsonify({'status': 'success', 'task_id': task_id})
+                    flash('Задача добавлена', 'success')
+
+            if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+                return redirect(url_for('day_tasks', year=year, month=month, day=day))
+
+        # GET-запрос
+        cursor.execute('''
+            SELECT t.id, t.task, t.time, t.created, t.repeat_days, t.repeat_start, t.repeat_end, t.priority,
+                   GROUP_CONCAT(tc.category_id) AS category_ids
+            FROM tasks t
+            LEFT JOIN task_categories tc ON t.id = tc.task_id
+            WHERE t.user_id = ? AND t.year = ? AND t.month = ? AND t.day = ?
+            GROUP BY t.id
+            ORDER BY t.priority DESC, t.time, t.created
+        ''', (current_user.id, year, month, day))
+        tasks = []
+        for row in cursor.fetchall():
+            task = dict(row)
+            try:
+                task['category_ids'] = list(map(int, task['category_ids'].split(','))) if task['category_ids'] else []
+            except (ValueError, TypeError) as e:
+                logger.error(f"Error processing category_ids for task {task['id']}: {e}")
+                task['category_ids'] = []
+            tasks.append(task)
+        logger.info(f"Tasks data for day {year}-{month}-{day}: {tasks}")
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({'tasks': tasks, 'date': f"{year}-{month:02d}-{day:02d}", 'categories': [dict(cat) for cat in categories]})
+
+        date_str = f"{day:02d}.{month:02d}.{year}"
+        return render_template('tasks.html', year=year, month=month, day=day, date_str=date_str,
+                               tasks=tasks, categories=categories)
+
+    except Exception as e:
+        logger.error(f"Error in day_tasks: {str(e)}", exc_info=True)
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/tasks/<int:year>/<int:month>/<int:day>/remind', methods=['POST'])
@@ -418,6 +443,14 @@ def month_tasks(year, month):
             'task': row['task'],
             'priority': row['priority']
         })
+
+    # Добавляем все дни месяца, даже если задач нет
+    import calendar
+    cal = calendar.Calendar()
+    month_days = cal.itermonthdays(year, month)
+    for day in month_days:
+        if day != 0 and day not in tasks_by_day:
+            tasks_by_day[day] = []
 
     return jsonify({'tasksByDay': tasks_by_day})
 
