@@ -27,10 +27,6 @@
             bindAllTaskHandlers
         } from "{{ url_for('static', filename='js/tasks.js') }}";
 
-        import {
-            fetchCompletedTasks
-        } from "{{ url_for('static', filename='js/completed-tasks.js') }}";
-
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM fully loaded and parsed');
 
@@ -46,6 +42,7 @@
                     const month = {{ month }};
                     const day = this.getAttribute('data-day');
                     console.log(`Day clicked: ${year}-${month}-${day}`);
+                    selectedDay = day;
 
                     if (!day || isNaN(day)) {
                         console.error('Invalid day value:', day);
@@ -71,7 +68,6 @@
                         console.log('Received tasks data:', data);
                         updateTasksSection(data.tasks, date, day, data.categories || []);
                         updateTaskPriorityIndicator(this.closest('.day-cell'), data.tasks);
-                        fetchCompletedTasks(year, month, day); // Добавляем загрузку выполненных задач
                     })
                     .catch(error => {
                         console.error('Error loading tasks:', error);

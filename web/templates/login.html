@@ -6,6 +6,16 @@
 <div style="max-width: 400px; margin: 0 auto; padding: 20px;">
     <h1 style="text-align: center;">Вход</h1>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div style="margin-bottom: 15px; color: {% if category == 'success' %}green{% else %}red{% endif %};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <form method="POST" style="display: flex; flex-direction: column; gap: 15px;">
         <div>
             <label for="username">Имя пользователя:</label>

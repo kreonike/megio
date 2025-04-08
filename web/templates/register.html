@@ -10,6 +10,16 @@
 <div class="registration-container">
     <h2 style="text-align: center; margin-bottom: 1.5rem;">Регистрация</h2>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div style="margin-bottom: 15px; color: {% if category == 'success' %}green{% else %}red{% endif %};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <form method="POST" class="registration-form">
         <div class="form-group">
             <label for="username">Имя пользователя:</label>

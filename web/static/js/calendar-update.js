@@ -7,7 +7,6 @@ import {
 
 import { bindAllTaskHandlers } from './tasks.js';
 import { updateCompletedTasksSection, fetchCompletedTasks } from './completed-tasks.js';
-import { bindRemindHandlers } from './remind.js';
 
 export function updateTasksSection(tasks, date, day, categories) {
     console.log(`[updateTasksSection] Updating for date ${date}, day ${day}`);
@@ -179,53 +178,29 @@ export function updateTasksSection(tasks, date, day, categories) {
                                 <button type="button" class="cancel-edit" data-task-id="${task.id}">Отмена</button>
                             </div>
                         </form>
-                        <form id="remind-form-${task.id}" class="remind-form" data-task-id="${task.id}">
-                            <div class="remind-options">
-                                <label class="remind-option">
-                                    <input type="checkbox" name="remind-options" value="5"> За 5 минут
-                                </label>
-                                <label class="remind-option">
-                                    <input type="checkbox" name="remind-options" value="15"> За 15 минут
-                                </label>
-                                <label class="remind-option">
-                                    <input type="checkbox" name="remind-options" value="30"> За 30 минут
-                                </label>
-                                <label class="remind-option">
-                                    <input type="checkbox" name="remind-options" value="60"> За 1 час
-                                </label>
-                            </div>
-                            <div class="remind-buttons">
-                                <button type="submit" class="remind-confirm-btn">Установить</button>
-                                <button type="button" class="cancel-remind">Отмена</button>
-                            </div>
-                        </form>
                     </li>
                 `;
             }).join('')}
         </ul>
     `;
 
-    const dateHeader = tasksSection.querySelector('.task-date-header');
-    if (dateHeader) {
-        dateHeader.style.color = tasks.length > 0 ? '#ff9800' : 'inherit';
-        console.log(`[updateTasksSection] Date header color set to: ${dateHeader.style.color}`);
-    }
-
+    // Rebind event handlers
     const yearNum = parseInt(year);
     const monthNum = parseInt(month);
-
     bindAllTaskHandlers(yearNum, monthNum);
-    bindRemindHandlers(yearNum, monthNum);
 
+    // Rebind time spinner events
     document.querySelectorAll('.edit-time-input').forEach(input => {
         bindTimeSpinnerEvents(input);
     });
 
+    // Rebind task form time input
     const taskTimeInput = document.getElementById('task-time');
     if (taskTimeInput) {
         bindTimeSpinnerEvents(taskTimeInput);
     }
 
+    // Bind main repeat checkbox handler
     const mainRepeatCheckbox = document.getElementById('main-repeat-checkbox');
     if (mainRepeatCheckbox) {
         mainRepeatCheckbox.addEventListener('change', function(e) {
@@ -243,6 +218,7 @@ export function updateTasksSection(tasks, date, day, categories) {
         });
     }
 
+    // Bind edit repeat checkbox handlers
     document.querySelectorAll('.edit-repeat-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', function(e) {
             e.stopPropagation();
@@ -261,9 +237,11 @@ export function updateTasksSection(tasks, date, day, categories) {
         });
     });
 
+    // Rebind filter events
     document.getElementById('category-filter')?.addEventListener('change', applyFilters);
     document.getElementById('priority-filter')?.addEventListener('change', applyFilters);
 
+    // После обновления активных задач загружаем выполненные
     fetchCompletedTasks(yearNum, monthNum, day);
 }
 
@@ -304,22 +282,11 @@ export function updateCalendar(year, month) {
     })
     .then(data => {
         console.log(`[updateCalendar] Received data:`, data);
-        const calendarTable = document.querySelector('.calendar-table');
-        if (!calendarTable) {
-            console.error('[updateCalendar] Calendar table not found');
-            return;
-        }
-
-        calendarTable.querySelectorAll('.day-link').forEach(link => {
+        document.querySelectorAll('.day-link').forEach(link => {
             const day = link.getAttribute('data-day');
             console.log(`[updateCalendar] Processing day ${day}`);
 
             const dayCell = link.closest('.day-cell');
-            if (!dayCell) {
-                console.warn(`[updateCalendar] No day-cell found for day ${day}`);
-                return;
-            }
-
             let badge = link.querySelector('.task-count-badge');
 
             if (day && data.tasksByDay.hasOwnProperty(day)) {
@@ -383,12 +350,6 @@ export function updateCalendar(year, month) {
                     }
                     dayCell.classList.remove('has-tasks');
                 }
-            } else {
-                if (badge) {
-                    console.log(`[updateCalendar] Removing badge for day ${day} as no tasks exist`);
-                    badge.remove();
-                }
-                dayCell.classList.remove('has-tasks');
             }
         });
     })
