@@ -8,6 +8,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_required, current_user
 
 from web.logging_config import configure_logging
+from web.routes.stats import stats_routes
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 import datetime as dt
@@ -54,6 +55,7 @@ register_routes(app, get_db, bcrypt)
 login_routes(app, get_db, bcrypt)
 logout_routes(app)
 google_routes(app, get_db)
+stats_routes(app, get_db)
 #categories_routes(app, get_db)
 
 # Инициализация Flask-Login
@@ -620,31 +622,6 @@ def restore_task(year, month, day):
         logger.error(f"Ошибка при восстановлении задачи: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
-
-
-@app.route('/stats', endpoint='stats')
-@login_required
-def show_stats():
-    db = get_db()
-    cursor = db.cursor()
-
-    # Статистика по выполненным задачам
-    cursor.execute('''
-        SELECT 
-            strftime('%Y-%m', completion_time) as month,
-            COUNT(*) as total,
-            SUM(CASE WHEN priority = 3 THEN 1 ELSE 0 END) as high_priority,
-            SUM(CASE WHEN priority = 2 THEN 1 ELSE 0 END) as medium_priority,
-            SUM(CASE WHEN priority = 1 THEN 1 ELSE 0 END) as low_priority
-        FROM completed_tasks
-        WHERE user_id = ?
-        GROUP BY strftime('%Y-%m', completion_time)
-        ORDER BY month DESC
-    ''', (current_user.id,))
-
-    stats = cursor.fetchall()
-
-    return render_template('stats.html', stats=stats)
 
 
 if __name__ == '__main__':

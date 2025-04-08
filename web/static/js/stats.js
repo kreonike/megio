@@ -77,11 +77,9 @@ function fetchTasks(startDate, endDate, priority) {
                                      task.priority === 2 ? 'priority-medium' : 'priority-low';
                 tasksList.innerHTML += `
                     <li>
-                        <span class="task-text">${task.task_text}</span>
-                        <span class="task-priority ${priorityClass}">
-                            ${task.priority === 3 ? 'Высокий' : task.priority === 2 ? 'Средний' : 'Низкий'}
-                        </span>
+                        <span class="task-priority-icon ${priorityClass}"></span>
                         <span class="task-completion-time">${new Date(task.completion_time).toLocaleString()}</span>
+                        <span class="task-text">${task.task_text}</span>
                     </li>
                 `;
             });

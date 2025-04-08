@@ -10,7 +10,7 @@
     background-color: #3498db;
     color: white;
     padding: 12px 15px;
-    text-align: left;
+    text-align: center;
     cursor: pointer;
     position: relative;
 }
@@ -24,12 +24,14 @@
     transition: background-color 0.2s;
 }
 
-.stats-table tbody tr:hover {
-    background-color: #f5f5f5;
-}
-
 .stats-table td {
     padding: 12px 15px;
+    text-align: center;
+}
+
+.stats-table th:first-child,
+.stats-table td:first-child {
+    text-align: left;
 }
 
 .stat-value {
@@ -75,4 +77,105 @@ th.sorted-asc .sort-indicator::after {
 th.sorted-desc .sort-indicator::after {
     content: '▼';
     opacity: 1;
+}
+
+.stats-filters {
+    margin-bottom: 20px;
+}
+
+.filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 15px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    margin-bottom: 5px;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.filter-button-wrapper {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.filter-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-button:hover {
+    background-color: #2980b9;
+}
+
+.filter-button:active {
+    background-color: #1f6391;
+}
+
+.tasks-list {
+    list-style: none;
+    padding: 0;
+}
+
+.tasks-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tasks-list li:last-child {
+    border-bottom: none;
+}
+
+.task-priority-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.task-priority-icon.priority-high {
+    background-color: #e74c3c;
+}
+
+.task-priority-icon.priority-medium {
+    background-color: #e67e22;
+}
+
+.task-priority-icon.priority-low {
+    background-color: #27ae60;
+}
+
+.task-completion-time {
+    margin-right: 10px;
+    color: #777;
+    flex-shrink: 0;
+}
+
+.task-text {
+    font-weight: bold;
+    flex-grow: 1;
 }
