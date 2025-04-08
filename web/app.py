@@ -20,18 +20,16 @@ from web.routes.register import register_routes
 from web.routes.login import login_routes
 from web.routes.logout import logout_routes
 from web.routes.google import google_routes, google_sync_scheduler
-#from web.routes.categories import categories_routes
 
 import atexit
 
 # Импорт конфигурации
 from web.config.config import (
-    SECRET_KEY, MONTH_NAMES, get_db, close_db
+    SECRET_KEY, MONTH_NAMES, get_db, close_db,
+    GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, SCOPES
 )
 
 app = Flask(__name__)
-
-from web.config.config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, SCOPES
 
 app.config['GOOGLE_CLIENT_ID'] = GOOGLE_CLIENT_ID
 app.config['GOOGLE_CLIENT_SECRET'] = GOOGLE_CLIENT_SECRET
@@ -40,8 +38,6 @@ app.config['SCOPES'] = SCOPES
 
 bcrypt = Bcrypt(app)
 app.secret_key = SECRET_KEY
-
-
 
 # Настройка логирования
 configure_logging(app)
@@ -54,7 +50,6 @@ register_routes(app, get_db, bcrypt)
 login_routes(app, get_db, bcrypt)
 logout_routes(app)
 google_routes(app, get_db)
-#categories_routes(app, get_db)
 
 # Инициализация Flask-Login
 login_manager = LoginManager()
@@ -71,7 +66,6 @@ if not hasattr(app, 'google_scheduler') and (not app.debug or os.environ.get('WE
 app.teardown_appcontext(close_db)
 init_db(app)
 
-
 @login_manager.user_loader
 def load_user(user_id):
     db = get_db()
@@ -81,7 +75,6 @@ def load_user(user_id):
     if user_data:
         return User(user_data['id'], user_data['username'], user_data['email'],
                     user_data['telegram_token'], user_data['google_token'])
-
 
 def generate_calendar(year, month, user_id):
     cal = calendar.Calendar()
@@ -163,7 +156,7 @@ def generate_calendar(year, month, user_id):
             task_count_html = f'<span class="task-count-badge {priority_class}">{task_count}</span>' if task_count > 0 else ''
 
             calendar_html += f'''
-                <td class="{" ".join(classes)}" style="{style}">
+                <td class={" ".join(classes)}" style="{style}">
                     <a href="{url_for("day_tasks", year=year, month=month, day=day)}" class="day-link" data-day="{day}">
                         <span class="day-number">{day}</span>
                         {task_count_html}
@@ -174,7 +167,6 @@ def generate_calendar(year, month, user_id):
 
     calendar_html += '</table>'
     return calendar_html
-
 
 @app.route('/')
 @login_required
@@ -205,7 +197,6 @@ def show_calendar():
                            username=current_user.username,
                            categories=categories)
 
-
 @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
 @login_required
 def day_tasks(year, month, day):
@@ -225,7 +216,7 @@ def day_tasks(year, month, day):
                 cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
                 db.commit()
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                    return jsonify({'status': 'success'})
+                    return jsonify({'status': 'success', 'day': str(day).zfill(2)})
                 flash('Задача удалена', 'success')
 
             # Редактирование задачи
@@ -267,7 +258,7 @@ def day_tasks(year, month, day):
 
                     db.commit()
                     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                        return jsonify({'status': 'success'})
+                        return jsonify({'status': 'success', 'day': str(day).zfill(2)})
                     flash('Задача обновлена', 'success')
 
             # Добавление новой задачи
@@ -308,7 +299,7 @@ def day_tasks(year, month, day):
 
                     db.commit()
                     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                        return jsonify({'status': 'success', 'task_id': task_id})
+                        return jsonify({'status': 'success', 'task_id': task_id, 'day': str(day).zfill(2)})
                     flash('Задача добавлена', 'success')
 
             if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
@@ -345,7 +336,6 @@ def day_tasks(year, month, day):
     except Exception as e:
         logger.error(f"Error in day_tasks: {str(e)}", exc_info=True)
         return jsonify({'error': str(e)}), 500
-
 
 @app.route('/tasks/<int:year>/<int:month>/<int:day>/remind', methods=['POST'])
 @login_required
@@ -385,12 +375,11 @@ def set_task_reminders(year, month, day):
         ))
 
         db.commit()
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'day': str(day).zfill(2)})
 
     except Exception as e:
         logger.error(f"Ошибка при установке напоминаний: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
-
 
 @app.route('/categories', methods=['GET', 'POST'])
 @login_required
@@ -422,7 +411,6 @@ def manage_categories():
     categories = cursor.fetchall()
 
     return render_template('categories.html', categories=categories)
-
 
 @app.route('/tasks/<int:year>/<int:month>', methods=['GET'])
 @login_required
@@ -457,7 +445,6 @@ def month_tasks(year, month):
             tasks_by_day[day] = []
 
     return jsonify({'tasksByDay': tasks_by_day})
-
 
 @app.route('/tasks/<int:year>/<int:month>/<int:day>/complete', methods=['POST'])
 @login_required
@@ -495,7 +482,7 @@ def complete_task(year, month, day):
         ''', (task_id,))
         categories = [row['name'] for row in cursor.fetchall()]
 
-        # 3. Переносим в таблицу выполненных задач с правильными именами столбцов
+        # 3. Переносим в таблицу выполненных задач
         cursor.execute('''
             INSERT INTO completed_tasks 
             (user_id, task_id, task_text, priority, categories, original_year, original_month, original_day)
@@ -519,13 +506,12 @@ def complete_task(year, month, day):
 
         db.commit()
 
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'day': str(day).zfill(2)})
 
     except Exception as e:
         db.rollback()
         logger.error(f"Ошибка при выполнении задачи: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
-
 
 @app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
 @login_required
@@ -551,7 +537,6 @@ def get_completed_tasks(year, month, day):
     except Exception as e:
         logger.error(f"Error fetching completed tasks: {str(e)}")
         return jsonify({'error': str(e)}), 500
-
 
 @app.route('/tasks/<int:year>/<int:month>/<int:day>/restore', methods=['POST'])
 @login_required
@@ -613,14 +598,12 @@ def restore_task(year, month, day):
 
         db.commit()
 
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'day': str(day).zfill(2)})
 
     except Exception as e:
         db.rollback()
         logger.error(f"Ошибка при восстановлении задачи: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
-
-
 
 @app.route('/stats', endpoint='stats')
 @login_required
@@ -645,7 +628,6 @@ def show_stats():
     stats = cursor.fetchall()
 
     return render_template('stats.html', stats=stats)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
