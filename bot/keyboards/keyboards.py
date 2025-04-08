@@ -185,7 +185,7 @@ def create_help_keyboard(lang: str = 'ru') -> InlineKeyboardMarkup:
         )]
     ])
 
-def create_language_keyboard(lang: str = None) -> InlineKeyboardMarkup:
+def create_language_keyboard(lang: str = 'ru') -> InlineKeyboardMarkup:
     """Создаёт клавиатуру для выбора языка."""
     return InlineKeyboardMarkup(inline_keyboard=[
         [
