@@ -1,4 +1,3 @@
-# bot/main.py
 import logging
 from logging.config import dictConfig
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -15,53 +14,19 @@ from pathlib import Path
 from bot.config.config import DB_PATH
 from dotenv import load_dotenv
 import os
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, Date, Time, DateTime, ForeignKey
-from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
+from bot.config.models import Base
 
-# Загрузка переменных окружения
 load_dotenv()
 
-# Добавляем корень проекта в PYTHONPATH
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-# Настройка логирования
 dictConfig(dict_config)
 logger = logging.getLogger("bot")
-
-# Инициализация SQLAlchemy
-Base = declarative_base()
-
-class User(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    telegram_accounts = relationship("TelegramUser", back_populates="user")
-    tasks = relationship("Task", back_populates="user")
-
-class TelegramUser(Base):
-    __tablename__ = 'telegram_users'
-    telegram_id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    user = relationship("User", back_populates="telegram_accounts")
-
-class Task(Base):
-    __tablename__ = 'tasks'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    year = Column(Integer, nullable=False)
-    month = Column(Integer, nullable=False)
-    day = Column(Integer, nullable=False)
-    task = Column(String, nullable=False)
-    time = Column(Time)
-    created = Column(DateTime, server_default='CURRENT_TIMESTAMP')
-    reminder_1day_sent = Column(Boolean, default=False)
-    reminder_2h_sent = Column(Boolean, default=False)
-    reminder_15m_sent = Column(Boolean, default=False)
-    user = relationship("User", back_populates="tasks")
 
 async def init_db():
     logger.info("Начинаем инициализацию базы данных")
@@ -99,7 +64,7 @@ async def main():
     logger.info("Starting bot with ORM database")
     await asyncio.gather(
         dp.start_polling(bot),
-        check_reminders(bot=bot, session=db_session, interval=30)  # Вернули session
+        check_reminders(bot=bot, session=db_session, interval=30)
     )
 
 if __name__ == "__main__":

@@ -4157,3 +4157,23 @@ TypeError: check_reminders() missing 1 required positional argument: 'session'
 [SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
 [parameters: (2025, 4, 9)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-09 09:08:38 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 10)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-09 09:08:42 | ERROR | aiogram.dispatcher | dispatcher.py:219 | Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-04-09 09:08:42 | WARNING | aiogram.dispatcher | dispatcher.py:221 | Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7855463694)
+2025-04-09 09:08:44 | ERROR | aiogram.dispatcher | dispatcher.py:219 | Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2025-04-09 09:08:44 | WARNING | aiogram.dispatcher | dispatcher.py:221 | Sleep for 1.198663 seconds and try again... (tryings = 1, bot id = 7855463694)
+2025-04-09 10:33:28 | ERROR | bot | reminders.py:62 | Ошибка парсинга времени: time data '2025-04-10 None' does not match format '%Y-%m-%d %H:%M'
+2025-04-09 10:33:28 | ERROR | bot | reminders.py:62 | Ошибка парсинга времени: time data '2025-04-10 None' does not match format '%Y-%m-%d %H:%M'
+2025-04-09 10:33:32 | ERROR | aiogram.dispatcher | dispatcher.py:219 | Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2025-04-09 10:33:32 | WARNING | aiogram.dispatcher | dispatcher.py:221 | Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7855463694)
+2025-04-09 10:46:56 | ERROR | aiogram.dispatcher | dispatcher.py:219 | Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-04-09 10:46:56 | WARNING | aiogram.dispatcher | dispatcher.py:221 | Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7855463694)
+2025-04-09 10:47:01 | ERROR | aiogram.dispatcher | dispatcher.py:219 | Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-04-09 10:47:01 | WARNING | aiogram.dispatcher | dispatcher.py:221 | Sleep for 1.097846 seconds and try again... (tryings = 1, bot id = 7855463694)
+2025-04-09 10:47:04 | ERROR | aiogram.dispatcher | dispatcher.py:219 | Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2025-04-09 10:47:04 | WARNING | aiogram.dispatcher | dispatcher.py:221 | Sleep for 1.391210 seconds and try again... (tryings = 2, bot id = 7855463694)
+2025-04-09 10:58:21 | ERROR | aiogram.dispatcher | dispatcher.py:219 | Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2025-04-09 10:58:21 | WARNING | aiogram.dispatcher | dispatcher.py:221 | Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7855463694)

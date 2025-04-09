@@ -9712,3 +9712,33 @@ TypeError: check_reminders() missing 1 required positional argument: 'session'
 [SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
 [parameters: (2025, 4, 9)]
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-09 09:08:38 | INFO | bot | main.py:86 | Starting bot initialization
+2025-04-09 09:08:38 | INFO | bot | main.py:67 | Начинаем инициализацию базы данных
+2025-04-09 09:08:38 | INFO | bot | main.py:71 | Таблицы базы данных успешно созданы/проверены
+2025-04-09 09:08:38 | INFO | bot | main.py:75 | Таблицы в базе данных: [('users',), ('sqlite_sequence',), ('tasks',), ('categories',), ('task_categories',), ('telegram_users',), ('completed_tasks',)]
+2025-04-09 09:08:38 | INFO | bot | main.py:99 | Starting bot with ORM database
+2025-04-09 09:08:38 | INFO | bot | reminders.py:46 | Starting reminders service with interval: 30 seconds
+2025-04-09 09:08:38 | ERROR | bot | reminders.py:98 | Error in reminders loop: (sqlite3.OperationalError) no such column: telegram_id
+[SQL: SELECT id, task, time, telegram_id FROM tasks WHERE year = ? AND month = ? AND day = ? AND reminder_1day_sent = 0]
+[parameters: (2025, 4, 10)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-04-09 10:33:28 | INFO | bot | main.py:51 | Starting bot initialization
+2025-04-09 10:33:28 | INFO | bot | main.py:32 | Начинаем инициализацию базы данных
+2025-04-09 10:33:28 | INFO | bot | main.py:36 | Таблицы базы данных успешно созданы/проверены
+2025-04-09 10:33:28 | INFO | bot | main.py:40 | Таблицы в базе данных: [('users',), ('sqlite_sequence',), ('tasks',), ('categories',), ('task_categories',), ('telegram_users',), ('completed_tasks',)]
+2025-04-09 10:33:28 | INFO | bot | main.py:64 | Starting bot with ORM database
+2025-04-09 10:33:28 | INFO | bot | reminders.py:66 | Starting reminders service with interval: 30 seconds
+2025-04-09 10:33:28 | ERROR | bot | reminders.py:62 | Ошибка парсинга времени: time data '2025-04-10 None' does not match format '%Y-%m-%d %H:%M'
+2025-04-09 10:33:28 | ERROR | bot | reminders.py:62 | Ошибка парсинга времени: time data '2025-04-10 None' does not match format '%Y-%m-%d %H:%M'
+2025-04-09 10:46:52 | INFO | bot | main.py:51 | Starting bot initialization
+2025-04-09 10:46:52 | INFO | bot | main.py:32 | Начинаем инициализацию базы данных
+2025-04-09 10:46:52 | INFO | bot | main.py:36 | Таблицы базы данных успешно созданы/проверены
+2025-04-09 10:46:52 | INFO | bot | main.py:40 | Таблицы в базе данных: [('users',), ('sqlite_sequence',), ('tasks',), ('categories',), ('task_categories',), ('telegram_users',), ('completed_tasks',)]
+2025-04-09 10:46:52 | INFO | bot | main.py:64 | Starting bot with ORM database
+2025-04-09 10:46:52 | INFO | bot | reminders.py:81 | Starting reminders service with interval: 30 seconds
+2025-04-09 10:58:18 | INFO | bot | main.py:51 | Starting bot initialization
+2025-04-09 10:58:18 | INFO | bot | main.py:32 | Начинаем инициализацию базы данных
+2025-04-09 10:58:18 | INFO | bot | main.py:36 | Таблицы базы данных успешно созданы/проверены
+2025-04-09 10:58:18 | INFO | bot | main.py:40 | Таблицы в базе данных: [('users',), ('sqlite_sequence',), ('tasks',), ('categories',), ('task_categories',), ('telegram_users',), ('completed_tasks',)]
+2025-04-09 10:58:18 | INFO | bot | main.py:64 | Starting bot with ORM database
+2025-04-09 10:58:18 | INFO | bot | reminders.py:81 | Starting reminders service with interval: 30 seconds
