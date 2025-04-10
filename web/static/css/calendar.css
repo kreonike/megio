@@ -81,6 +81,9 @@
 /* Стили дней */
 .day-cell {
     position: relative;
+    text-align: left; /* Изменяем выравнивание текста на левое */
+    padding-left: 8px; /* Добавляем отступ слева */
+    position: relative;
     background-color: var(--bg-color);
     height: 50px;
     transition: var(--transition-base);
@@ -107,6 +110,9 @@
 
 /* Номера дней */
 .day-number {
+    display: inline-block; /* Изменяем на inline-block для лучшего контроля */
+    text-align: left; /* Выравниваем текст по левому краю */
+    margin-left: -40px; /* Добавляем небольшой отступ слева */
     color: var(--day-number-color);
     font-weight: 600;
     font-size: 0.95em;
@@ -126,6 +132,9 @@
 }
 
 .today .day-number {
+    margin-left: 0; /* Убираем отступ для сегодняшней даты, если нужно */
+    position: relative;
+    left: 40px; /* Смещаем немного левее */
     background-color: var(--today-bg-color);
     color: var(--today-text-color);
     border-radius: 50%;
@@ -137,6 +146,16 @@
     justify-content: center;
     font-weight: bold;
     box-shadow: 0 0 0 2px var(--bg-color);
+}
+
+/* Для дней с задачами */
+.has-tasks .day-number {
+    margin-left: -40px; /* Сохраняем отступ для дней с задачами */
+}
+
+/* Для выходных дней */
+.weekend .day-number {
+    margin-left: -40px; /* Сохраняем отступ для выходных дней */
 }
 
 /* Счётчик задач */
