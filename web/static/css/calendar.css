@@ -1151,3 +1151,70 @@
 .dark-mode .restore-btn:hover {
     background-color: #ef6c00;
 }
+
+/* Форма напоминания */
+.remind-form {
+    display: none;
+    margin-top: 10px;
+    padding: 15px;
+    background-color: var(--bg-secondary-color);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.remind-form.active {
+    display: block;
+}
+
+.remind-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.remind-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.remind-option:hover {
+    background-color: var(--hover-color);
+}
+
+.remind-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.remind-confirm-btn, .cancel-remind {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-grow: 1;
+}
+
+.remind-confirm-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.remind-confirm-btn:hover {
+    background-color: #3e8e41;
+}
+
+.cancel-remind {
+    background-color: #6c757d;
+    color: white;
+}
+
+.cancel-remind:hover {
+    background-color: #5a6268;
+}
