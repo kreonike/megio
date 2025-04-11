@@ -220,33 +220,33 @@ def calendar_routes(app, get_db):
         now = datetime.now(pytz.UTC)
         return redirect(url_for('show_calendar', year=now.year, month=now.month))
 
-    @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET'])
-    @login_required
-    def get_tasks(year, month, day):
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('''
-            SELECT id, task, time, priority, google_event_id 
-            FROM tasks 
-            WHERE user_id = ? AND year = ? AND month = ? AND day = ?
-        ''', (current_user.id, year, month, day))
-        tasks = cursor.fetchall()
-
-        # Форматируем задачи для JSON-ответа
-        tasks_list = []
-        for task in tasks:
-            tasks_list.append({
-                'id': task['id'],
-                'task': task['task'],
-                'time': task['time'],
-                'priority': task['priority'],
-                'google_event_id': task['google_event_id']
-            })
-
-        # Категории пока не поддерживаются, но добавим пустой список для совместимости
-        categories = []
-
-        return jsonify({'tasks': tasks_list, 'categories': categories})
+    # @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET'])
+    # @login_required
+    # def get_tasks(year, month, day):
+    #     db = get_db()
+    #     cursor = db.cursor()
+    #     cursor.execute('''
+    #         SELECT id, task, time, priority, google_event_id
+    #         FROM tasks
+    #         WHERE user_id = ? AND year = ? AND month = ? AND day = ?
+    #     ''', (current_user.id, year, month, day))
+    #     tasks = cursor.fetchall()
+    #
+    #     # Форматируем задачи для JSON-ответа
+    #     tasks_list = []
+    #     for task in tasks:
+    #         tasks_list.append({
+    #             'id': task['id'],
+    #             'task': task['task'],
+    #             'time': task['time'],
+    #             'priority': task['priority'],
+    #             'google_event_id': task['google_event_id']
+    #         })
+    #
+    #     # Категории пока не поддерживаются, но добавим пустой список для совместимости
+    #     categories = []
+    #
+    #     return jsonify({'tasks': tasks_list, 'categories': categories})
 
     @app.route('/add_task/<int:year>/<int:month>/<int:day>', methods=['POST'])
     @login_required

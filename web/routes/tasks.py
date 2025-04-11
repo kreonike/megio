@@ -1,103 +1,11 @@
-# web/routes/tasks.py
-import calendar
 from datetime import datetime
 
-from flask import render_template, request, redirect, flash, jsonify, url_for
+from flask import jsonify, request, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
+from web.config.config import get_db, MONTH_NAMES
+from web.routes.calendar import generate_calendar
 
-# def generate_calendar(year, month, user_id, get_db):
-#     cal = calendar.Calendar()
-#     month_days = cal.monthdayscalendar(year, month)
-#     now = datetime.now()
-#     current_day = now.day if (year == now.year and month == now.month) else None
-#
-#     db = get_db()
-#     cursor = db.cursor()
-#
-#     # Получаем количество задач и максимальный приоритет по дням
-#     cursor.execute('''
-#         SELECT day, COUNT(*) as task_count, MAX(priority) as max_priority
-#         FROM tasks
-#         WHERE user_id = ? AND year = ? AND month = ?
-#         GROUP BY day
-#     ''', (user_id, year, month))
-#     days_tasks = {row['day']: {'count': row['task_count'], 'priority': row['max_priority']}
-#                   for row in cursor.fetchall()}
-#
-#     # Получаем задачи с категориями
-#     cursor.execute('''
-#         SELECT t.day, c.color
-#         FROM tasks t
-#         JOIN task_categories tc ON t.id = tc.task_id
-#         JOIN categories c ON tc.category_id = c.id
-#         WHERE t.user_id = ? AND t.year = ? AND t.month = ?
-#     ''', (user_id, year, month))
-#
-#     days_colors = {}
-#     for row in cursor.fetchall():
-#         day = row['day']
-#         if day not in days_colors:
-#             days_colors[day] = set()
-#         days_colors[day].add(row['color'])
-#
-#     # Начинаем формировать HTML календаря
-#     calendar_html = '<table class="calendar-table"><tr>'
-#     calendar_html += ''.join(f'<th>{day}</th>' for day in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'])
-#     calendar_html += '</tr>'
-#
-#     for week in month_days:
-#         calendar_html += '<tr>'
-#         for i, day in enumerate(week):
-#             if day == 0:
-#                 calendar_html += '<td class="empty-day"></td>'
-#                 continue
-#
-#             classes = ['day-cell']
-#             if day == current_day:
-#                 classes.append('today')
-#             if day in days_tasks:
-#                 classes.append('has-tasks')
-#             if i >= 5:
-#                 classes.append('weekend')
-#
-#             # Добавляем стили для категорий
-#             style = ''
-#             if day in days_colors:
-#                 colors = days_colors[day]
-#                 if len(colors) == 1:
-#                     style = f"background-color: {next(iter(colors))}20;"  # 20 - прозрачность
-#                 else:
-#                     gradient = ','.join([f"{color} 0%, {color} 50%" for color in colors])
-#                     style = f"background: linear-gradient(135deg, {gradient});"
-#
-#             task_info = days_tasks.get(day, {})
-#             task_count = task_info.get('count', 0)
-#             priority = task_info.get('priority', 1)
-#
-#             priority_class = ''
-#             if priority == 3:
-#                 priority_class = 'priority-high'
-#             elif priority == 2:
-#                 priority_class = 'priority-medium'
-#             else:
-#                 priority_class = 'priority-low'
-#
-#             task_count_html = f'<span class="task-count-badge {priority_class}">{task_count}</span>' if task_count > 0 else ''
-#
-#             calendar_html += f'''
-#                 <td class="{" ".join(classes)}" style="{style}">
-#                     <a href="{url_for("day_tasks", year=year, month=month, day=day)}" class="day-link" data-day="{day}">
-#                         <span class="day-number">{day}</span>
-#                         {task_count_html}
-#                     </a>
-#                 </td>
-#             '''
-#         calendar_html += '</tr>'
-#
-#     calendar_html += '</table>'
-#     return calendar_html
-
-def tasks_routes(app, get_db, MONTH_NAMES):
+def tasks_routes(app, get_db):
     @app.route('/')
     @login_required
     def show_calendar():
@@ -146,7 +54,7 @@ def tasks_routes(app, get_db, MONTH_NAMES):
                     cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
                     db.commit()
                     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                        return jsonify({'status': 'success', 'day': str(day).zfill(2)})
+                        return jsonify({'status': 'success'})
                     flash('Задача удалена', 'success')
 
                 # Редактирование задачи
@@ -188,7 +96,7 @@ def tasks_routes(app, get_db, MONTH_NAMES):
 
                         db.commit()
                         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                            return jsonify({'status': 'success', 'day': str(day).zfill(2)})
+                            return jsonify({'status': 'success'})
                         flash('Задача обновлена', 'success')
 
                 # Добавление новой задачи
@@ -229,7 +137,7 @@ def tasks_routes(app, get_db, MONTH_NAMES):
 
                         db.commit()
                         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                            return jsonify({'status': 'success', 'task_id': task_id, 'day': str(day).zfill(2)})
+                            return jsonify({'status': 'success', 'task_id': task_id})
                         flash('Задача добавлена', 'success')
 
                 if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
@@ -267,50 +175,6 @@ def tasks_routes(app, get_db, MONTH_NAMES):
             app.logger.error(f"Error in day_tasks: {str(e)}", exc_info=True)
             return jsonify({'error': str(e)}), 500
 
-    # @app.route('/tasks/<int:year>/<int:month>/<int:day>/remind', methods=['POST'])
-    # @login_required
-    # def set_task_reminders(year, month, day):
-    #     if not request.is_json:
-    #         return jsonify({'success': False, 'error': 'Invalid content type'}), 400
-    #
-    #     data = request.get_json()
-    #     task_id = data.get('task_id')
-    #     remind_times = data.get('remind_times', [])  # Пример: [15, 120, 1440]
-    #     app.logger.debug(f"Received remind request: task_id={task_id}, remind_times={remind_times}")
-    #
-    #     if not task_id or not remind_times:
-    #         return jsonify({'success': False, 'error': 'Missing task_id or remind_times'}), 400
-    #
-    #     try:
-    #         db = get_db()
-    #         cursor = db.cursor()
-    #
-    #         cursor.execute('SELECT user_id FROM tasks WHERE id = ?', (task_id,))
-    #         task = cursor.fetchone()
-    #         if not task or task['user_id'] != current_user.id:
-    #             return jsonify({'success': False, 'error': 'Task not found or access denied'}), 403
-    #
-    #         cursor.execute('''
-    #             UPDATE tasks
-    #             SET
-    #                 reminder_15m_sent = ?,
-    #                 reminder_2h_sent = ?,
-    #                 reminder_1day_sent = ?
-    #             WHERE id = ?
-    #         ''', (
-    #             0 if 15 in remind_times else 1,
-    #             0 if 120 in remind_times else 1,
-    #             0 if 1440 in remind_times else 1,
-    #             task_id
-    #         ))
-    #
-    #         db.commit()
-    #         return jsonify({'success': True, 'day': str(day).zfill(2)})
-    #
-    #     except Exception as e:
-    #         app.logger.error(f"Ошибка при установке напоминаний: {str(e)}")
-    #         return jsonify({'success': False, 'error': str(e)}), 500
-
     @app.route('/tasks/<int:year>/<int:month>', methods=['GET'])
     @login_required
     def month_tasks(year, month):
@@ -336,6 +200,7 @@ def tasks_routes(app, get_db, MONTH_NAMES):
             })
 
         # Добавляем все дни месяца, даже если задач нет
+        import calendar
         cal = calendar.Calendar()
         month_days = cal.itermonthdays(year, month)
         for day in month_days:
@@ -343,162 +208,3 @@ def tasks_routes(app, get_db, MONTH_NAMES):
                 tasks_by_day[day] = []
 
         return jsonify({'tasksByDay': tasks_by_day})
-
-    @app.route('/tasks/<int:year>/<int:month>/<int:day>/complete', methods=['POST'])
-    @login_required
-    def complete_task(year, month, day):
-        if not request.is_json:
-            return jsonify({'success': False, 'error': 'Invalid content type'}), 400
-
-        data = request.get_json()
-        task_id = data.get('task_id')
-
-        if not task_id:
-            return jsonify({'success': False, 'error': 'Missing task_id'}), 400
-
-        db = get_db()
-        cursor = db.cursor()
-
-        try:
-            # 1. Получаем данные задачи
-            cursor.execute('''
-                SELECT id, user_id, task, priority 
-                FROM tasks 
-                WHERE id = ? AND user_id = ?
-            ''', (task_id, current_user.id))
-            task = cursor.fetchone()
-
-            if not task:
-                return jsonify({'success': False, 'error': 'Task not found'}), 404
-
-            # 2. Получаем категории задачи
-            cursor.execute('''
-                SELECT c.name 
-                FROM categories c
-                JOIN task_categories tc ON c.id = tc.category_id
-                WHERE tc.task_id = ?
-            ''', (task_id,))
-            categories = [row['name'] for row in cursor.fetchall()]
-
-            # 3. Переносим в таблицу выполненных задач
-            cursor.execute('''
-                INSERT INTO completed_tasks 
-                (user_id, task_id, task_text, priority, categories, original_year, original_month, original_day)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                current_user.id,
-                task_id,
-                task['task'],
-                task['priority'],
-                ','.join(categories) if categories else None,
-                year,
-                month,
-                day
-            ))
-
-            # 4. Удаляем из текущих задач
-            cursor.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
-
-            # 5. Удаляем связи с категориями
-            cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
-
-            db.commit()
-
-            return jsonify({'success': True, 'day': str(day).zfill(2)})
-
-        except Exception as e:
-            db.rollback()
-            app.logger.error(f"Ошибка при выполнении задачи: {str(e)}")
-            return jsonify({'success': False, 'error': str(e)}), 500
-
-    @app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
-    @login_required
-    def get_completed_tasks(year, month, day):
-        db = get_db()
-        cursor = db.cursor()
-
-        try:
-            cursor.execute('''
-                SELECT id, task_id, task_text, priority, categories, 
-                       datetime(completion_time, 'localtime') as completion_time
-                FROM completed_tasks
-                WHERE user_id = ? AND original_year = ? AND original_month = ? AND original_day = ?
-                ORDER BY completion_time DESC
-            ''', (current_user.id, year, month, day))
-
-            completed_tasks = [dict(row) for row in cursor.fetchall()]
-
-            return jsonify({
-                'completed_tasks': completed_tasks,
-                'date': f"{year}-{month:02d}-{day:02d}"
-            })
-        except Exception as e:
-            app.logger.error(f"Error fetching completed tasks: {str(e)}")
-            return jsonify({'error': str(e)}), 500
-
-    # @app.route('/tasks/<int:year>/<int:month>/<int:day>/restore', methods=['POST'])
-    # @login_required
-    # def restore_task(year, month, day):
-    #     if not request.is_json:
-    #         return jsonify({'success': False, 'error': 'Invalid content type'}), 400
-    #
-    #     data = request.get_json()
-    #     completed_task_id = data.get('completed_task_id')
-    #
-    #     if not completed_task_id:
-    #         return jsonify({'success': False, 'error': 'Missing completed_task_id'}), 400
-    #
-    #     db = get_db()
-    #     cursor = db.cursor()
-    #
-    #     try:
-    #         # 1. Получаем данные выполненной задачи
-    #         cursor.execute('''
-    #             SELECT task_id, task_text, priority, categories, original_year, original_month, original_day
-    #             FROM completed_tasks
-    #             WHERE id = ? AND user_id = ?
-    #         ''', (completed_task_id, current_user.id))
-    #         completed_task = cursor.fetchone()
-    #
-    #         if not completed_task:
-    #             return jsonify({'success': False, 'error': 'Completed task not found'}), 404
-    #
-    #         # 2. Восстанавливаем задачу в таблицу tasks
-    #         cursor.execute('''
-    #             INSERT INTO tasks (id, user_id, year, month, day, task, priority)
-    #             VALUES (?, ?, ?, ?, ?, ?, ?)
-    #         ''', (
-    #             completed_task['task_id'],
-    #             current_user.id,
-    #             completed_task['original_year'],
-    #             completed_task['original_month'],
-    #             completed_task['original_day'],
-    #             completed_task['task_text'],
-    #             completed_task['priority']
-    #         ))
-    #
-    #         # 3. Восстанавливаем категории (если есть)
-    #         if completed_task['categories']:
-    #             category_names = completed_task['categories'].split(',')
-    #             for category_name in category_names:
-    #                 cursor.execute('''
-    #                     SELECT id FROM categories WHERE user_id = ? AND name = ?
-    #                 ''', (current_user.id, category_name.strip()))
-    #                 category = cursor.fetchone()
-    #                 if category:
-    #                     cursor.execute('''
-    #                         INSERT OR IGNORE INTO task_categories (task_id, category_id)
-    #                         VALUES (?, ?)
-    #                     ''', (completed_task['task_id'], category['id']))
-    #
-    #         # 4. Удаляем задачу из completed_tasks
-    #         cursor.execute('DELETE FROM completed_tasks WHERE id = ?', (completed_task_id,))
-    #
-    #         db.commit()
-    #
-    #         return jsonify({'success': True, 'day': str(day).zfill(2)})
-    #
-    #     except Exception as e:
-    #         db.rollback()
-    #         app.logger.error(f"Ошибка при восстановлении задачи: {str(e)}")
-    #         return jsonify({'success': False, 'error': str(e)}), 500
