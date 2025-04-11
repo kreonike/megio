@@ -25,6 +25,9 @@ from web.routes.google import google_routes, google_sync_scheduler
 from web.routes.task_restore import task_restore_routes
 from web.routes.categories import categories_routes
 from web.routes.remind import remind_routes
+from web.routes.calendar import generate_calendar
+from web.routes.complete import complete_routes
+
 
 import atexit
 
@@ -62,6 +65,7 @@ stats_routes(app, get_db)
 task_restore_routes(app, get_db)
 categories_routes(app)
 remind_routes(app)
+complete_routes(app, get_db)
 #categories_routes(app, get_db)
 
 # Инициализация Flask-Login
@@ -91,97 +95,97 @@ def load_user(user_id):
                     user_data['telegram_token'], user_data['google_token'])
 
 
-def generate_calendar(year, month, user_id):
-    cal = calendar.Calendar()
-    month_days = cal.monthdayscalendar(year, month)
-    now = datetime.now()
-    current_day = now.day if (year == now.year and month == now.month) else None
-
-    db = get_db()
-    cursor = db.cursor()
-
-    # Получаем количество задач и максимальный приоритет по дням
-    cursor.execute('''
-        SELECT day, COUNT(*) as task_count, MAX(priority) as max_priority 
-        FROM tasks 
-        WHERE user_id = ? AND year = ? AND month = ?
-        GROUP BY day
-    ''', (user_id, year, month))
-    days_tasks = {row['day']: {'count': row['task_count'], 'priority': row['max_priority']}
-                  for row in cursor.fetchall()}
-
-    # Получаем задачи с категориями
-    cursor.execute('''
-        SELECT t.day, c.color 
-        FROM tasks t
-        JOIN task_categories tc ON t.id = tc.task_id
-        JOIN categories c ON tc.category_id = c.id
-        WHERE t.user_id = ? AND t.year = ? AND t.month = ?
-    ''', (user_id, year, month))
-
-    days_colors = {}
-    for row in cursor.fetchall():
-        day = row['day']
-        if day not in days_colors:
-            days_colors[day] = set()
-        days_colors[day].add(row['color'])
-
-    # Начинаем формировать HTML календаря
-    calendar_html = '<table class="calendar-table"><tr>'
-    calendar_html += ''.join(f'<th>{day}</th>' for day in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'])
-    calendar_html += '</tr>'
-
-    for week in month_days:
-        calendar_html += '<tr>'
-        for i, day in enumerate(week):
-            if day == 0:
-                calendar_html += '<td class="empty-day"></td>'
-                continue
-
-            classes = ['day-cell']
-            if day == current_day:
-                classes.append('today')
-            if day in days_tasks:
-                classes.append('has-tasks')
-            if i >= 5:
-                classes.append('weekend')
-
-            # Добавляем стили для категорий
-            style = ''
-            if day in days_colors:
-                colors = days_colors[day]
-                if len(colors) == 1:
-                    style = f"background-color: {next(iter(colors))}20;"  # 20 - прозрачность
-                else:
-                    gradient = ','.join([f"{color} 0%, {color} 50%" for color in colors])
-                    style = f"background: linear-gradient(135deg, {gradient});"
-
-            task_info = days_tasks.get(day, {})
-            task_count = task_info.get('count', 0)
-            priority = task_info.get('priority', 1)
-
-            priority_class = ''
-            if priority == 3:
-                priority_class = 'priority-high'
-            elif priority == 2:
-                priority_class = 'priority-medium'
-            else:
-                priority_class = 'priority-low'
-
-            task_count_html = f'<span class="task-count-badge {priority_class}">{task_count}</span>' if task_count > 0 else ''
-
-            calendar_html += f'''
-                <td class="{" ".join(classes)}" style="{style}">
-                    <a href="{url_for("day_tasks", year=year, month=month, day=day)}" class="day-link" data-day="{day}">
-                        <span class="day-number">{day}</span>
-                        {task_count_html}
-                    </a>
-                </td>
-            '''
-        calendar_html += '</tr>'
-
-    calendar_html += '</table>'
-    return calendar_html
+# def generate_calendar(year, month, user_id):
+#     cal = calendar.Calendar()
+#     month_days = cal.monthdayscalendar(year, month)
+#     now = datetime.now()
+#     current_day = now.day if (year == now.year and month == now.month) else None
+#
+#     db = get_db()
+#     cursor = db.cursor()
+#
+#     # Получаем количество задач и максимальный приоритет по дням
+#     cursor.execute('''
+#         SELECT day, COUNT(*) as task_count, MAX(priority) as max_priority
+#         FROM tasks
+#         WHERE user_id = ? AND year = ? AND month = ?
+#         GROUP BY day
+#     ''', (user_id, year, month))
+#     days_tasks = {row['day']: {'count': row['task_count'], 'priority': row['max_priority']}
+#                   for row in cursor.fetchall()}
+#
+#     # Получаем задачи с категориями
+#     cursor.execute('''
+#         SELECT t.day, c.color
+#         FROM tasks t
+#         JOIN task_categories tc ON t.id = tc.task_id
+#         JOIN categories c ON tc.category_id = c.id
+#         WHERE t.user_id = ? AND t.year = ? AND t.month = ?
+#     ''', (user_id, year, month))
+#
+#     days_colors = {}
+#     for row in cursor.fetchall():
+#         day = row['day']
+#         if day not in days_colors:
+#             days_colors[day] = set()
+#         days_colors[day].add(row['color'])
+#
+#     # Начинаем формировать HTML календаря
+#     calendar_html = '<table class="calendar-table"><tr>'
+#     calendar_html += ''.join(f'<th>{day}</th>' for day in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'])
+#     calendar_html += '</tr>'
+#
+#     for week in month_days:
+#         calendar_html += '<tr>'
+#         for i, day in enumerate(week):
+#             if day == 0:
+#                 calendar_html += '<td class="empty-day"></td>'
+#                 continue
+#
+#             classes = ['day-cell']
+#             if day == current_day:
+#                 classes.append('today')
+#             if day in days_tasks:
+#                 classes.append('has-tasks')
+#             if i >= 5:
+#                 classes.append('weekend')
+#
+#             # Добавляем стили для категорий
+#             style = ''
+#             if day in days_colors:
+#                 colors = days_colors[day]
+#                 if len(colors) == 1:
+#                     style = f"background-color: {next(iter(colors))}20;"  # 20 - прозрачность
+#                 else:
+#                     gradient = ','.join([f"{color} 0%, {color} 50%" for color in colors])
+#                     style = f"background: linear-gradient(135deg, {gradient});"
+#
+#             task_info = days_tasks.get(day, {})
+#             task_count = task_info.get('count', 0)
+#             priority = task_info.get('priority', 1)
+#
+#             priority_class = ''
+#             if priority == 3:
+#                 priority_class = 'priority-high'
+#             elif priority == 2:
+#                 priority_class = 'priority-medium'
+#             else:
+#                 priority_class = 'priority-low'
+#
+#             task_count_html = f'<span class="task-count-badge {priority_class}">{task_count}</span>' if task_count > 0 else ''
+#
+#             calendar_html += f'''
+#                 <td class="{" ".join(classes)}" style="{style}">
+#                     <a href="{url_for("day_tasks", year=year, month=month, day=day)}" class="day-link" data-day="{day}">
+#                         <span class="day-number">{day}</span>
+#                         {task_count_html}
+#                     </a>
+#                 </td>
+#             '''
+#         calendar_html += '</tr>'
+#
+#     calendar_html += '</table>'
+#     return calendar_html
 
 
 @app.route('/')
@@ -204,7 +208,7 @@ def show_calendar():
     cursor.execute('SELECT id, name, color FROM categories WHERE user_id = ?', (current_user.id,))
     categories = cursor.fetchall()
 
-    calendar_html = generate_calendar(year, month, current_user.id)
+    calendar_html = generate_calendar(year, month, current_user.id, get_db)
     return render_template('calendar.html',
                            calendar=calendar_html,
                            year=year,
@@ -390,98 +394,98 @@ def month_tasks(year, month):
     return jsonify({'tasksByDay': tasks_by_day})
 
 
-@app.route('/tasks/<int:year>/<int:month>/<int:day>/complete', methods=['POST'])
-@login_required
-def complete_task(year, month, day):
-    if not request.is_json:
-        return jsonify({'success': False, 'error': 'Invalid content type'}), 400
+# @app.route('/tasks/<int:year>/<int:month>/<int:day>/complete', methods=['POST'])
+# @login_required
+# def complete_task(year, month, day):
+#     if not request.is_json:
+#         return jsonify({'success': False, 'error': 'Invalid content type'}), 400
+#
+#     data = request.get_json()
+#     task_id = data.get('task_id')
+#
+#     if not task_id:
+#         return jsonify({'success': False, 'error': 'Missing task_id'}), 400
+#
+#     db = get_db()
+#     cursor = db.cursor()
+#
+#     try:
+#         # 1. Получаем данные задачи
+#         cursor.execute('''
+#             SELECT id, user_id, task, priority
+#             FROM tasks
+#             WHERE id = ? AND user_id = ?
+#         ''', (task_id, current_user.id))
+#         task = cursor.fetchone()
+#
+#         if not task:
+#             return jsonify({'success': False, 'error': 'Task not found'}), 404
+#
+#         # 2. Получаем категории задачи
+#         cursor.execute('''
+#             SELECT c.name
+#             FROM categories c
+#             JOIN task_categories tc ON c.id = tc.category_id
+#             WHERE tc.task_id = ?
+#         ''', (task_id,))
+#         categories = [row['name'] for row in cursor.fetchall()]
+#
+#         # 3. Переносим в таблицу выполненных задач с правильными именами столбцов
+#         cursor.execute('''
+#             INSERT INTO completed_tasks
+#             (user_id, task_id, task_text, priority, categories, original_year, original_month, original_day)
+#             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+#         ''', (
+#             current_user.id,
+#             task_id,
+#             task['task'],
+#             task['priority'],
+#             ','.join(categories) if categories else None,
+#             year,
+#             month,
+#             day
+#         ))
+#
+#         # 4. Удаляем из текущих задач
+#         cursor.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
+#
+#         # 5. Удаляем связи с категориями
+#         cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
+#
+#         db.commit()
+#
+#         return jsonify({'success': True})
+#
+#     except Exception as e:
+#         db.rollback()
+#         logger.error(f"Ошибка при выполнении задачи: {str(e)}")
+#         return jsonify({'success': False, 'error': str(e)}), 500
 
-    data = request.get_json()
-    task_id = data.get('task_id')
 
-    if not task_id:
-        return jsonify({'success': False, 'error': 'Missing task_id'}), 400
-
-    db = get_db()
-    cursor = db.cursor()
-
-    try:
-        # 1. Получаем данные задачи
-        cursor.execute('''
-            SELECT id, user_id, task, priority 
-            FROM tasks 
-            WHERE id = ? AND user_id = ?
-        ''', (task_id, current_user.id))
-        task = cursor.fetchone()
-
-        if not task:
-            return jsonify({'success': False, 'error': 'Task not found'}), 404
-
-        # 2. Получаем категории задачи
-        cursor.execute('''
-            SELECT c.name 
-            FROM categories c
-            JOIN task_categories tc ON c.id = tc.category_id
-            WHERE tc.task_id = ?
-        ''', (task_id,))
-        categories = [row['name'] for row in cursor.fetchall()]
-
-        # 3. Переносим в таблицу выполненных задач с правильными именами столбцов
-        cursor.execute('''
-            INSERT INTO completed_tasks 
-            (user_id, task_id, task_text, priority, categories, original_year, original_month, original_day)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            current_user.id,
-            task_id,
-            task['task'],
-            task['priority'],
-            ','.join(categories) if categories else None,
-            year,
-            month,
-            day
-        ))
-
-        # 4. Удаляем из текущих задач
-        cursor.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
-
-        # 5. Удаляем связи с категориями
-        cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
-
-        db.commit()
-
-        return jsonify({'success': True})
-
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Ошибка при выполнении задачи: {str(e)}")
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-
-@app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
-@login_required
-def get_completed_tasks(year, month, day):
-    db = get_db()
-    cursor = db.cursor()
-
-    try:
-        cursor.execute('''
-            SELECT id, task_id, task_text, priority, categories, 
-                   datetime(completion_time, 'localtime') as completion_time
-            FROM completed_tasks
-            WHERE user_id = ? AND original_year = ? AND original_month = ? AND original_day = ?
-            ORDER BY completion_time DESC
-        ''', (current_user.id, year, month, day))
-
-        completed_tasks = [dict(row) for row in cursor.fetchall()]
-
-        return jsonify({
-            'completed_tasks': completed_tasks,
-            'date': f"{year}-{month:02d}-{day:02d}"
-        })
-    except Exception as e:
-        logger.error(f"Error fetching completed tasks: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+# @app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
+# @login_required
+# def get_completed_tasks(year, month, day):
+#     db = get_db()
+#     cursor = db.cursor()
+#
+#     try:
+#         cursor.execute('''
+#             SELECT id, task_id, task_text, priority, categories,
+#                    datetime(completion_time, 'localtime') as completion_time
+#             FROM completed_tasks
+#             WHERE user_id = ? AND original_year = ? AND original_month = ? AND original_day = ?
+#             ORDER BY completion_time DESC
+#         ''', (current_user.id, year, month, day))
+#
+#         completed_tasks = [dict(row) for row in cursor.fetchall()]
+#
+#         return jsonify({
+#             'completed_tasks': completed_tasks,
+#             'date': f"{year}-{month:02d}-{day:02d}"
+#         })
+#     except Exception as e:
+#         logger.error(f"Error fetching completed tasks: {str(e)}")
+#         return jsonify({'error': str(e)}), 500
 
 
 

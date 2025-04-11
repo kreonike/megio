@@ -6,6 +6,97 @@ from datetime import datetime
 import pytz
 import json
 
+def generate_calendar(year, month, user_id, get_db):
+    cal = calendar.Calendar()
+    month_days = cal.monthdayscalendar(year, month)
+    now = datetime.now(pytz.UTC)
+    current_day = now.day if (year == now.year and month == now.month) else None
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Получаем количество задач и максимальный приоритет по дням
+    cursor.execute('''
+        SELECT day, COUNT(*) as task_count, MAX(priority) as max_priority 
+        FROM tasks 
+        WHERE user_id = ? AND year = ? AND month = ?
+        GROUP BY day
+    ''', (user_id, year, month))
+    days_tasks = {row['day']: {'count': row['task_count'], 'priority': row['max_priority']}
+                  for row in cursor.fetchall()}
+
+    # Получаем задачи с категориями
+    cursor.execute('''
+        SELECT t.day, c.color 
+        FROM tasks t
+        JOIN task_categories tc ON t.id = tc.task_id
+        JOIN categories c ON tc.category_id = c.id
+        WHERE t.user_id = ? AND t.year = ? AND t.month = ?
+    ''', (user_id, year, month))
+
+    days_colors = {}
+    for row in cursor.fetchall():
+        day = row['day']
+        if day not in days_colors:
+            days_colors[day] = set()
+        days_colors[day].add(row['color'])
+
+    # Начинаем формировать HTML календаря
+    calendar_html = '<table class="calendar-table"><tr>'
+    calendar_html += ''.join(f'<th>{day}</th>' for day in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'])
+    calendar_html += '</tr>'
+
+    for week in month_days:
+        calendar_html += '<tr>'
+        for i, day in enumerate(week):
+            if day == 0:
+                calendar_html += '<td class="empty-day"></td>'
+                continue
+
+            classes = ['day-cell']
+            if day == current_day:
+                classes.append('today')
+            if day in days_tasks:
+                classes.append('has-tasks')
+            if i >= 5:
+                classes.append('weekend')
+
+            # Добавляем стили для категорий
+            style = ''
+            if day in days_colors:
+                colors = days_colors[day]
+                if len(colors) == 1:
+                    style = f"background-color: {next(iter(colors))}20;"  # 20 - прозрачность
+                else:
+                    gradient = ','.join([f"{color} 0%, {color} 50%" for color in colors])
+                    style = f"background: linear-gradient(135deg, {gradient});"
+
+            task_info = days_tasks.get(day, {})
+            task_count = task_info.get('count', 0)
+            priority = task_info.get('priority', 1)
+
+            priority_class = ''
+            if priority == 3:
+                priority_class = 'priority-high'
+            elif priority == 2:
+                priority_class = 'priority-medium'
+            else:
+                priority_class = 'priority-low'
+
+            task_count_html = f'<span class="task-count-badge {priority_class}">{task_count}</span>' if task_count > 0 else ''
+
+            calendar_html += f'''
+                <td class="{" ".join(classes)}" style="{style}">
+                    <a href="{url_for("day_tasks", year=year, month=month, day=day)}" class="day-link" data-day="{day}">
+                        <span class="day-number">{day}</span>
+                        {task_count_html}
+                    </a>
+                </td>
+            '''
+        calendar_html += '</tr>'
+
+    calendar_html += '</table>'
+    return calendar_html
 
 def calendar_routes(app, get_db):
     # Список русских названий месяцев
