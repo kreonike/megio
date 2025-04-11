@@ -120,15 +120,15 @@ export function updateTasksSection(tasks, date, day, categories) {
                             <div id="remind-form-${task.id}" class="remind-form">
                                 <div class="remind-options">
                                     <label class="remind-option">
-                                        <input type="checkbox" name="remind_times" value="15">
+                                        <input type="checkbox" name="remind_times" value="15" checked>
                                         <span>За 15 минут</span>
                                     </label>
                                     <label class="remind-option">
-                                        <input type="checkbox" name="remind_times" value="120">
+                                        <input type="checkbox" name="remind_times" value="120" checked>
                                         <span>За 2 часа</span>
                                     </label>
                                     <label class="remind-option">
-                                        <input type="checkbox" name="remind_times" value="1440">
+                                        <input type="checkbox" name="remind_times" value="1440" checked>
                                         <span>За 1 день</span>
                                     </label>
                                 </div>
