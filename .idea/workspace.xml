@@ -4,8 +4,62 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="08.04.2025 bot 3">
-      <change afterPath="$PROJECT_DIR$/bot/utils/calendar.py" afterDir="false" />
+    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/tasks.db" beforeDir="false" afterPath="$PROJECT_DIR$/database/tasks.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/app.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/app.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/config/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/decorators.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/logging_config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/logs/flask_debug.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/logs/flask_error.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/migrate_db.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/models/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/models/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/auth.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/calendar.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/categories.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/complete.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/google.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/login.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/logout.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/profile.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/register.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/remind.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/stats.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/task_restore.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/tasks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/telegram.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/services/category_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/services/task_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/base.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/calendar.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/old_cal.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/register.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/stats.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/tasks.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/calendar-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/completed-tasks.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/events.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/stats.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/tasks-update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/tasks.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/time.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/calendar.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/categories.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/profile.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/register.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/stats.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/tasks.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/utils.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +77,7 @@
     <branch-grouping />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="test" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,40 +92,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.app (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.app.executor&quot;: &quot;Run&quot;,
-    &quot;Python.bot_test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.main (2).executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mig.executor&quot;: &quot;Run&quot;,
-    &quot;Python.routes.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;test&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kreon/Dropbox/python_advanced_final/bot/locales/en&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.CommitDialog&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.app (1).executor": "Run",
+    "Python.app.executor": "Run",
+    "Python.bot_test.executor": "Run",
+    "Python.main (1).executor": "Run",
+    "Python.main (2).executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.mig.executor": "Run",
+    "Python.migrate_db.executor": "Run",
+    "Python.routes.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "alfa",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/kreon/Dropbox/python_advanced_final/web",
+    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\locales\en" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\config" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\routes" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\static\css" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\static\js" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\services" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\routes" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\database" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\logs" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\locales" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main (1)">
+  <component name="RunManager" selected="Python.app">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python_advanced_final" />
       <option name="ENV_FILES" value="" />
@@ -116,28 +171,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main (2)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="python_advanced_final" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/web" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/web/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="mig" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python_advanced_final" />
       <option name="ENV_FILES" value="" />
@@ -152,6 +185,28 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/database/mig.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="migrate_db" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="python_advanced_final" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/web" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/web/migrate_db.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -184,11 +239,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.app" />
+        <item itemvalue="Python.migrate_db" />
+        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.routes" />
         <item itemvalue="Python.mig" />
-        <item itemvalue="Python.main (2)" />
       </list>
     </recent_temporary>
   </component>
@@ -207,62 +262,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1743005307087</updated>
-    </task>
-    <task id="LOCAL-00008" summary="04.04.2025 1">
-      <option name="closed" value="true" />
-      <created>1743755787331</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1743755787331</updated>
-    </task>
-    <task id="LOCAL-00009" summary="04.04.2025 2">
-      <option name="closed" value="true" />
-      <created>1743769381474</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1743769381474</updated>
-    </task>
-    <task id="LOCAL-00010" summary="04.04.2025 2">
-      <option name="closed" value="true" />
-      <created>1743769390264</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1743769390264</updated>
-    </task>
-    <task id="LOCAL-00011" summary="04.04.2025 3">
-      <option name="closed" value="true" />
-      <created>1743770218668</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1743770218668</updated>
-    </task>
-    <task id="LOCAL-00012" summary="04.04.2025 4">
-      <option name="closed" value="true" />
-      <created>1743774542357</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1743774542357</updated>
-    </task>
-    <task id="LOCAL-00013" summary="04.04.2025 5">
-      <option name="closed" value="true" />
-      <created>1743783585122</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1743783585122</updated>
-    </task>
-    <task id="LOCAL-00014" summary="05.04.2025 динамический всё обновляется">
-      <option name="closed" value="true" />
-      <created>1743801223192</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1743801223192</updated>
     </task>
     <task id="LOCAL-00015" summary="05.04.2025 динамический всё обновляется">
       <option name="closed" value="true" />
@@ -600,7 +599,63 @@
       <option name="project" value="LOCAL" />
       <updated>1744143969848</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="11.04.2025">
+      <option name="closed" value="true" />
+      <created>1744381790032</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1744381790033</updated>
+    </task>
+    <task id="LOCAL-00058" summary="11.04.2025 2">
+      <option name="closed" value="true" />
+      <created>1744383952164</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1744383952164</updated>
+    </task>
+    <task id="LOCAL-00059" summary="11.04.2025 3">
+      <option name="closed" value="true" />
+      <created>1744384950365</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1744384950365</updated>
+    </task>
+    <task id="LOCAL-00060" summary="11.04.2025 4">
+      <option name="closed" value="true" />
+      <created>1744388611148</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1744388611148</updated>
+    </task>
+    <task id="LOCAL-00061" summary="11.04.2025 5">
+      <option name="closed" value="true" />
+      <created>1744388664061</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1744388664061</updated>
+    </task>
+    <task id="LOCAL-00062" summary="11.04.2025 6">
+      <option name="closed" value="true" />
+      <created>1744398173630</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1744398173630</updated>
+    </task>
+    <task id="LOCAL-00063" summary="12.04.2025">
+      <option name="closed" value="true" />
+      <created>1744452770216</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1744452770216</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -642,13 +697,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="05.04.2025 динамический всё обновляется 7" />
-    <MESSAGE value="05.04.2025 динамический всё обновляется 8" />
-    <MESSAGE value="05.04.2025 динамический всё обновляется 9" />
-    <MESSAGE value="05.04.2025 рабочий           вариант" />
-    <MESSAGE value="05.04.2025 рабочий вариант 100%" />
-    <MESSAGE value="06.04.2025" />
-    <MESSAGE value="06.04.2025 1" />
     <MESSAGE value="06.04.2025 2" />
     <MESSAGE value="06.04.2025 4" />
     <MESSAGE value="06.04.2025 done" />
@@ -667,7 +715,14 @@
     <MESSAGE value="08.04.2025 bot 1" />
     <MESSAGE value="08.04.2025 bot 2" />
     <MESSAGE value="08.04.2025 bot 3" />
-    <option name="LAST_COMMIT_MESSAGE" value="08.04.2025 bot 3" />
+    <MESSAGE value="11.04.2025" />
+    <MESSAGE value="11.04.2025 2" />
+    <MESSAGE value="11.04.2025 3" />
+    <MESSAGE value="11.04.2025 4" />
+    <MESSAGE value="11.04.2025 5" />
+    <MESSAGE value="11.04.2025 6" />
+    <MESSAGE value="12.04.2025" />
+    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -675,6 +730,10 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/bot/handlers/commands.py</url>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/web/config/config.py</url>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

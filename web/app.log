@@ -1,6 +1,0 @@
-2025-04-08 18:00:21,511 - tzlocal - DEBUG - Looking up time zone info from registry
-2025-04-08 18:00:21,516 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2025-04-08 18:00:21,518 - apscheduler.scheduler - INFO - Added job "profile_routes.<locals>.<lambda>" to job store "default"
-2025-04-08 18:00:21,518 - apscheduler.scheduler - INFO - Scheduler started
-2025-04-08 18:00:21,519 - apscheduler.scheduler - DEBUG - Looking for jobs to run
-2025-04-08 18:00:21,520 - apscheduler.scheduler - DEBUG - Next wakeup is due at 2025-04-08 18:02:21.516628+03:00 (in 119.995997 seconds)
