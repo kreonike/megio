@@ -20,8 +20,10 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
     const dayNum = dateParts[2];
     const formattedDate = `${dayNum.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
 
-    // Фильтрация завершенных задач для исключения некорректных записей
-    const validCompletedTasks = completedTasks.filter(task => task.id && task.task_text);
+    // Фильтрация и сортировка завершённых задач
+    const validCompletedTasks = completedTasks
+        .filter(task => task.id && task.task_text)
+        .sort((a, b) => new Date(b.completion_time) - new Date(a.completion_time));
 
     tasksSection.innerHTML = `
         <div class="calendar-filters">
@@ -198,26 +200,24 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
                 </li>
             `).join('')}
         </ul>
-        <h4 class="completed-tasks-header">Завершенные задачи</h4>
+        <h4 class="completed-tasks-header">Завершённые задачи</h4>
         <ul class="completed-task-list">
-            ${validCompletedTasks.length === 0 ? '<li class="no-tasks">Нет завершенных задач</li>' : validCompletedTasks.map(task => `
+            ${validCompletedTasks.length === 0 ? '<li class="no-completed-tasks">Нет завершённых задач</li>' : validCompletedTasks.map(task => `
                 <li class="completed-task-item" data-task-id="${task.id}" data-priority="${task.priority}">
-                    <span class="task-text">${task.task_text}</span>
-                    ${task.completion_time ? `<span class="completion-time">Завершено: ${formatCompletionTime(task.completion_time)}</span>` : ''}
-                    ${task.priority == 3 ? '<span class="priority-high">❗ Высокий</span>' :
-                      task.priority == 2 ? '<span class="priority-medium">🔹 Средний</span>' :
-                      '<span class="priority-low">🔸 Низкий</span>'}
-                    ${task.categories ? `
-                        <div class="task-meta">
-                            ${task.categories.split(',').map(cat_id => {
-                                const cat = categories.find(c => c.id == parseInt(cat_id));
-                                return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
-                            }).filter(tag => tag).join('')}
-                        </div>
-                    ` : ''}
-                    <div class="task-actions">
-                        <button type="button" class="restore-btn" data-task-id="${task.id}">Восстановить</button>
+                    <div class="completed-task-content">
+                        <span class="completed-task-text">${task.task_text}</span>
                     </div>
+                    <div class="completed-task-meta">
+                        ${task.completion_time ? `<span class="completed-time">Завершено: ${formatCompletionTime(task.completion_time)}</span>` : ''}
+                        <span class="priority-indicator priority-${task.priority}">
+                            ${task.priority == 3 ? '❗ Высокий' : task.priority == 2 ? '🔹 Средний' : '🔸 Низкий'}
+                        </span>
+                        ${task.categories ? task.categories.split(',').map(cat_id => {
+                            const cat = categories.find(c => c.id == parseInt(cat_id));
+                            return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
+                        }).filter(tag => tag).join('') : ''}
+                    </div>
+                    <button type="button" class="restore-btn" data-task-id="${task.id}">Восстановить</button>
                 </li>
             `).join('')}
         </ul>
@@ -271,9 +271,8 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
     document.getElementById('category-filter')?.addEventListener('change', applyFilters);
     document.getElementById('priority-filter')?.addEventListener('change', applyFilters);
 
-    // Привязываем обработчики кнопок восстановления
     document.querySelectorAll('.restore-btn').forEach(button => {
-        button.removeEventListener('click', handleRestore); // Предотвращаем дублирование
+        button.removeEventListener('click', handleRestore);
         button.addEventListener('click', handleRestore);
     });
 
@@ -300,7 +299,7 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
         .then(response => {
             if (!response.ok) {
                 if (response.status === 404) {
-                    throw new Error('Задача не найдена в завершенных');
+                    throw new Error('Задача не найдена в завершённых');
                 } else if (response.status === 409) {
                     throw new Error('Задача уже восстановлена');
                 }
@@ -360,7 +359,6 @@ function applyFilters() {
     });
 }
 
-// Форматирование времени завершения (например, "2025-04-12 14:30:00" → "14:30")
 function formatCompletionTime(timestamp) {
     try {
         const date = new Date(timestamp);
@@ -481,24 +479,41 @@ export function updateCalendar(year, month) {
     });
 }
 
-export function updateTaskPriorityIndicator(dayElement, tasks) {
+export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
     const badge = dayElement.querySelector('.task-count-badge');
-    if (!badge) return;
-    if (!tasks || tasks.length === 0) {
-        dayElement.classList.remove('has-tasks');
-        badge.remove();
+    const allTasks = [...(tasks || []), ...(completedTasks || []).map(task => ({
+        ...task,
+        priority: task.priority || 1
+    }))];
+
+    if (allTasks.length === 0) {
+        dayElement.classList.remove('has-tasks', 'has-overdue-tasks', 'all-tasks-completed');
+        if (badge) badge.remove();
         return;
     }
 
-    let maxPriority = 1;
-    tasks.forEach(task => {
-        if (task.priority > maxPriority) maxPriority = task.priority;
-    });
+    if (!badge) {
+        const link = dayElement.querySelector('.day-link');
+        if (link) {
+            const newBadge = document.createElement('span');
+            newBadge.className = 'task-count-badge';
+            link.appendChild(newBadge);
+        }
+    }
 
-    badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-    if (maxPriority === 3) badge.classList.add('priority-high');
-    else if (maxPriority === 2) badge.classList.add('priority-medium');
-    else badge.classList.add('priority-low');
+    const updatedBadge = dayElement.querySelector('.task-count-badge');
+    if (updatedBadge) {
+        let maxPriority = 1;
+        allTasks.forEach(task => {
+            maxPriority = Math.max(maxPriority, task.priority || 1);
+        });
+
+        updatedBadge.textContent = allTasks.length;
+        updatedBadge.classList.remove('priority-low', 'priority-medium', 'priority-high');
+        if (maxPriority === 3) updatedBadge.classList.add('priority-high');
+        else if (maxPriority === 2) updatedBadge.classList.add('priority-medium');
+        else updatedBadge.classList.add('priority-low');
+    }
 }
 
 export function bindAllTaskHandlers(year, month, day) {
@@ -544,7 +559,11 @@ export function bindAllTaskHandlers(year, month, day) {
                     dayAttr,
                     taskData.data.categories || []
                 );
-                updateTaskPriorityIndicator(this.closest('.day-cell'), taskData.data.tasks || []);
+                updateTaskPriorityIndicator(
+                    this.closest('.day-cell'),
+                    taskData.data.tasks || [],
+                    completedTasks || []
+                );
             } else {
                 console.error('[handleDayClick] Invalid task response data:', taskData);
                 alert('Ошибка: некорректные данные');

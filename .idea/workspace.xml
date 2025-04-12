@@ -4,26 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025 4">
-      <change afterPath="$PROJECT_DIR$/web/templates/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/templates/calendar.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/templates/categories.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/templates/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/templates/profile.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/templates/register.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/templates/stats.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/templates/tasks.html" afterDir="false" />
+    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025 5">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/tasks.db" beforeDir="false" afterPath="$PROJECT_DIR$/database/tasks.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/calendar.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes/calendar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/complete.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes/complete.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/task_restore.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes/task_restore.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes/tasks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/services/task_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/services/task_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/calendar.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/css/calendar.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/static/js/calendar-update.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/js/calendar-update.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/completed-tasks.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/js/completed-tasks.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -230,14 +214,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1743005307087</updated>
-    </task>
-    <task id="LOCAL-00017" summary="05.04.2025 динамический всё обновляется 3">
-      <option name="closed" value="true" />
-      <created>1743846466757</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1743846466757</updated>
     </task>
     <task id="LOCAL-00018" summary="05.04.2025 динамический всё обновляется 4">
       <option name="closed" value="true" />
@@ -623,7 +599,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744472265871</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="12.04.2025 5">
+      <option name="closed" value="true" />
+      <created>1744493494382</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1744493494382</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -665,7 +649,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="06.04.2025 done" />
     <MESSAGE value="07.04.2025 1" />
     <MESSAGE value="08.04.2025 test" />
     <MESSAGE value="08.04.2025" />
@@ -690,7 +673,8 @@
     <MESSAGE value="12.04.2025" />
     <MESSAGE value="12.04.2025 2" />
     <MESSAGE value="12.04.2025 4" />
-    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025 4" />
+    <MESSAGE value="12.04.2025 5" />
+    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025 5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
