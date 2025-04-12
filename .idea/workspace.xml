@@ -4,9 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025 2">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025 4">
+      <change afterPath="$PROJECT_DIR$/web/templates/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/templates/calendar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/templates/categories.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/templates/profile.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/templates/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/templates/stats.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/templates/tasks.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/tasks.db" beforeDir="false" afterPath="$PROJECT_DIR$/database/tasks.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/calendar.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes/calendar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/complete.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes/complete.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/task_restore.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes/task_restore.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/routes/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/routes/tasks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/services/task_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/web/services/task_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/calendar.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/css/calendar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/calendar-update.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/js/calendar-update.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/completed-tasks.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/js/completed-tasks.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +58,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.analize_db.executor": "Run",
     "Python.app (1).executor": "Run",
     "Python.app.executor": "Run",
     "Python.bot_test.executor": "Run",
@@ -50,30 +68,55 @@
     "Python.mig.executor": "Run",
     "Python.migrate_db.executor": "Run",
     "Python.routes.executor": "Run",
+    "Python.tt (1).executor": "Run",
+    "Python.tt (2).executor": "Run",
+    "Python.tt.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "alfa",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/kreon/Dropbox/python_advanced_final/web",
+    "last_opened_file_path": "C:/Users/kreon/Dropbox/python_advanced_final",
     "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final" />
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\database" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\locales\en" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\config" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\routes" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\static\css" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\database" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\services" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\routes" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\database" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\logs" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\locales" />
     </key>
   </component>
   <component name="RunManager" selected="Python.app">
+    <configuration name="analize_db" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="python_advanced_final" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/analize_db.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python_advanced_final" />
       <option name="ENV_FILES" value="" />
@@ -96,29 +139,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="python_advanced_final" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/bot" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/bot/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="mig" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="tt (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python_advanced_final" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -131,7 +152,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/database/mig.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/database/tt.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -140,7 +161,29 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="migrate_db" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="tt (2)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="python_advanced_final" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tt.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tt" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="python_advanced_final" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -153,29 +196,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/web/migrate_db.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="routes" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="python_advanced_final" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/web" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/web/routes.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\kreon\Dropbox\python_advanced_final\database\tt.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -187,10 +208,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.app" />
-        <item itemvalue="Python.migrate_db" />
-        <item itemvalue="Python.main (1)" />
-        <item itemvalue="Python.routes" />
-        <item itemvalue="Python.mig" />
+        <item itemvalue="Python.analize_db" />
+        <item itemvalue="Python.tt (2)" />
+        <item itemvalue="Python.tt (1)" />
+        <item itemvalue="Python.tt" />
       </list>
     </recent_temporary>
   </component>
@@ -209,14 +230,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1743005307087</updated>
-    </task>
-    <task id="LOCAL-00016" summary="05.04.2025 динамический всё обновляется 2">
-      <option name="closed" value="true" />
-      <created>1743804851091</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1743804851091</updated>
     </task>
     <task id="LOCAL-00017" summary="05.04.2025 динамический всё обновляется 3">
       <option name="closed" value="true" />
@@ -602,7 +615,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744468466008</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="12.04.2025 4">
+      <option name="closed" value="true" />
+      <created>1744472265871</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1744472265871</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -644,7 +665,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="06.04.2025 4" />
     <MESSAGE value="06.04.2025 done" />
     <MESSAGE value="07.04.2025 1" />
     <MESSAGE value="08.04.2025 test" />
@@ -669,7 +689,8 @@
     <MESSAGE value="11.04.2025 6" />
     <MESSAGE value="12.04.2025" />
     <MESSAGE value="12.04.2025 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025 2" />
+    <MESSAGE value="12.04.2025 4" />
+    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025 4" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -681,6 +702,10 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/web/config/config.py</url>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/web/app.py</url>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

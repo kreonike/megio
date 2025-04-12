@@ -7,19 +7,16 @@ from web.services.task_service import add_task, edit_task, delete_task
 from web.services.category_service import get_user_categories
 from web.utils import json_response
 
-
 def tasks_routes(app):
     @app.route('/', defaults={'year': None, 'month': None})
     @app.route('/calendar/<int:year>/<int:month>', methods=['GET'])
     @login_required
     def show_calendar(year=None, month=None):
         now = datetime.now()
-        # Установить значения по умолчанию, если year или month не указаны
         if year is None or month is None:
             year = now.year
             month = now.month
 
-        # Проверка границ месяца
         if month > 12:
             month = 1
             year += 1
@@ -27,7 +24,6 @@ def tasks_routes(app):
             month = 12
             year -= 1
 
-        # Проверка корректности года
         if year < 1900 or year > 9999:
             now = datetime.now()
             return redirect(url_for('show_calendar', year=now.year, month=now.month))
@@ -42,7 +38,8 @@ def tasks_routes(app):
                                month=month,
                                russian_month_name=MONTH_NAMES[month],
                                username=current_user.username,
-                               categories=categories)
+                               categories=categories,
+                               current_user_id=current_user.id)  # Добавлено
 
     @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
     @login_required
@@ -53,7 +50,6 @@ def tasks_routes(app):
 
             if request.method == 'POST':
                 try:
-                    # Удаление задачи
                     if 'delete' in request.form:
                         task_id = request.form.get('delete')
                         delete_task(db, current_user.id, task_id)
@@ -61,7 +57,6 @@ def tasks_routes(app):
                             return json_response(True)
                         flash('Задача удалена', 'success')
 
-                    # Редактирование задачи
                     elif 'task_id' in request.form:
                         task_id = request.form.get('task_id')
                         task_text = request.form.get('task')
@@ -92,7 +87,6 @@ def tasks_routes(app):
                             return json_response(True)
                         flash('Задача обновлена', 'success')
 
-                    # Добавление задачи
                     elif 'task' in request.form:
                         task_text = request.form.get('task')
                         time = request.form.get('time')
@@ -134,12 +128,15 @@ def tasks_routes(app):
                     flash(f'Ошибка: {str(e)}', 'error')
                     return redirect(url_for('day_tasks', year=year, month=month, day=day))
 
-            # GET-запрос
-            # Получаем незавершенные задачи
             cursor.execute('''
-                SELECT t.id, t.task, t.time, t.created, t.repeat_days, t.repeat_start, t.repeat_end, t.priority,
-                       GROUP_CONCAT(tc.category_id) AS category_ids
+                SELECT 
+                    t.id, t.task, t.time, t.created, t.repeat_days, t.repeat_start, t.repeat_end, t.priority,
+                    CASE WHEN ct.id IS NOT NULL THEN 1 ELSE 0 END as completed,
+                    GROUP_CONCAT(tc.category_id) AS category_ids
                 FROM tasks t
+                LEFT JOIN completed_tasks ct 
+                    ON t.id = ct.task_id 
+                    AND ct.user_id = t.user_id
                 LEFT JOIN task_categories tc ON t.id = tc.task_id
                 WHERE t.user_id = ? AND t.year = ? AND t.month = ? AND t.day = ?
                 GROUP BY t.id
@@ -149,41 +146,16 @@ def tasks_routes(app):
             for row in cursor.fetchall():
                 task = dict(row)
                 try:
-                    task['category_ids'] = list(map(int, task['category_ids'].split(','))) if task[
-                        'category_ids'] else []
+                    task['category_ids'] = list(map(int, task['category_ids'].split(','))) if task['category_ids'] else []
                 except (ValueError, TypeError):
                     task['category_ids'] = []
-                task['completed'] = False
                 tasks.append(task)
-
-            # Получаем завершенные задачи
-            cursor.execute('''
-                SELECT task_text, priority
-                FROM completed_tasks
-                WHERE user_id = ? AND original_year = ? AND original_month = ? AND original_day = ?
-            ''', (current_user.id, year, month, day))
-            for row in cursor.fetchall():
-                tasks.append({
-                    'id': None,
-                    'task': row['task_text'],
-                    'time': None,
-                    'created': None,
-                    'repeat_days': None,
-                    'repeat_start': None,
-                    'repeat_end': None,
-                    'priority': row['priority'],
-                    'category_ids': [],
-                    'completed': True
-                })
-
-            all_completed = all(task['completed'] for task in tasks) if tasks else False
 
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return json_response(True, data={
                     'tasks': tasks,
                     'date': f"{year}-{month:02d}-{day:02d}",
-                    'categories': categories,
-                    'all_completed': all_completed
+                    'categories': categories
                 })
 
             date_str = f"{day:02d}.{month:02d}.{year}"
@@ -201,12 +173,20 @@ def tasks_routes(app):
         with db_connection() as db:
             cursor = db.cursor()
 
-            # Получаем активные задачи
             cursor.execute('''
-                SELECT day, task, priority
-                FROM tasks
-                WHERE user_id = ? AND year = ? AND month = ?
-                ORDER BY day
+                SELECT 
+                    t.day, t.id, t.task, t.priority, t.time,
+                    t.repeat_days, t.repeat_start, t.repeat_end,
+                    CASE WHEN ct.id IS NOT NULL THEN 1 ELSE 0 END as completed,
+                    GROUP_CONCAT(tc.category_id) AS category_ids
+                FROM tasks t
+                LEFT JOIN completed_tasks ct 
+                    ON t.id = ct.task_id 
+                    AND ct.user_id = t.user_id
+                LEFT JOIN task_categories tc ON t.id = tc.task_id
+                WHERE t.user_id = ? AND t.year = ? AND t.month = ?
+                GROUP BY t.id
+                ORDER BY t.day
             ''', (current_user.id, year, month))
 
             tasks_by_day = {}
@@ -214,46 +194,24 @@ def tasks_routes(app):
                 day = row['day']
                 if day not in tasks_by_day:
                     tasks_by_day[day] = []
-                tasks_by_day[day].append({
+                task = {
+                    'id': row['id'],
                     'task': row['task'],
                     'priority': row['priority'],
-                    'completed': False
-                })
-
-            # Получаем завершенные задачи
-            cursor.execute('''
-                SELECT original_day, task_text, priority
-                FROM completed_tasks
-                WHERE user_id = ? AND original_year = ? AND original_month = ?
-                ORDER BY original_day
-            ''', (current_user.id, year, month))
-
-            for row in cursor.fetchall():
-                day = row['original_day']
-                if day not in tasks_by_day:
-                    tasks_by_day[day] = []
-                tasks_by_day[day].append({
-                    'task': row['task_text'],
-                    'priority': row['priority'],
-                    'completed': True
-                })
-
-            # Формируем структуру ответа
-            result = {}
-            for day in tasks_by_day:
-                tasks = tasks_by_day[day]
-                all_completed = all(task['completed'] for task in tasks) if tasks else False
-                result[day] = {
-                    'tasks': tasks,
-                    'all_completed': all_completed
+                    'time': row['time'],
+                    'repeat_days': row['repeat_days'],
+                    'repeat_start': row['repeat_start'],
+                    'repeat_end': row['repeat_end'],
+                    'completed': row['completed'],
+                    'category_ids': [int(cid) for cid in row['category_ids'].split(',')] if row['category_ids'] else []
                 }
+                tasks_by_day[day].append(task)
 
             import calendar
             cal = calendar.Calendar()
             month_days = cal.itermonthdays(year, month)
             for day in month_days:
-                if day != 0 and day not in result:
-                    result[day] = {'tasks': [], 'all_completed': False}
+                if day != 0 and day not in tasks_by_day:
+                    tasks_by_day[day] = []
 
-            app.logger.debug(f"Tasks by day for {year}-{month}: {result}")  # Добавляем отладку
-            return json_response(True, data={'tasksByDay': result})
+            return json_response(True, data={'tasksByDay': tasks_by_day})
