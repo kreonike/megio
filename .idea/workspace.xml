@@ -4,62 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025 2">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/tasks.db" beforeDir="false" afterPath="$PROJECT_DIR$/database/tasks.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/app.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/app.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/config/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/config/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/decorators.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/logging_config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/logs/flask_debug.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/logs/flask_error.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/migrate_db.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/models/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/models/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/auth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/calendar.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/categories.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/complete.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/google.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/login.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/logout.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/profile.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/register.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/remind.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/stats.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/task_restore.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/tasks.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/routes/telegram.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/services/category_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/services/task_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/base.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/calendar.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/old_cal.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/register.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/stats.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/tasks.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/calendar-update.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/completed-tasks.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/events.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/stats.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/tasks-update.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/tasks.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/time.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/calendar.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/categories.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/profile.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/register.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/stats.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/tasks.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/utils.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -262,14 +209,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1743005307087</updated>
-    </task>
-    <task id="LOCAL-00015" summary="05.04.2025 динамический всё обновляется">
-      <option name="closed" value="true" />
-      <created>1743801229439</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1743801229439</updated>
     </task>
     <task id="LOCAL-00016" summary="05.04.2025 динамический всё обновляется 2">
       <option name="closed" value="true" />
@@ -655,7 +594,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744452770216</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="12.04.2025 2">
+      <option name="closed" value="true" />
+      <created>1744468466008</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1744468466008</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -697,7 +644,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="06.04.2025 2" />
     <MESSAGE value="06.04.2025 4" />
     <MESSAGE value="06.04.2025 done" />
     <MESSAGE value="07.04.2025 1" />
@@ -722,7 +668,8 @@
     <MESSAGE value="11.04.2025 5" />
     <MESSAGE value="11.04.2025 6" />
     <MESSAGE value="12.04.2025" />
-    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025" />
+    <MESSAGE value="12.04.2025 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025 2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
