@@ -1,9 +1,11 @@
 # register.py
-from flask import render_template, redirect, url_for, flash, request
 import sqlite3
-import re
 
-def register_routes(app, get_db, bcrypt):
+from flask import render_template, redirect, url_for, flash, request
+import re
+from web.config.config import db_connection
+
+def register_routes(app, bcrypt):
     @app.route('/register', methods=['GET', 'POST'])
     def register():
         if request.method == 'POST':
@@ -32,22 +34,25 @@ def register_routes(app, get_db, bcrypt):
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
             try:
-                db = get_db()
-                cursor = db.cursor()
-                cursor.execute('''
-                    INSERT INTO users (username, email, password)
-                    VALUES (?, ?, ?)
-                ''', (username, email, hashed_password))
-                db.commit()
+                with db_connection() as db:
+                    cursor = db.cursor()
+                    cursor.execute('''
+                        INSERT INTO users (username, email, password)
+                        VALUES (?, ?, ?)
+                    ''', (username, email, hashed_password))
+                    db.commit()
 
-                flash('Регистрация успешна. Теперь вы можете войти.', 'success')
-                return redirect(url_for('login'))
+                    flash('Регистрация успешна. Теперь вы можете войти.', 'success')
+                    return redirect(url_for('login'))
 
             except sqlite3.IntegrityError as e:
                 if 'username' in str(e):
                     flash('Это имя пользователя уже занято', 'error')
                 elif 'email' in str(e):
                     flash('Этот email уже используется', 'error')
+                return render_template('register.html')
+            except Exception as e:
+                flash(f'Ошибка при регистрации: {str(e)}', 'error')
                 return render_template('register.html')
 
         return render_template('register.html')

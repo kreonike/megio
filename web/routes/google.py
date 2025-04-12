@@ -9,6 +9,7 @@ from google.auth.transport.requests import Request
 import datetime as dt
 from apscheduler.schedulers.background import BackgroundScheduler
 from web.models.models import User
+from web.config.config import db_connection
 
 
 def fetch_google_events(user, max_results=10):
@@ -33,97 +34,97 @@ def fetch_google_events(user, max_results=10):
     return events_result.get('items', [])
 
 
-def sync_google_calendar_for_all_users(app, get_db):
+def sync_google_calendar_for_all_users(app):
     logger = logging.getLogger(__name__)
     with app.app_context():
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('SELECT id, username, email, google_token FROM users WHERE google_token IS NOT NULL')
-        users = cursor.fetchall()
+        try:
+            with db_connection() as db:
+                cursor = db.cursor()
+                cursor.execute('SELECT id, username, email, google_token FROM users WHERE google_token IS NOT NULL')
+                users = cursor.fetchall()
 
-        for user_data in users:
-            user = User(user_data['id'], user_data['username'], user_data['email'],
-                        google_token=user_data['google_token'])
-            try:
-                events = fetch_google_events(user)
-                if events is None:
-                    continue
-
-                added_count = 0
-                # Получаем все event_id из Google Calendar
-                google_event_ids = set()
-
-                for event in events:
-                    google_event_ids.add(event['id'])  # Используем id события из Google Calendar
-                    start = event['start'].get('dateTime', event['start'].get('date'))
-                    if not start:
-                        continue
-
+                for user_data in users:
+                    user = User(user_data['id'], user_data['username'], user_data['email'],
+                                google_token=user_data['google_token'])
                     try:
-                        event_date = dt.datetime.fromisoformat(start) if 'T' in start else dt.datetime.strptime(start,
-                                                                                                                '%Y-%m-%d')
-                        if 'date' in event['start']:
-                            event_date = event_date.replace(hour=12, minute=0)
+                        events = fetch_google_events(user)
+                        if events is None:
+                            continue
+
+                        added_count = 0
+                        google_event_ids = set()
+
+                        for event in events:
+                            google_event_ids.add(event['id'])
+                            start = event['start'].get('dateTime', event['start'].get('date'))
+                            if not start:
+                                continue
+
+                            try:
+                                event_date = dt.datetime.fromisoformat(start) if 'T' in start else dt.datetime.strptime(start, '%Y-%m-%d')
+                                if 'date' in event['start']:
+                                    event_date = event_date.replace(hour=12, minute=0)
+
+                                cursor.execute('''
+                                    SELECT 1 FROM tasks 
+                                    WHERE user_id = ? 
+                                    AND year = ? AND month = ? AND day = ?
+                                    AND task = ?
+                                    AND (time = ? OR (time IS NULL AND ? IS NULL))
+                                    AND google_event_id = ?
+                                ''', (
+                                    user.id,
+                                    event_date.year,
+                                    event_date.month,
+                                    event_date.day,
+                                    event.get('summary', 'Без названия'),
+                                    event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
+                                    event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
+                                    event['id']
+                                ))
+
+                                if not cursor.fetchone():
+                                    cursor.execute('''
+                                        INSERT INTO tasks (user_id, year, month, day, task, time, created, google_event_id)
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                                    ''', (
+                                        user.id,
+                                        event_date.year,
+                                        event_date.month,
+                                        event_date.day,
+                                        event.get('summary', 'Без названия'),
+                                        event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
+                                        dt.datetime.now(),
+                                        event['id']
+                                    ))
+                                    added_count += 1
+                            except Exception as e:
+                                logger.error(f"Ошибка при добавлении события для пользователя {user.username}: {str(e)}")
+                                continue
 
                         cursor.execute('''
-                            SELECT 1 FROM tasks 
-                            WHERE user_id = ? 
-                            AND year = ? AND month = ? AND day = ?
-                            AND task = ?
-                            AND (time = ? OR (time IS NULL AND ? IS NULL))
-                            AND google_event_id = ?
-                        ''', (
-                            user.id,
-                            event_date.year,
-                            event_date.month,
-                            event_date.day,
-                            event.get('summary', 'Без названия'),
-                            event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                            event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                            event['id']
-                        ))
+                            SELECT id, google_event_id FROM tasks 
+                            WHERE user_id = ? AND google_event_id IS NOT NULL
+                        ''', (user.id,))
+                        db_tasks = cursor.fetchall()
 
-                        if not cursor.fetchone():
-                            cursor.execute('''
-                                INSERT INTO tasks (user_id, year, month, day, task, time, created, google_event_id)
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                            ''', (
-                                user.id,
-                                event_date.year,
-                                event_date.month,
-                                event_date.day,
-                                event.get('summary', 'Без названия'),
-                                event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                                dt.datetime.now(),
-                                event['id']
-                            ))
-                            added_count += 1
+                        deleted_count = 0
+                        for task in db_tasks:
+                            if task['google_event_id'] not in google_event_ids:
+                                cursor.execute('DELETE FROM tasks WHERE id = ?', (task['id'],))
+                                deleted_count += 1
+
+                        db.commit()
+                        logger.info(f"Для пользователя {user.username}: добавлено {added_count} новых событий, удалено {deleted_count} событий")
+
                     except Exception as e:
-                        logger.error(f"Ошибка при добавлении события для пользователя {user.username}: {str(e)}")
+                        logger.error(f"Ошибка синхронизации для пользователя {user.username}: {str(e)}")
                         continue
+        except Exception as e:
+            logger.error(f"Ошибка при синхронизации календарей: {str(e)}")
 
-                # Удаляем задачи, которых больше нет в Google Calendar
-                cursor.execute('''
-                    SELECT id, google_event_id FROM tasks 
-                    WHERE user_id = ? AND google_event_id IS NOT NULL
-                ''', (user.id,))
-                db_tasks = cursor.fetchall()
 
-                deleted_count = 0
-                for task in db_tasks:
-                    if task['google_event_id'] not in google_event_ids:
-                        cursor.execute('DELETE FROM tasks WHERE id = ?', (task['id'],))
-                        deleted_count += 1
-
-                db.commit()
-                logger.info(
-                    f"Для пользователя {user.username}: добавлено {added_count} новых событий, удалено {deleted_count} событий из Google Calendar")
-
-            except Exception as e:
-                logger.error(f"Ошибка синхронизации для пользователя {user.username}: {str(e)}")
-                continue
-
-def google_routes(app, get_db):
+def google_routes(app):
     logger = logging.getLogger(__name__)
 
     @app.route('/connect_google')
@@ -189,18 +190,18 @@ def google_routes(app, get_db):
             flow.fetch_token(authorization_response=request.url)
             credentials = flow.credentials
 
-            db = get_db()
-            cursor = db.cursor()
-            cursor.execute('UPDATE users SET google_token = ? WHERE id = ?',
-                         (json.dumps({
-                             'token': credentials.token,
-                             'refresh_token': credentials.refresh_token,
-                             'token_uri': credentials.token_uri,
-                             'client_id': credentials.client_id,
-                             'client_secret': credentials.client_secret,
-                             'scopes': credentials.scopes
-                         }), current_user.id))
-            db.commit()
+            with db_connection() as db:
+                cursor = db.cursor()
+                cursor.execute('UPDATE users SET google_token = ? WHERE id = ?',
+                             (json.dumps({
+                                 'token': credentials.token,
+                                 'refresh_token': credentials.refresh_token,
+                                 'token_uri': credentials.token_uri,
+                                 'client_id': credentials.client_id,
+                                 'client_secret': credentials.client_secret,
+                                 'scopes': credentials.scopes
+                             }), current_user.id))
+                db.commit()
 
             flash('Google Calendar успешно подключен', 'success')
             return redirect(url_for('profile'))
@@ -213,10 +214,10 @@ def google_routes(app, get_db):
     @app.route('/disconnect_google', methods=['POST'])
     @login_required
     def disconnect_google():
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('UPDATE users SET google_token = NULL WHERE id = ?', (current_user.id,))
-        db.commit()
+        with db_connection() as db:
+            cursor = db.cursor()
+            cursor.execute('UPDATE users SET google_token = NULL WHERE id = ?', (current_user.id,))
+            db.commit()
         flash('Google Calendar успешно отключен', 'success')
         return redirect(url_for('profile'))
 
@@ -228,47 +229,29 @@ def google_routes(app, get_db):
             flash('Не удалось получить доступ к Google Calendar. Пожалуйста, подключите аккаунт.', 'error')
             return redirect(url_for('profile'))
 
-        db = get_db()
-        cursor = db.cursor()
-        added_count = 0
+        with db_connection() as db:
+            cursor = db.cursor()
+            added_count = 0
+            google_event_ids = set()
 
-        # Получаем все event_id из Google Calendar
-        google_event_ids = set()
+            for event in events:
+                google_event_ids.add(event['id'])
+                start = event['start'].get('dateTime', event['start'].get('date'))
+                if not start:
+                    continue
 
-        for event in events:
-            google_event_ids.add(event['id'])
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            if not start:
-                continue
+                try:
+                    event_date = dt.datetime.fromisoformat(start) if 'T' in start else dt.datetime.strptime(start, '%Y-%m-%d')
+                    if 'date' in event['start']:
+                        event_date = event_date.replace(hour=12, minute=0)
 
-            try:
-                event_date = dt.datetime.fromisoformat(start) if 'T' in start else dt.datetime.strptime(start,
-                                                                                                        '%Y-%m-%d')
-                if 'date' in event['start']:
-                    event_date = event_date.replace(hour=12, minute=0)
-
-                cursor.execute('''
-                    SELECT 1 FROM tasks 
-                    WHERE user_id = ? 
-                    AND year = ? AND month = ? AND day = ?
-                    AND task = ?
-                    AND (time = ? OR (time IS NULL AND ? IS NULL))
-                    AND google_event_id = ?
-                ''', (
-                    current_user.id,
-                    event_date.year,
-                    event_date.month,
-                    event_date.day,
-                    event.get('summary', 'Без названия'),
-                    event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                    event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                    event['id']
-                ))
-
-                if not cursor.fetchone():
                     cursor.execute('''
-                        INSERT INTO tasks (user_id, year, month, day, task, time, created, google_event_id)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        SELECT 1 FROM tasks 
+                        WHERE user_id = ? 
+                        AND year = ? AND month = ? AND day = ?
+                        AND task = ?
+                        AND (time = ? OR (time IS NULL AND ? IS NULL))
+                        AND google_event_id = ?
                     ''', (
                         current_user.id,
                         event_date.year,
@@ -276,38 +259,51 @@ def google_routes(app, get_db):
                         event_date.day,
                         event.get('summary', 'Без названия'),
                         event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
-                        dt.datetime.now(),
+                        event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
                         event['id']
                     ))
-                    added_count += 1
 
-            except Exception as e:
-                logger.error(f"Ошибка при добавлении события: {str(e)}")
-                continue
+                    if not cursor.fetchone():
+                        cursor.execute('''
+                            INSERT INTO tasks (user_id, year, month, day, task, time, created, google_event_id)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        ''', (
+                            current_user.id,
+                            event_date.year,
+                            event_date.month,
+                            event_date.day,
+                            event.get('summary', 'Без названия'),
+                            event_date.strftime('%H:%M') if 'dateTime' in event['start'] else None,
+                            dt.datetime.now(),
+                            event['id']
+                        ))
+                        added_count += 1
 
-        # Удаляем задачи, которых больше нет в Google Calendar
-        cursor.execute('''
-            SELECT id, google_event_id FROM tasks 
-            WHERE user_id = ? AND google_event_id IS NOT NULL
-        ''', (current_user.id,))
-        db_tasks = cursor.fetchall()
+                except Exception as e:
+                    logger.error(f"Ошибка при добавлении события: {str(e)}")
+                    continue
 
-        deleted_count = 0
-        for task in db_tasks:
-            if task['google_event_id'] not in google_event_ids:
-                cursor.execute('DELETE FROM tasks WHERE id = ?', (task['id'],))
-                deleted_count += 1
+            cursor.execute('''
+                SELECT id, google_event_id FROM tasks 
+                WHERE user_id = ? AND google_event_id IS NOT NULL
+            ''', (current_user.id,))
+            db_tasks = cursor.fetchall()
 
-        db.commit()
-        flash(f'Добавлено {added_count} новых событий, удалено {deleted_count} событий из Google Calendar', 'success')
-        return redirect(url_for('show_calendar'))
+            deleted_count = 0
+            for task in db_tasks:
+                if task['google_event_id'] not in google_event_ids:
+                    cursor.execute('DELETE FROM tasks WHERE id = ?', (task['id'],))
+                    deleted_count += 1
+
+            db.commit()
+            flash(f'Добавлено {added_count} новых событий, удалено {deleted_count} событий из Google Calendar', 'success')
+            return redirect(url_for('show_calendar'))
 
 
-
-def google_sync_scheduler(app, get_db):
+def google_sync_scheduler(app):
     scheduler = BackgroundScheduler()
     scheduler.add_job(
-        func=lambda: sync_google_calendar_for_all_users(app, get_db),
+        func=lambda: sync_google_calendar_for_all_users(app),
         trigger='interval',
         minutes=2
     )

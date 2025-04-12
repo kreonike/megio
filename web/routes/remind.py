@@ -1,8 +1,6 @@
-# web/routes/remind.py
 from flask import jsonify, request
 from flask_login import login_required, current_user
-
-from web.config.config import get_db
+from web.config.config import db_connection
 
 def remind_routes(app):
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/remind', methods=['POST'])
@@ -20,30 +18,30 @@ def remind_routes(app):
             return jsonify({'success': False, 'error': 'Missing task_id or remind_times'}), 400
 
         try:
-            db = get_db()
-            cursor = db.cursor()
+            with db_connection() as db:
+                cursor = db.cursor()
 
-            cursor.execute('SELECT user_id FROM tasks WHERE id = ?', (task_id,))
-            task = cursor.fetchone()
-            if not task or task['user_id'] != current_user.id:
-                return jsonify({'success': False, 'error': 'Task not found or access denied'}), 403
+                cursor.execute('SELECT user_id FROM tasks WHERE id = ?', (task_id,))
+                task = cursor.fetchone()
+                if not task or task['user_id'] != current_user.id:
+                    return jsonify({'success': False, 'error': 'Task not found or access denied'}), 403
 
-            cursor.execute('''
-                UPDATE tasks 
-                SET 
-                    reminder_15m_sent = ?,
-                    reminder_2h_sent = ?,
-                    reminder_1day_sent = ?
-                WHERE id = ?
-            ''', (
-                0 if 15 in remind_times else 1,
-                0 if 120 in remind_times else 1,
-                0 if 1440 in remind_times else 1,
-                task_id
-            ))
+                cursor.execute('''
+                    UPDATE tasks 
+                    SET 
+                        reminder_15m_sent = ?,
+                        reminder_2h_sent = ?,
+                        reminder_1day_sent = ?
+                    WHERE id = ?
+                ''', (
+                    0 if 15 in remind_times else 1,
+                    0 if 120 in remind_times else 1,
+                    0 if 1440 in remind_times else 1,
+                    task_id
+                ))
 
-            db.commit()
-            return jsonify({'success': True})
+                db.commit()
+                return jsonify({'success': True})
 
         except Exception as e:
             app.logger.error(f"Ошибка при установке напоминаний: {str(e)}")

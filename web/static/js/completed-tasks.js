@@ -1,23 +1,24 @@
-// static/js/completed-tasks.js
+// completed-tasks.js
+
+// Импортируем необходимые функции
+import { fetchTasks } from './tasks.js';
+import { updateTasksSection, updateCalendar } from './calendar-update.js';
+
+// Обновляет секцию выполненных задач в интерфейсе
 export function updateCompletedTasksSection(completedTasks, year, month, day) {
     console.log('[updateCompletedTasksSection] Updating completed tasks section');
-    const taskList = document.querySelector('.task-list');
-    if (!taskList) {
-        console.log('[updateCompletedTasksSection] Task list not found');
-        return;
-    }
+    console.log('[updateCompletedTasksSection] Received completed tasks:', completedTasks);
 
-    let completedSection = taskList.querySelector('.completed-tasks-section');
+    const completedSection = document.querySelector('.completed-tasks-section');
     if (!completedSection) {
-        completedSection = document.createElement('div');
-        completedSection.className = 'completed-tasks-section';
-        taskList.appendChild(completedSection);
+        console.error('[updateCompletedTasksSection] Completed tasks section not found');
+        return;
     }
 
     completedSection.innerHTML = `
         <h4 class="completed-tasks-header">Выполненные задачи</h4>
         <ul class="completed-tasks-list">
-            ${completedTasks.length === 0 ?
+            ${!completedTasks || completedTasks.length === 0 ?
                 '<li class="no-completed-tasks">Нет выполненных задач</li>' :
                 completedTasks.map(task => `
                     <li class="completed-task-item" data-completed-task-id="${task.id}">
@@ -31,8 +32,12 @@ export function updateCompletedTasksSection(completedTasks, year, month, day) {
                                     ${task.priority === 3 ? 'Высокий' : task.priority === 2 ? 'Средний' : 'Низкий'}
                                 </span>` : ''
                             }
-                            ${task.categories ?
-                                `<span class="completed-categories">${task.categories}</span>` : ''
+                            ${task.categories && Array.isArray(task.categories) ?
+                                task.categories.map(cat => `
+                                    <span class="category-tag" style="background-color: ${cat.color || '#ccc'}">
+                                        ${cat.name || 'Без названия'}
+                                    </span>
+                                `).join('') : ''
                             }
                         </div>
                         <div class="completed-task-actions">
@@ -58,6 +63,7 @@ export function updateCompletedTasksSection(completedTasks, year, month, day) {
     });
 }
 
+// Загружает список выполненных задач с сервера
 export function fetchCompletedTasks(year, month, day) {
     console.log(`[fetchCompletedTasks] Fetching completed tasks for ${year}-${month}-${day}`);
     return fetch(`/tasks/${year}/${month}/${day}/completed`, {
@@ -65,21 +71,31 @@ export function fetchCompletedTasks(year, month, day) {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
     .then(response => {
+        console.log('[fetchCompletedTasks] Response status:', response.status);
         if (!response.ok) {
             console.error('[fetchCompletedTasks] Network response not ok:', response.status);
-            throw new Error('Network response was not ok');
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
-        console.log('[fetchCompletedTasks] Received completed tasks:', JSON.stringify(data, null, 2));
-        updateCompletedTasksSection(data.completed_tasks, year, month, day);
+        console.log('[fetchCompletedTasks] Response data:', data);
+        if (data.success && data.data) {
+            updateCompletedTasksSection(data.data.completed_tasks || [], year, month, day);
+        } else {
+            console.error('[fetchCompletedTasks] Invalid response data:', data);
+            updateCompletedTasksSection([], year, month, day);
+            alert('Ошибка: сервер вернул некорректные данные о выполненных задачах');
+        }
     })
     .catch(error => {
         console.error('[fetchCompletedTasks] Error fetching completed tasks:', error);
+        updateCompletedTasksSection([], year, month, day);
+        alert('Ошибка при загрузке выполненных задач: ' + error.message);
     });
 }
 
+// Восстанавливает выполненную задачу
 function restoreTask(completedTaskId, year, month, day) {
     console.log(`[restoreTask] Restoring task with ID ${completedTaskId}`);
     fetch(`/tasks/${year}/${month}/${day}/restore`, {
@@ -91,33 +107,28 @@ function restoreTask(completedTaskId, year, month, day) {
         body: JSON.stringify({ completed_task_id: completedTaskId })
     })
     .then(response => {
+        console.log('[restoreTask] Response status:', response.status);
         if (!response.ok) {
             console.error('[restoreTask] Network response not ok:', response.status);
-            throw new Error('Network response was not ok');
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
+        console.log('[restoreTask] Response data:', data);
         if (data.success) {
             console.log('[restoreTask] Task restored successfully');
-            // Обновляем список активных задач
-            fetch(`/tasks/${year}/${month}/${day}`, {
-                method: 'GET',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(response => response.json())
-            .then(tasksData => {
-                import('./calendar-update.js').then(module => {
-                    module.updateTasksSection(tasksData.tasks, `${year}-${month}-${day}`, day, tasksData.categories || []);
-                });
-            });
-            // Обновляем список выполненных задач
-            fetchCompletedTasks(year, month, day);
+            // Обновляем список активных задач и передаем fetchCompletedTasks как callback
+            fetchTasks(year, month, day, fetchCompletedTasks);
+            // Обновляем календарь
+            updateCalendar(year, month);
         } else {
-            console.error('[restoreTask] Failed to restore task:', data.error);
+            console.error('[restoreTask] Error:', data.error);
+            alert('Ошибка при восстановлении задачи: ' + (data.error || 'Неизвестная ошибка'));
         }
     })
     .catch(error => {
         console.error('[restoreTask] Error restoring task:', error);
+        alert('Ошибка при восстановлении задачи: ' + error.message);
     });
 }

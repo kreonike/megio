@@ -1,17 +1,15 @@
 # profile.py
+import sqlite3
+
 import pytz
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required
-import sqlite3
-from web.models.models import User
+from web.config.config import db_connection
 
-
-def profile_routes(app, get_db):
+def profile_routes(app):
     @app.route('/profile', methods=['GET', 'POST'])
     @login_required
     def profile():
-        db = get_db()
-
         if request.method == 'POST':
             # Обработка email
             if 'email' in request.form:
@@ -20,11 +18,13 @@ def profile_routes(app, get_db):
                     flash('Email не может быть пустым', 'error')
                 else:
                     try:
-                        cursor = db.cursor()
-                        cursor.execute('UPDATE users SET email = ? WHERE id = ?', (new_email, current_user.id))
-                        db.commit()
-                        current_user.email = new_email
-                        flash('Email успешно обновлен', 'success')
+                        with db_connection() as db:
+                            cursor = db.cursor()
+                            cursor.execute('UPDATE users SET email = ? WHERE id = ?',
+                                         (new_email, current_user.id))
+                            db.commit()
+                            current_user.email = new_email
+                            flash('Email успешно обновлен', 'success')
                     except sqlite3.IntegrityError:
                         flash('Этот email уже используется другим пользователем', 'error')
 
@@ -33,18 +33,19 @@ def profile_routes(app, get_db):
                 new_timezone = request.form.get('timezone')
                 if new_timezone in pytz.all_timezones:
                     try:
-                        cursor = db.cursor()
-                        cursor.execute('UPDATE users SET timezone = ? WHERE id = ?', (new_timezone, current_user.id))
-                        db.commit()
-                        current_user.timezone = new_timezone
-                        flash('Временная зона успешно обновлена', 'success')
+                        with db_connection() as db:
+                            cursor = db.cursor()
+                            cursor.execute('UPDATE users SET timezone = ? WHERE id = ?',
+                                         (new_timezone, current_user.id))
+                            db.commit()
+                            current_user.timezone = new_timezone
+                            flash('Временная зона успешно обновлена', 'success')
                     except Exception as e:
                         flash(f'Ошибка при обновлении временной зоны: {str(e)}', 'error')
 
         if not current_user.telegram_token:
             current_user.telegram_token = current_user.generate_telegram_token()
 
-        # Получаем все временные зоны из pytz
         timezones = pytz.all_timezones
 
         return render_template('profile.html',
