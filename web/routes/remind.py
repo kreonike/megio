@@ -1,13 +1,15 @@
 from flask import jsonify, request
 from flask_login import login_required, current_user
 from web.config.config import db_connection
+from web.utils import json_response
+from web.services.task_service import check_ownership
 
 def remind_routes(app):
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/remind', methods=['POST'])
     @login_required
     def set_task_reminders(year, month, day):
         if not request.is_json:
-            return jsonify({'success': False, 'error': 'Invalid content type'}), 400
+            return json_response(False, error='Invalid content type', status_code=400)
 
         data = request.get_json()
         task_id = data.get('task_id')
@@ -15,16 +17,14 @@ def remind_routes(app):
         app.logger.debug(f"Received remind request: task_id={task_id}, remind_times={remind_times}")
 
         if not task_id or not remind_times:
-            return jsonify({'success': False, 'error': 'Missing task_id or remind_times'}), 400
+            return json_response(False, error='Missing task_id or remind_times', status_code=400)
 
         try:
             with db_connection() as db:
                 cursor = db.cursor()
 
-                cursor.execute('SELECT user_id FROM tasks WHERE id = ?', (task_id,))
-                task = cursor.fetchone()
-                if not task or task['user_id'] != current_user.id:
-                    return jsonify({'success': False, 'error': 'Task not found or access denied'}), 403
+                # Проверяем права доступа
+                check_ownership(cursor, 'tasks', task_id, current_user.id)
 
                 cursor.execute('''
                     UPDATE tasks 
@@ -41,8 +41,11 @@ def remind_routes(app):
                 ))
 
                 db.commit()
-                return jsonify({'success': True})
+                return json_response(True)
 
+        except PermissionError as e:
+            app.logger.error(f"Permission error: {str(e)}")
+            return json_response(False, error=str(e), status_code=403)
         except Exception as e:
             app.logger.error(f"Ошибка при установке напоминаний: {str(e)}")
-            return jsonify({'success': False, 'error': str(e)}), 500
+            return json_response(False, error=str(e), status_code=500)

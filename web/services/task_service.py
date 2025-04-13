@@ -7,12 +7,12 @@ class PermissionError(Exception):
     pass
 
 
-def check_task_ownership(cursor, task_id, user_id, table='tasks'):
-    """Проверяет, принадлежит ли задача пользователю."""
-    cursor.execute(f'SELECT user_id FROM {table} WHERE id = ?', (task_id,))
-    task = cursor.fetchone()
-    if not task or task['user_id'] != user_id:
-        raise PermissionError(f"No access to {table} with id {task_id}")
+def check_ownership(cursor, table, id, user_id):
+    """Проверяет, принадлежит ли запись в указанной таблице пользователю."""
+    cursor.execute(f'SELECT user_id FROM {table} WHERE id = ?', (id,))
+    record = cursor.fetchone()
+    if not record or record['user_id'] != user_id:
+        raise PermissionError(f"No access to {table} with id {id}")
 
 
 def complete_task(db, user_id, task_id, year, month, day):
@@ -20,7 +20,7 @@ def complete_task(db, user_id, task_id, year, month, day):
     cursor = db.cursor()
 
     # Проверяем права доступа
-    check_task_ownership(cursor, task_id, user_id, table='tasks')
+    check_ownership(cursor, 'tasks', task_id, user_id)
 
     # Получаем данные задачи
     cursor.execute('''
@@ -65,7 +65,7 @@ def restore_task(db, user_id, completed_task_id, year, month, day):
     cursor = db.cursor()
 
     # Проверяем права доступа
-    check_task_ownership(cursor, completed_task_id, user_id, table='completed_tasks')
+    check_ownership(cursor, 'completed_tasks', completed_task_id, user_id)
 
     # Получаем данные выполненной задачи
     cursor.execute('''
@@ -100,7 +100,6 @@ def restore_task(db, user_id, completed_task_id, year, month, day):
     return new_task_id
 
 
-# Существующие функции (add_task, edit_task, delete_task) остаются без изменений
 def add_task(db, user_id, year, month, day, task_text, time=None, priority=1, category_ids=None, repeat_days=None,
              repeat_start=None, repeat_end=None):
     cursor = db.cursor()
@@ -131,7 +130,7 @@ def add_task(db, user_id, year, month, day, task_text, time=None, priority=1, ca
 def edit_task(db, user_id, task_id, task_text, time=None, priority=1, category_ids=None, repeat_days=None,
               repeat_start=None, repeat_end=None):
     cursor = db.cursor()
-    check_task_ownership(cursor, task_id, user_id)
+    check_ownership(cursor, 'tasks', task_id, user_id)
     cursor.execute('''
         UPDATE tasks 
         SET task = ?, time = ?, priority = ?, repeat_days = ?, repeat_start = ?, repeat_end = ?
@@ -146,7 +145,7 @@ def edit_task(db, user_id, task_id, task_text, time=None, priority=1, category_i
 
 def delete_task(db, user_id, task_id):
     cursor = db.cursor()
-    check_task_ownership(cursor, task_id, user_id)
+    check_ownership(cursor, 'tasks', task_id, user_id)
     cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
     cursor.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
     db.commit()
