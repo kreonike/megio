@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025 5">
+    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025 6">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/tasks.db" beforeDir="false" afterPath="$PROJECT_DIR$/database/tasks.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/calendar.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/css/calendar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/css/tasks.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/css/tasks.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/static/js/calendar-update.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/js/calendar-update.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/templates/calendar.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,14 +223,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1743005307087</updated>
-    </task>
-    <task id="LOCAL-00019" summary="05.04.2025 динамический всё обновляется 5">
-      <option name="closed" value="true" />
-      <created>1743856775861</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1743856775861</updated>
     </task>
     <task id="LOCAL-00020" summary="05.04.2025 динамический всё обновляется 6">
       <option name="closed" value="true" />
@@ -610,7 +608,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744493935740</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="12.04.2025 6">
+      <option name="closed" value="true" />
+      <created>1744494714636</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1744494714636</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -652,7 +658,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="07.04.2025 1" />
     <MESSAGE value="08.04.2025 test" />
     <MESSAGE value="08.04.2025" />
     <MESSAGE value="08.04.2025 1" />
@@ -677,7 +682,8 @@
     <MESSAGE value="12.04.2025 2" />
     <MESSAGE value="12.04.2025 4" />
     <MESSAGE value="12.04.2025 5" />
-    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025 5" />
+    <MESSAGE value="12.04.2025 6" />
+    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025 6" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -689,10 +695,6 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/web/config/config.py</url>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/web/app.py</url>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

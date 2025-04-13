@@ -103,8 +103,11 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
                         ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
                     </div>
                     <div class="task-meta">
-                        ${task.priority == 3 ? '<span class="priority-high">❗ Высокий приоритет</span>' : ''}
-                        ${task.priority == 2 ? '<span class="priority-medium">🔹 Средний приоритет</span>' : ''}
+                        <span class="priority-indicator priority-${task.priority}">
+                            ${task.priority == 3 ? '❗ Высокий приоритет' :
+                              task.priority == 2 ? '🔹 Средний приоритет' :
+                              '🔸 Низкий приоритет'}
+                        </span>
                         ${task.category_ids ? task.category_ids.map(cat_id => {
                             const cat = categories.find(c => c.id == cat_id);
                             return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
@@ -210,7 +213,9 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
                     <div class="completed-task-meta">
                         ${task.completion_time ? `<span class="completed-time">Завершено: ${formatCompletionTime(task.completion_time)}</span>` : ''}
                         <span class="priority-indicator priority-${task.priority}">
-                            ${task.priority == 3 ? '❗ Высокий' : task.priority == 2 ? '🔹 Средний' : '🔸 Низкий'}
+                            ${task.priority == 3 ? '❗ Высокий приоритет' :
+                              task.priority == 2 ? '🔹 Средний приоритет' :
+                              '🔸 Низкий приоритет'}
                         </span>
                         ${task.categories ? task.categories.split(',').map(cat_id => {
                             const cat = categories.find(c => c.id == parseInt(cat_id));

@@ -1,359 +1,86 @@
-:root {
-    --error-color: #e53e3e;
-    --edit-btn-color: #ff9800;
-    --edit-btn-hover: #f57c00;
-    --delete-btn-color: #f44336;
-    --delete-btn-hover: #d32f2f;
-    --remind-confirm-btn: #4CAF50;
-    --remind-confirm-btn-hover: #3e8e41;
-    --cancel-remind-btn: #6c757d;
-    --cancel-remind-btn-hover: #5a6268;
-}
+/* Стили для приоритетов в боковой панели задач */
 
-.dark-mode {
-    --error-color: #fc8181;
-    --edit-btn-color: #e67e22;
-    --edit-btn-hover: #d35400;
-    --delete-btn-color: #c0392b;
-    --delete-btn-hover: #a52714;
-    --remind-confirm-btn: #2E7D32;
-    --remind-confirm-btn-hover: #1B5E20;
-    --cancel-remind-btn: #5a6268;
-    --cancel-remind-btn-hover: #495057;
-}
-
-.tasks-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.task-form {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.task-input {
-    padding: 10px;
-    flex-grow: 1;
-    min-width: 200px;
-    border: 1px solid var(--border-color);
+/* Низкий приоритет - активные задачи */
+.tasks-sidebar .task-meta .priority-indicator.priority-1 {
+    color: #4caf50 !important; /* Зелёный текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
     border-radius: 4px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: border-color 0.2s;
-}
-
-.task-input:focus {
-    border-color: var(--primary-color);
-    outline: none;
-}
-
-.time-selector {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.time-input {
-    padding: 10px;
-    width: 70px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    text-align: center;
-    cursor: ns-resize;
-    transition: all 0.2s;
-}
-
-.time-input:hover {
-    border-color: var(--primary-color);
-}
-
-.time-input:focus {
-    border-color: var(--primary-color);
-    outline: none;
-}
-
-.time-spinner {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.time-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    width: 25px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 10px;
-    padding: 0;
-    transition: background-color 0.2s;
-}
-
-.time-btn:hover {
-    background-color: var(--hover-color);
-}
-
-.task-button {
-    padding: 10px 15px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.task-button:hover {
-    background-color: var(--hover-color);
-}
-
-.task-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.task-item {
-    background-color: var(--bg-color);
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-    transition: transform 0.2s;
-}
-
-.task-item:hover {
-    transform: translateY(-2px);
-}
-
-.task-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-grow: 1;
-    margin-bottom: 10px;
-}
-
-.task-time {
-    font-weight: bold;
-    color: var(--primary-color);
-    min-width: 50px;
-}
-
-.task-text {
-    flex-grow: 1;
-    word-break: break-word;
-}
-
-.task-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-}
-
-.task-created {
-    color: var(--text-color);
-    opacity: 0.7;
-    font-size: 0.8em;
-    white-space: nowrap;
-    margin-right: auto;
-}
-
-/* Стили для кнопки удаления */
-.task-actions .delete-btn {
-    padding: 8px 12px;
-    background-color: var(--delete-btn-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-    font-weight: bold;
-    text-decoration: none;
+    font-size: 0.9em; /* Оставляем как есть */
+    letter-spacing: 0.5px; /* Оставляем как есть */
+    font-weight: 500; /* Оставляем */
     display: inline-block;
-    text-align: center;
 }
 
-.task-actions .delete-btn:hover {
-    background-color: var(--delete-btn-hover);
-}
-
-/* Стили для кнопки редактирования */
-.task-actions .edit-btn {
-    padding: 8px 12px;
-    background-color: var(--edit-btn-color);
-    color: white;
-    border: none;
+/* Низкий приоритет - завершённые задачи */
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-1 {
+    color: #4caf50 !important; /* Зелёный текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
     border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-    font-weight: bold;
-    text-decoration: none;
+    font-size: 0.75em; /* Уменьшено */
+    letter-spacing: 0.2px; /* Уменьшено */
+    font-weight: 500;
     display: inline-block;
-    text-align: center;
+    white-space: nowrap; /* Запрещаем перенос текста */
 }
 
-.task-actions .edit-btn:hover {
-    background-color: var(--edit-btn-hover);
-}
-
-.back-link {
+/* Средний приоритет - активные задачи */
+.tasks-sidebar .task-meta .priority-indicator.priority-2 {
+    color: #ff9800 !important; /* Оранжевый текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em; /* Оставляем */
+    letter-spacing: 0.5px; /* Оставляем */
+    font-weight: 500;
     display: inline-block;
-    margin-top: 20px;
-    text-decoration: none;
-    color: var(--primary-color);
-    padding: 10px 15px;
-    border: 1px solid var(--primary-color);
+}
+
+/* Средний приоритет - завершённые задачи */
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-2 {
+    color: #ff9800 !important; /* Оранжевый текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
     border-radius: 4px;
-    transition: all 0.2s;
-}
-
-.back-link:hover {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.no-tasks {
-    color: var(--text-color);
-    font-style: italic;
-    padding: 15px;
-    text-align: center;
-}
-
-.edit-form {
-    display: none;
-    margin-top: 10px;
-    padding: 15px;
-    background-color: var(--bg-color);
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-    width: 100%;
-}
-
-.edit-form.active {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.edit-form .task-input {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.edit-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-}
-
-.cancel-edit {
-    background-color: #6c757d;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.cancel-edit:hover {
-    background-color: #5a6268;
-}
-
-/* Для форм с кнопками */
-.task-actions form {
-    margin: 0;
-    display: inline;
-}
-
-/* Стили для кнопки напоминания */
-.task-actions .remind-btn {
-    padding: 8px 12px;
-    background-color: var(--remind-btn-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-    font-weight: bold;
-    text-decoration: none;
+    font-size: 0.75em; /* Уменьшено */
+    letter-spacing: 0.2px; /* Уменьшено */
+    font-weight: 500;
     display: inline-block;
-    text-align: center;
+    white-space: nowrap; /* Запрещаем перенос текста */
 }
 
-.task-actions .remind-btn:hover {
-    background-color: var(--remind-btn-hover);
+/* Высокий приоритет - активные задачи */
+.tasks-sidebar .task-meta .priority-indicator.priority-3 {
+    color: #f44336 !important; /* Красный текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em; /* Оставляем */
+    letter-spacing: 0.5px; /* Оставляем */
+    font-weight: 500;
+    display: inline-block;
 }
 
-/* Добавим новые переменные для кнопки напоминания */
-:root {
-    --remind-btn-color: #4CAF50;
-    --remind-btn-hover: #3e8e41;
+/* Высокий приоритет - завершённые задачи */
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-3 {
+    color: #f44336 !important; /* Красный текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em; /* Уменьшено */
+    letter-spacing: 0.2px; /* Уменьшено */
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap; /* Запрещаем перенос текста */
 }
 
-.dark-mode {
-    --remind-btn-color: #2E7D32;
-    --remind-btn-hover: #1B5E20;
-}
-
-@media (max-width: 600px) {
-    .task-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .task-actions {
-        width: 100%;
-        margin-top: 10px;
-        justify-content: space-between;
-    }
-
-    .task-created {
-        color: #757575;
-        font-size: 0.8em;
-        white-space: nowrap;
-        margin-right: auto;
-        font-style: italic;
-    }
-
-    .task-form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .task-button {
-        width: 100%;
-    }
-
-    .edit-buttons {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .edit-buttons button {
-        width: 100%;
-    }
-
-
+/* Поддержка тёмной темы (те же цвета текста) */
+.dark-mode .tasks-sidebar .task-meta .priority-indicator.priority-1,
+.dark-mode .tasks-sidebar .task-meta .priority-indicator.priority-2,
+.dark-mode .tasks-sidebar .task-meta .priority-indicator.priority-3,
+.dark-mode .tasks-sidebar .completed-task-meta .priority-indicator.priority-1,
+.dark-mode .tasks-sidebar .completed-task-meta .priority-indicator.priority-2,
+.dark-mode .tasks-sidebar .completed-task-meta .priority-indicator.priority-3 {
+    background-color: transparent !important; /* Прозрачный фон */
 }
