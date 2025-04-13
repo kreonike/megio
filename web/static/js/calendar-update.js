@@ -814,6 +814,12 @@ export function bindAllTaskHandlers(year, month, day) {
                                 day,
                                 taskData.data.categories || []
                             );
+                            // Добавляем вызов updateCalendar для обновления индикатора приоритета
+                            updateCalendar(year, month).then(() => {
+                                console.log(`[edit-form] Calendar updated after task edit for ${year}-${month}`);
+                            }).catch(error => {
+                                console.error('[edit-form] Error updating calendar:', error);
+                            });
                         }
                     });
                 } else {

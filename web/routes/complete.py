@@ -3,7 +3,7 @@ from flask import jsonify, request
 from flask_login import login_required, current_user
 from web.config.config import db_connection
 from web.utils import json_response
-from datetime import datetime
+from web.services.task_service import complete_task
 
 def complete_routes(app):
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
@@ -36,7 +36,7 @@ def complete_routes(app):
 
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/complete', methods=['POST'])
     @login_required
-    def complete_task(year, month, day):
+    def complete_task_route(year, month, day):
         if not request.is_json:
             return json_response(False, error="Требуется JSON-запрос", status_code=400)
 
@@ -48,40 +48,12 @@ def complete_routes(app):
 
         try:
             with db_connection() as db:
-                cursor = db.cursor()
-                cursor.execute('''
-                    SELECT id, task, priority, categories
-                    FROM tasks
-                    WHERE id = ? AND user_id = ?
-                ''', (task_id, current_user.id))
-                task = cursor.fetchone()
-
-                if not task:
-                    return json_response(False, error="Задача не найдена", status_code=404)
-
-                # Записываем задачу в completed_tasks
-                cursor.execute('''
-                    INSERT INTO completed_tasks (
-                        user_id, task_id, task_text, priority, categories,
-                        original_year, original_month, original_day, completion_time
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                    current_user.id,
-                    task_id,
-                    task['task'],
-                    task['priority'],
-                    task['categories'],
-                    year,
-                    month,
-                    day,
-                    datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                ))
-                cursor.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
-                db.commit()
-
+                completed_id = complete_task(db, current_user.id, task_id, year, month, day)
                 app.logger.info(f"Task {task_id} marked as completed for user_id={current_user.id}, date={year}-{month}-{day}")
                 return json_response(True, data={"message": "Задача отмечена как выполненная"})
+        except PermissionError as e:
+            app.logger.error(f"Task {task_id} not found or access denied")
+            return json_response(False, error=str(e), status_code=404)
         except Exception as e:
             app.logger.error(f"Error completing task: {str(e)}", exc_info=True)
             return json_response(False, error=str(e), status_code=500)
