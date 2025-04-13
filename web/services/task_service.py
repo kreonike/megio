@@ -6,9 +6,19 @@ import json
 class PermissionError(Exception):
     pass
 
-
 def check_ownership(cursor, table, id, user_id):
-    """Проверяет, принадлежит ли запись в указанной таблице пользователю."""
+    """
+    Проверяет, принадлежит ли запись в указанной таблице пользователю.
+
+    Args:
+        cursor: Курсор базы данных.
+        table (str): Название таблицы.
+        id: ID записи.
+        user_id: ID пользователя.
+
+    Raises:
+        PermissionError: Если запись не найдена или принадлежит другому пользователю.
+    """
     cursor.execute(f'SELECT user_id FROM {table} WHERE id = ?', (id,))
     record = cursor.fetchone()
     if not record or record['user_id'] != user_id:
