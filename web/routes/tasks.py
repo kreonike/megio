@@ -5,7 +5,7 @@ from web.config.config import db_connection, MONTH_NAMES
 from web.routes.calendar import generate_calendar
 from web.services.task_service import add_task, edit_task, delete_task
 from web.services.category_service import get_user_categories
-from web.utils import json_response, log_task_action, log_error, handle_exceptions
+from web.utils import json_response, log_action, log_error, handle_exceptions
 
 def tasks_routes(app):
     @app.route('/', defaults={'year': None, 'month': None})
@@ -55,7 +55,8 @@ def tasks_routes(app):
                     if 'delete' in request.form:
                         task_id = request.form.get('delete')
                         delete_task(db, current_user.id, task_id)
-                        log_task_action(app.logger, "deleted", task_id, current_user.id, year, month, day)
+                        log_action(app.logger, "Task", "deleted", current_user.id, entity_id=task_id,
+                                   date={'year': year, 'month': month, 'day': day})
                         return True, {'message': 'Задача удалена', 'category': 'success'}
 
                     elif 'task_id' in request.form:
@@ -84,7 +85,8 @@ def tasks_routes(app):
                             repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
                             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
                         )
-                        log_task_action(app.logger, "updated", task_id, current_user.id, year, month, day)
+                        log_action(app.logger, "Task", "updated", current_user.id, entity_id=task_id,
+                                   date={'year': year, 'month': month, 'day': day})
                         return True, {'message': 'Задача обновлена', 'category': 'success'}
 
                     elif 'task' in request.form:
@@ -114,20 +116,15 @@ def tasks_routes(app):
                             repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
                             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
                         )
-                        log_task_action(app.logger, "added", task_id, current_user.id, year, month, day)
+                        log_action(app.logger, "Task", "added", current_user.id, entity_id=task_id,
+                                   date={'year': year, 'month': month, 'day': day})
                         return True, {'message': 'Задача добавлена', 'category': 'success', 'task_id': task_id}
 
-                try:
-                    success, flash_data = process_post()
-                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                        return json_response(True, data={'task_id': flash_data.get('task_id')})
-                    flash(flash_data['message'], flash_data['category'])
-                    return redirect(url_for('day_tasks', year=year, month=month, day=day))
-                except ValueError as e:
-                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                        return json_response(False, error=str(e), status_code=400)
-                    flash(str(e), 'error')
-                    return redirect(url_for('day_tasks', year=year, month=month, day=day))
+                success, flash_data = process_post()
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return json_response(True, data={'task_id': flash_data.get('task_id')})
+                flash(flash_data['message'], flash_data['category'])
+                return redirect(url_for('day_tasks', year=year, month=month, day=day))
 
             cursor.execute('''
                 SELECT 
@@ -170,6 +167,7 @@ def tasks_routes(app):
 
     @app.route('/tasks/<int:year>/<int:month>', methods=['GET'])
     @login_required
+    @handle_exceptions
     def month_tasks(year, month):
         with db_connection() as db:
             cursor = db.cursor()
@@ -215,4 +213,4 @@ def tasks_routes(app):
                 if day != 0 and day not in tasks_by_day:
                     tasks_by_day[day] = []
 
-            return json_response(True, data={'tasksByDay': tasks_by_day})
+            return {'tasksByDay': tasks_by_day}

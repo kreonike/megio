@@ -1,7 +1,7 @@
 # web/routes/task_restore.py
 from flask import request
 from flask_login import current_user
-from web.utils import json_response, require_ownership, log_task_action, log_error, handle_exceptions
+from web.utils import json_response, require_ownership, log_action, log_error, handle_exceptions
 from web.services.task_service import restore_task
 
 def init_task_restore_routes(app):
@@ -12,5 +12,6 @@ def init_task_restore_routes(app):
         data = request.get_json()
         completed_task_id = data.get('completed_task_id')
         new_task_id = restore_task(db, current_user.id, completed_task_id, year, month, day)
-        log_task_action(app.logger, "restored", completed_task_id, current_user.id, year, month, day)
-        return json_response(True, data={"message": "Задача восстановлена"})
+        log_action(app.logger, "Task", "restored", current_user.id, entity_id=completed_task_id,
+                   date={'year': year, 'month': month, 'day': day})
+        return {"message": "Задача восстановлена"}
