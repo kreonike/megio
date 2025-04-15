@@ -1,7 +1,7 @@
 # web/routes/complete.py
 from flask import request, jsonify
 from flask_login import login_required, current_user
-from web.utils import json_response, require_ownership
+from web.utils import json_response, require_ownership, log_task_action, log_error
 from web.services.task_service import complete_task
 from web.config.config import db_connection
 
@@ -12,7 +12,7 @@ def complete_routes(app):
         data = request.get_json()
         task_id = data.get('task_id')
         completed_id = complete_task(db, current_user.id, task_id, year, month, day)
-        app.logger.info(f"Task {task_id} marked as completed for user_id={current_user.id}, date={year}-{month}-{day}")
+        log_task_action(app.logger, "marked as completed", task_id, current_user.id, year, month, day)
         return json_response(True, data={"message": "Задача отмечена как выполненная"})
 
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
@@ -37,8 +37,9 @@ def complete_routes(app):
                     }
                     for row in cursor.fetchall()
                 ]
-                app.logger.info(f"Fetched {len(completed_tasks)} completed tasks for user_id={current_user.id}, date={year}-{month}-{day}")
+                log_task_action(app.logger, "fetched completed tasks", None, current_user.id, year, month, day,
+                               extra_info=f"count={len(completed_tasks)}")
                 return json_response(True, data={'completedTasks': completed_tasks})
         except Exception as e:
-            app.logger.error(f"Error fetching completed tasks: {str(e)}", exc_info=True)
+            log_error(app.logger, f"Error fetching completed tasks: {str(e)}", exc_info=True)
             return json_response(False, error=str(e), status_code=500)

@@ -5,7 +5,7 @@ from web.config.config import db_connection, MONTH_NAMES
 from web.routes.calendar import generate_calendar
 from web.services.task_service import add_task, edit_task, delete_task
 from web.services.category_service import get_user_categories
-from web.utils import json_response
+from web.utils import json_response, log_task_action, log_error
 
 def tasks_routes(app):
     @app.route('/', defaults={'year': None, 'month': None})
@@ -39,7 +39,7 @@ def tasks_routes(app):
                                russian_month_name=MONTH_NAMES[month],
                                username=current_user.username,
                                categories=categories,
-                               current_user_id=current_user.id)  # Добавлено
+                               current_user_id=current_user.id)
 
     @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
     @login_required
@@ -53,6 +53,7 @@ def tasks_routes(app):
                     if 'delete' in request.form:
                         task_id = request.form.get('delete')
                         delete_task(db, current_user.id, task_id)
+                        log_task_action(app.logger, "deleted", task_id, current_user.id, year, month, day)
                         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                             return json_response(True)
                         flash('Задача удалена', 'success')
@@ -83,6 +84,7 @@ def tasks_routes(app):
                             repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
                             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
                         )
+                        log_task_action(app.logger, "updated", task_id, current_user.id, year, month, day)
                         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                             return json_response(True)
                         flash('Задача обновлена', 'success')
@@ -114,6 +116,7 @@ def tasks_routes(app):
                             repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
                             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
                         )
+                        log_task_action(app.logger, "added", task_id, current_user.id, year, month, day)
                         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                             return json_response(True, data={'task_id': task_id})
                         flash('Задача добавлена', 'success')
@@ -122,7 +125,7 @@ def tasks_routes(app):
                         return redirect(url_for('day_tasks', year=year, month=month, day=day))
 
                 except Exception as e:
-                    app.logger.error(f"Error in day_tasks: {str(e)}", exc_info=True)
+                    log_error(app.logger, f"Error in day_tasks: {str(e)}", exc_info=True)
                     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                         return json_response(False, error=str(e), status_code=500)
                     flash(f'Ошибка: {str(e)}', 'error')

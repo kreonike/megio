@@ -1,6 +1,7 @@
 # web/routes/remind.py
 from flask import request
-from web.utils import json_response, require_ownership
+from flask_login import current_user  # Добавляем импорт
+from web.utils import json_response, require_ownership, log_task_action
 
 def remind_routes(app):
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/remind', methods=['POST'])
@@ -27,4 +28,6 @@ def remind_routes(app):
         ))
 
         db.commit()
+        log_task_action(app.logger, "set reminders", task_id, current_user.id, year, month, day,
+                        extra_info=f"remind_times={remind_times}")
         return json_response(True)
