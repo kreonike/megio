@@ -5,7 +5,7 @@ from web.config.config import db_connection, MONTH_NAMES
 from web.routes.calendar import generate_calendar
 from web.services.task_service import add_task, edit_task, delete_task
 from web.services.category_service import get_user_categories
-from web.utils import json_response, log_task_action, log_error
+from web.utils import json_response, log_task_action, log_error, handle_exceptions
 
 def tasks_routes(app):
     @app.route('/', defaults={'year': None, 'month': None})
@@ -49,14 +49,14 @@ def tasks_routes(app):
             categories = get_user_categories(db, current_user.id)
 
             if request.method == 'POST':
-                try:
+                # Внутренняя функция для обработки POST-запроса
+                @handle_exceptions
+                def process_post():
                     if 'delete' in request.form:
                         task_id = request.form.get('delete')
                         delete_task(db, current_user.id, task_id)
                         log_task_action(app.logger, "deleted", task_id, current_user.id, year, month, day)
-                        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                            return json_response(True)
-                        flash('Задача удалена', 'success')
+                        return True, {'message': 'Задача удалена', 'category': 'success'}
 
                     elif 'task_id' in request.form:
                         task_id = request.form.get('task_id')
@@ -70,7 +70,7 @@ def tasks_routes(app):
                         repeat_end = request.form.get('repeat_end') if repeat_enabled else None
 
                         if not task_text:
-                            return json_response(False, error='Task cannot be empty', status_code=400)
+                            raise ValueError('Task cannot be empty')
 
                         edit_task(
                             db,
@@ -85,9 +85,7 @@ def tasks_routes(app):
                             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
                         )
                         log_task_action(app.logger, "updated", task_id, current_user.id, year, month, day)
-                        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                            return json_response(True)
-                        flash('Задача обновлена', 'success')
+                        return True, {'message': 'Задача обновлена', 'category': 'success'}
 
                     elif 'task' in request.form:
                         task_text = request.form.get('task')
@@ -100,7 +98,7 @@ def tasks_routes(app):
                         repeat_end = request.form.get('repeat_end') if repeat_enabled else None
 
                         if not task_text:
-                            return json_response(False, error='Task cannot be empty', status_code=400)
+                            raise ValueError('Task cannot be empty')
 
                         task_id = add_task(
                             db,
@@ -117,18 +115,18 @@ def tasks_routes(app):
                             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
                         )
                         log_task_action(app.logger, "added", task_id, current_user.id, year, month, day)
-                        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                            return json_response(True, data={'task_id': task_id})
-                        flash('Задача добавлена', 'success')
+                        return True, {'message': 'Задача добавлена', 'category': 'success', 'task_id': task_id}
 
-                    if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
-                        return redirect(url_for('day_tasks', year=year, month=month, day=day))
-
-                except Exception as e:
-                    log_error(app.logger, f"Error in day_tasks: {str(e)}", exc_info=True)
+                try:
+                    success, flash_data = process_post()
                     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                        return json_response(False, error=str(e), status_code=500)
-                    flash(f'Ошибка: {str(e)}', 'error')
+                        return json_response(True, data={'task_id': flash_data.get('task_id')})
+                    flash(flash_data['message'], flash_data['category'])
+                    return redirect(url_for('day_tasks', year=year, month=month, day=day))
+                except ValueError as e:
+                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                        return json_response(False, error=str(e), status_code=400)
+                    flash(str(e), 'error')
                     return redirect(url_for('day_tasks', year=year, month=month, day=day))
 
             cursor.execute('''
