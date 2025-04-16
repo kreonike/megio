@@ -6,18 +6,10 @@ import json
 class PermissionError(Exception):
     pass
 
+
 def check_ownership(cursor, table, id, user_id):
     """
     Проверяет, принадлежит ли запись в указанной таблице пользователю.
-
-    Args:
-        cursor: Курсор базы данных.
-        table (str): Название таблицы.
-        id: ID записи.
-        user_id: ID пользователя.
-
-    Raises:
-        PermissionError: Если запись не найдена или принадлежит другому пользователю.
     """
     cursor.execute(f'SELECT user_id FROM {table} WHERE id = ?', (id,))
     record = cursor.fetchone()
@@ -25,14 +17,29 @@ def check_ownership(cursor, table, id, user_id):
         raise PermissionError(f"No access to {table} with id {id}")
 
 
+def update_task_categories(db, task_id, category_ids):
+    """
+    Обновляет связи задачи с категориями в таблице task_categories.
+
+    Args:
+        db: Соединение с базой данных.
+        task_id: ID задачи.
+        category_ids: Список ID категорий (может быть None или пустым).
+    """
+    cursor = db.cursor()
+    cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
+    if category_ids:
+        for cat_id in category_ids:
+            cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)', (task_id, cat_id))
+    db.commit()
+
+
 def complete_task(db, user_id, task_id, year, month, day):
     """Завершает задачу, перемещая ее в completed_tasks."""
     cursor = db.cursor()
 
-    # Проверяем права доступа
     check_ownership(cursor, 'tasks', task_id, user_id)
 
-    # Получаем данные задачи
     cursor.execute('''
         SELECT id, task, priority, categories
         FROM tasks
@@ -43,7 +50,6 @@ def complete_task(db, user_id, task_id, year, month, day):
     if not task:
         raise PermissionError("Task not found")
 
-    # Записываем задачу в completed_tasks
     cursor.execute('''
         INSERT INTO completed_tasks (
             user_id, task_id, task_text, priority, categories,
@@ -63,7 +69,6 @@ def complete_task(db, user_id, task_id, year, month, day):
     ))
     completed_id = cursor.lastrowid
 
-    # Удаляем задачу из tasks
     cursor.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
     db.commit()
 
@@ -74,10 +79,8 @@ def restore_task(db, user_id, completed_task_id, year, month, day):
     """Восстанавливает задачу из completed_tasks в tasks."""
     cursor = db.cursor()
 
-    # Проверяем права доступа
     check_ownership(cursor, 'completed_tasks', completed_task_id, user_id)
 
-    # Получаем данные выполненной задачи
     cursor.execute('''
         SELECT id, task_id, task_text, priority, categories
         FROM completed_tasks
@@ -88,7 +91,6 @@ def restore_task(db, user_id, completed_task_id, year, month, day):
     if not completed_task:
         raise PermissionError("Completed task not found")
 
-    # Восстанавливаем задачу в tasks
     cursor.execute('''
         INSERT INTO tasks (user_id, task, year, month, day, priority, categories)
         VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -103,7 +105,6 @@ def restore_task(db, user_id, completed_task_id, year, month, day):
     ))
     new_task_id = cursor.lastrowid
 
-    # Удаляем задачу из completed_tasks
     cursor.execute('DELETE FROM completed_tasks WHERE id = ?', (completed_task_id,))
     db.commit()
 
@@ -130,10 +131,7 @@ def add_task(db, user_id, year, month, day, task_text, time=None, priority=1, ca
         datetime.now()
     ))
     task_id = cursor.lastrowid
-    if category_ids:
-        for cat_id in category_ids:
-            cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)', (task_id, cat_id))
-    db.commit()
+    update_task_categories(db, task_id, category_ids)
     return task_id
 
 
@@ -146,11 +144,7 @@ def edit_task(db, user_id, task_id, task_text, time=None, priority=1, category_i
         SET task = ?, time = ?, priority = ?, repeat_days = ?, repeat_start = ?, repeat_end = ?
         WHERE id = ?
     ''', (task_text, time, priority, repeat_days, repeat_start, repeat_end, task_id))
-    cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
-    if category_ids:
-        for cat_id in category_ids:
-            cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)', (task_id, cat_id))
-    db.commit()
+    update_task_categories(db, task_id, category_ids)
 
 
 def delete_task(db, user_id, task_id):

@@ -1,13 +1,15 @@
 # web/routes/remind.py
 from flask import request
 from flask_login import current_user
-from web.utils import json_response, require_ownership, log_action, handle_exceptions
+from web.utils import json_response, require_ownership, log_action, handle_exceptions, validate_date
+
 
 def remind_routes(app):
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/remind', methods=['POST'])
     @require_ownership(table='tasks')
     @handle_exceptions
     def set_task_reminders(year, month, day, db):
+        year, month, day = validate_date(year, month, day)
         data = request.get_json()
         task_id = data.get('task_id')
         remind_times = data.get('remind_times', [])
@@ -30,5 +32,5 @@ def remind_routes(app):
 
         db.commit()
         log_action(app.logger, "Task", "set reminders", current_user.id, entity_id=task_id,
-                   date={'year': year, 'month': month, 'day': day}, remind_times=remind_times)
+                   extra_info={'date': {'year': year, 'month': month, 'day': day}, 'remind_times': remind_times})
         return True

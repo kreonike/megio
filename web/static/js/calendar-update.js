@@ -1,4 +1,3 @@
-// static/js/calendar-update.js
 import {
     formatDateToRussian,
     formatDateForInput,
@@ -435,34 +434,41 @@ export function updateCalendar(year, month) {
                         let hasOverdue = false;
                         let allCompleted = allTasks.length > 0;
                         let maxPriority = 1;
+                        let hasIncompleteTasks = false;
 
                         allTasks.forEach(task => {
                             if (taskDate < today && !task.completed) hasOverdue = true;
-                            if (!task.completed) allCompleted = false;
+                            if (!task.completed) {
+                                allCompleted = false;
+                                hasIncompleteTasks = true;
+                            }
                             maxPriority = Math.max(maxPriority, task.priority || 1);
                         });
 
-                        dayCell.classList.add('has-tasks');
+                        if (hasIncompleteTasks) {
+                            dayCell.classList.add('has-tasks');
+                            if (!badge) {
+                                badge = document.createElement('span');
+                                badge.className = 'task-count-badge';
+                                link.appendChild(badge);
+                            }
+                            badge.textContent = allTasks.filter(task => !task.completed).length;
+                            badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
+                            if (maxPriority === 3) {
+                                badge.classList.add('priority-high');
+                            } else if (maxPriority === 2) {
+                                badge.classList.add('priority-medium');
+                            } else {
+                                badge.classList.add('priority-low');
+                            }
+                        } else {
+                            if (badge) badge.remove();
+                        }
+
                         if (hasOverdue) {
                             dayCell.classList.add('has-overdue-tasks');
                         } else if (allCompleted && allTasks.length > 0) {
                             dayCell.classList.add('all-tasks-completed');
-                        }
-
-                        if (!badge) {
-                            badge = document.createElement('span');
-                            badge.className = 'task-count-badge';
-                            link.appendChild(badge);
-                        }
-
-                        badge.textContent = allTasks.length;
-                        badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-                        if (maxPriority === 3) {
-                            badge.classList.add('priority-high');
-                        } else if (maxPriority === 2) {
-                            badge.classList.add('priority-medium');
-                        } else {
-                            badge.classList.add('priority-low');
                         }
                     } else {
                         if (badge) badge.remove();
@@ -488,7 +494,8 @@ export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
     const badge = dayElement.querySelector('.task-count-badge');
     const allTasks = [...(tasks || []), ...(completedTasks || []).map(task => ({
         ...task,
-        priority: task.priority || 1
+        priority: task.priority || 1,
+        completed: 1
     }))];
 
     if (allTasks.length === 0) {
@@ -497,27 +504,40 @@ export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
         return;
     }
 
-    if (!badge) {
-        const link = dayElement.querySelector('.day-link');
-        if (link) {
-            const newBadge = document.createElement('span');
-            newBadge.className = 'task-count-badge';
-            link.appendChild(newBadge);
+    const hasIncompleteTasks = tasks.some(task => !task.completed);
+
+    if (hasIncompleteTasks) {
+        if (!badge) {
+            const link = dayElement.querySelector('.day-link');
+            if (link) {
+                const newBadge = document.createElement('span');
+                newBadge.className = 'task-count-badge';
+                link.appendChild(newBadge);
+            }
         }
-    }
 
-    const updatedBadge = dayElement.querySelector('.task-count-badge');
-    if (updatedBadge) {
-        let maxPriority = 1;
-        allTasks.forEach(task => {
-            maxPriority = Math.max(maxPriority, task.priority || 1);
-        });
+        const updatedBadge = dayElement.querySelector('.task-count-badge');
+        if (updatedBadge) {
+            let maxPriority = 1;
+            tasks.forEach(task => {
+                if (!task.completed) {
+                    maxPriority = Math.max(maxPriority, task.priority || 1);
+                }
+            });
 
-        updatedBadge.textContent = allTasks.length;
-        updatedBadge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-        if (maxPriority === 3) updatedBadge.classList.add('priority-high');
-        else if (maxPriority === 2) updatedBadge.classList.add('priority-medium');
-        else updatedBadge.classList.add('priority-low');
+            updatedBadge.textContent = tasks.filter(task => !task.completed).length;
+            updatedBadge.classList.remove('priority-low', 'priority-medium', 'priority-high');
+            if (maxPriority === 3) updatedBadge.classList.add('priority-high');
+            else if (maxPriority === 2) updatedBadge.classList.add('priority-medium');
+            else updatedBadge.classList.add('priority-low');
+        }
+        dayElement.classList.add('has-tasks');
+    } else {
+        if (badge) badge.remove();
+        dayElement.classList.remove('has-tasks');
+        if (allTasks.length > 0) {
+            dayElement.classList.add('all-tasks-completed');
+        }
     }
 }
 
@@ -814,7 +834,6 @@ export function bindAllTaskHandlers(year, month, day) {
                                 day,
                                 taskData.data.categories || []
                             );
-                            // Добавляем вызов updateCalendar для обновления индикатора приоритета
                             updateCalendar(year, month).then(() => {
                                 console.log(`[edit-form] Calendar updated after task edit for ${year}-${month}`);
                             }).catch(error => {

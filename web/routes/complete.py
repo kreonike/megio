@@ -1,26 +1,29 @@
 # web/routes/complete.py
 from flask import request, jsonify
 from flask_login import login_required, current_user
-from web.utils import json_response, require_ownership, log_action, log_error, handle_exceptions
+from web.utils import json_response, require_ownership, log_action, log_error, handle_exceptions, validate_date
 from web.services.task_service import complete_task
 from web.config.config import db_connection
+
 
 def complete_routes(app):
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/complete', methods=['POST'])
     @require_ownership(table='tasks')
     @handle_exceptions
     def complete_task_route(year, month, day, db):
+        year, month, day = validate_date(year, month, day)
         data = request.get_json()
         task_id = data.get('task_id')
         completed_id = complete_task(db, current_user.id, task_id, year, month, day)
         log_action(app.logger, "Task", "marked as completed", current_user.id, entity_id=task_id,
-                   date={'year': year, 'month': month, 'day': day})
+                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
         return {"message": "Задача отмечена как выполненная"}
 
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
     @login_required
     @handle_exceptions
     def get_completed_tasks(year, month, day):
+        year, month, day = validate_date(year, month, day, redirect_endpoint='show_calendar')
         with db_connection() as db:
             cursor = db.cursor()
             cursor.execute('''
@@ -40,5 +43,5 @@ def complete_routes(app):
                 for row in cursor.fetchall()
             ]
             log_action(app.logger, "Task", "fetched completed tasks", current_user.id,
-                       date={'year': year, 'month': month, 'day': day}, count=len(completed_tasks))
+                       extra_info={'date': {'year': year, 'month': month, 'day': day}, 'count': len(completed_tasks)})
             return {'completedTasks': completed_tasks}

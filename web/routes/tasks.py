@@ -5,7 +5,8 @@ from web.config.config import db_connection, MONTH_NAMES
 from web.routes.calendar import generate_calendar
 from web.services.task_service import add_task, edit_task, delete_task
 from web.services.category_service import get_user_categories
-from web.utils import json_response, log_action, log_error, handle_exceptions
+from web.utils import json_response, log_action, log_error, handle_exceptions, validate_date
+
 
 def tasks_routes(app):
     @app.route('/', defaults={'year': None, 'month': None})
@@ -17,16 +18,7 @@ def tasks_routes(app):
             year = now.year
             month = now.month
 
-        if month > 12:
-            month = 1
-            year += 1
-        elif month < 1:
-            month = 12
-            year -= 1
-
-        if year < 1900 or year > 9999:
-            now = datetime.now()
-            return redirect(url_for('show_calendar', year=now.year, month=now.month))
+        year, month, _ = validate_date(year, month, 1, redirect_endpoint='show_calendar')
 
         with db_connection() as db:
             calendar_html = generate_calendar(year, month, current_user.id, db, highlight_today=True, show_overdue=True)
@@ -44,19 +36,19 @@ def tasks_routes(app):
     @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
     @login_required
     def day_tasks(year, month, day):
+        year, month, day = validate_date(year, month, day, redirect_endpoint='show_calendar')
         with db_connection() as db:
             cursor = db.cursor()
             categories = get_user_categories(db, current_user.id)
 
             if request.method == 'POST':
-                # Внутренняя функция для обработки POST-запроса
                 @handle_exceptions
                 def process_post():
                     if 'delete' in request.form:
                         task_id = request.form.get('delete')
                         delete_task(db, current_user.id, task_id)
                         log_action(app.logger, "Task", "deleted", current_user.id, entity_id=task_id,
-                                   date={'year': year, 'month': month, 'day': day})
+                                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
                         return True, {'message': 'Задача удалена', 'category': 'success'}
 
                     elif 'task_id' in request.form:
@@ -86,7 +78,7 @@ def tasks_routes(app):
                             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
                         )
                         log_action(app.logger, "Task", "updated", current_user.id, entity_id=task_id,
-                                   date={'year': year, 'month': month, 'day': day})
+                                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
                         return True, {'message': 'Задача обновлена', 'category': 'success'}
 
                     elif 'task' in request.form:
@@ -117,7 +109,7 @@ def tasks_routes(app):
                             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
                         )
                         log_action(app.logger, "Task", "added", current_user.id, entity_id=task_id,
-                                   date={'year': year, 'month': month, 'day': day})
+                                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
                         return True, {'message': 'Задача добавлена', 'category': 'success', 'task_id': task_id}
 
                 success, flash_data = process_post()
@@ -169,6 +161,7 @@ def tasks_routes(app):
     @login_required
     @handle_exceptions
     def month_tasks(year, month):
+        year, month, _ = validate_date(year, month, 1, redirect_endpoint='show_calendar')
         with db_connection() as db:
             cursor = db.cursor()
 
