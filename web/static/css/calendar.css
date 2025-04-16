@@ -983,3 +983,47 @@
 .dark-mode .weekend:not(.has-tasks):not(.all-tasks-completed):not(.has-overdue-tasks):not(.category-work):not(.category-personal) {
     background-color: var(--weekend-bg-color) !important;
 }
+
+/* Было */
+.day-cell.category-work {
+    background-color: rgba(255, 165, 0, 0.2) !important;
+    border: 2px solid #FFA500 !important;
+}
+
+.day-cell.category-personal {
+    background-color: rgba(135, 206, 235, 0.2) !important;
+    border: 2px solid #87CEEB !important;
+}
+
+/* Темная тема для категорий */
+.dark-mode .day-cell.category-work {
+    background-color: rgba(255, 165, 0, 0.3) !important;
+    border-color: #FFA500 !important;
+}
+
+.dark-mode .day-cell.category-personal {
+    background-color: rgba(135, 206, 235, 0.3) !important;
+    border-color: #87CEEB !important;
+}
+
+/* Стало */
+.day-cell.category-work {
+    background-color: rgba(135, 206, 235, 0.2) !important;
+    border: 2px solid #87CEEB !important;
+}
+
+.day-cell.category-personal {
+    background-color: rgba(255, 165, 0, 0.2) !important;
+    border: 2px solid #FFA500 !important;
+}
+
+/* Темная тема для категорий */
+.dark-mode .day-cell.category-work {
+    background-color: rgba(135, 206, 235, 0.3) !important;
+    border-color: #87CEEB !important;
+}
+
+.dark-mode .day-cell.category-personal {
+    background-color: rgba(255, 165, 0, 0.3) !important;
+    border-color: #FFA500 !important;
+}

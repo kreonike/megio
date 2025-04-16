@@ -1,39 +1,17 @@
 // colors.js
 export const COLORS = {
-    WORK: '#FFA500',       // Оранжевый для работы
-    PERSONAL: '#87CEEB',   // Голубой для личного
+    WORK: '#87CEEB',       // Голубой для работы (ID 1)
+    PERSONAL: '#FFA500',   // Оранжевый для личного (ID 2)
     COMPLETED: '#4CAF50',  // Зеленый для выполненных задач
     OVERDUE: '#F44336',    // Красный для просроченных
-    WEEKEND: 'var(--weekend-bg-color)', // Цвет выходных из CSS переменных
-    DEFAULT: 'transparent' // Без цвета
+    WEEKEND: 'var(--weekend-bg-color)',
+    DEFAULT: 'transparent'
 };
 
 export function getDayCellBackground(tasks, completedTasks, isWeekend) {
     const allTasks = [...(tasks || []), ...(completedTasks || [])];
 
-    // Если это выходной и нет задач - возвращаем цвет выходных
-    if (isWeekend && allTasks.length === 0) {
-        return COLORS.WEEKEND;
-    }
-
-    if (allTasks.length === 0) return COLORS.DEFAULT;
-
-    // Проверка на просроченные задачи
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const taskDate = new Date(allTasks[0].date || now);
-
-    const hasOverdue = allTasks.some(task =>
-        !task.completed && taskDate < today
-    );
-
-    if (hasOverdue) return COLORS.OVERDUE;
-
-    // Проверка на все выполненные задачи
-    const allCompleted = allTasks.every(task => task.completed);
-    if (allCompleted) return COLORS.COMPLETED;
-
-    // Проверка категорий (только если ровно одна категория)
+    // 1. Проверка категорий (высший приоритет)
     const categoryIds = new Set();
     allTasks.forEach(task => {
         if (task.category_ids) {
@@ -41,29 +19,44 @@ export function getDayCellBackground(tasks, completedTasks, isWeekend) {
         }
     });
 
+    // Категории (ID 1 - работа, ID 2 - личное)
     if (categoryIds.size === 1) {
         const categoryId = Array.from(categoryIds)[0];
-        if (categoryId === 1) return COLORS.WORK;    // Работа
-        if (categoryId === 2) return COLORS.PERSONAL; // Личное
+        if (categoryId === 1) return COLORS.WORK;    // Работа - оранжевый
+        if (categoryId === 2) return COLORS.PERSONAL; // Личное - голубой
     }
 
-    // Во всех остальных случаях - без цвета
+    // 2. Все задачи выполнены
+    const allCompleted = allTasks.length > 0 && allTasks.every(task => task.completed);
+    if (allCompleted) return COLORS.COMPLETED;
+
+    // 3. Просроченные задачи
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const taskDate = new Date(allTasks[0]?.date || now);
+
+    const hasOverdue = allTasks.some(task => !task.completed && taskDate < today);
+    if (hasOverdue) return COLORS.OVERDUE;
+
+    // 4. Выходные
+    if (isWeekend) return COLORS.WEEKEND;
+
     return COLORS.DEFAULT;
 }
 
 export function applyDayCellStyles(dayCell, tasks, completedTasks, isWeekend) {
-    const color = getDayCellBackground(tasks, completedTasks, isWeekend);
-
-    // Сброс всех цветовых классов
+    // Сброс всех классов
     dayCell.classList.remove(
         'category-work',
         'category-personal',
         'all-tasks-completed',
         'has-overdue-tasks',
-        'weekend'
+        'weekend',
+        'has-tasks'
     );
 
-    // Применяем только конкретные цветовые классы
+    const color = getDayCellBackground(tasks, completedTasks, isWeekend);
+
     switch(color) {
         case COLORS.WORK:
             dayCell.classList.add('category-work');
@@ -80,6 +73,11 @@ export function applyDayCellStyles(dayCell, tasks, completedTasks, isWeekend) {
         case COLORS.WEEKEND:
             dayCell.classList.add('weekend');
             break;
-        // Для COLORS.DEFAULT ничего не делаем - останется без цвета
+    }
+
+    // Индикатор невыполненных задач
+    const hasIncompleteTasks = [...(tasks || [])].some(t => !t.completed);
+    if (hasIncompleteTasks) {
+        dayCell.classList.add('has-tasks');
     }
 }

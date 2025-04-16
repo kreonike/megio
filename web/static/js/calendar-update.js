@@ -7,6 +7,12 @@ import { fetchCompletedTasks } from './completed-tasks.js';
 import { initFilters, updateTaskPriorityIndicator } from "./filters.js";
 import { applyDayCellStyles } from "./colors.js";
 
+// В начале файла добавьте:
+const CATEGORY_COLORS = {
+    1: '#87CEEB', // Работа - голубой
+    2: '#FFA500'  // Личное - оранжевый
+};
+
 // Глобальный объект для кэширования задач
 window.tasksCache = {};
 
@@ -73,7 +79,7 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
                             ${categories.map(cat => `
                                 <label>
                                     <input type="checkbox" name="categories" value="${cat.id}">
-                                    <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                                    <span class="category-badge" style="background-color: ${CATEGORY_COLORS[cat.id] || cat.color}">${cat.name}</span>
                                 </label>
                             `).join('')}
                         </div>
