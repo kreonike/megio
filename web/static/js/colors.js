@@ -4,10 +4,10 @@ export const COLORS = {
     PERSONAL: '#87CEEB',   // Голубой для личного
     COMPLETED: '#4CAF50',  // Зеленый для выполненных задач
     OVERDUE: '#F44336',    // Красный для просроченных
-    DEFAULT: 'transparent' // Прозрачный (без категории)
+    DEFAULT: 'transparent' // Без цвета
 };
 
-export function getDayCellBackground(tasks, completedTasks, categories) {
+export function getDayCellBackground(tasks, completedTasks) {
     const allTasks = [...(tasks || []), ...(completedTasks || [])];
 
     if (allTasks.length === 0) return COLORS.DEFAULT;
@@ -15,7 +15,7 @@ export function getDayCellBackground(tasks, completedTasks, categories) {
     // Проверка на просроченные задачи
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const taskDate = new Date(allTasks[0].date || now); // предполагаем, что все задачи одного дня
+    const taskDate = new Date(allTasks[0].date || now);
 
     const hasOverdue = allTasks.some(task =>
         !task.completed && taskDate < today
@@ -27,7 +27,7 @@ export function getDayCellBackground(tasks, completedTasks, categories) {
     const allCompleted = allTasks.every(task => task.completed);
     if (allCompleted) return COLORS.COMPLETED;
 
-    // Проверка категорий
+    // Проверка категорий (только если ровно одна категория)
     const categoryIds = new Set();
     allTasks.forEach(task => {
         if (task.category_ids) {
@@ -35,20 +35,20 @@ export function getDayCellBackground(tasks, completedTasks, categories) {
         }
     });
 
-    const hasWork = categoryIds.has(1); // предполагаем, что 1 - это работа
-    const hasPersonal = categoryIds.has(2); // предполагаем, что 2 - это личное
+    if (categoryIds.size === 1) {
+        const categoryId = Array.from(categoryIds)[0];
+        if (categoryId === 1) return COLORS.WORK;    // Работа
+        if (categoryId === 2) return COLORS.PERSONAL; // Личное
+    }
 
-    if (hasWork && !hasPersonal) return COLORS.WORK;
-    if (hasPersonal && !hasWork) return COLORS.PERSONAL;
-
-    // Если несколько категорий или нет категорий
+    // Во всех остальных случаях - без цвета
     return COLORS.DEFAULT;
 }
 
-export function applyDayCellStyles(dayCell, tasks, completedTasks, categories) {
-    const color = getDayCellBackground(tasks, completedTasks, categories);
+export function applyDayCellStyles(dayCell, tasks, completedTasks) {
+    const color = getDayCellBackground(tasks, completedTasks);
 
-    // Сброс всех классов
+    // Сброс всех цветовых классов
     dayCell.classList.remove(
         'category-work',
         'category-personal',
@@ -56,7 +56,7 @@ export function applyDayCellStyles(dayCell, tasks, completedTasks, categories) {
         'has-overdue-tasks'
     );
 
-    // Применение стилей в зависимости от цвета
+    // Применяем только конкретные цветовые классы
     switch(color) {
         case COLORS.WORK:
             dayCell.classList.add('category-work');
@@ -70,8 +70,6 @@ export function applyDayCellStyles(dayCell, tasks, completedTasks, categories) {
         case COLORS.OVERDUE:
             dayCell.classList.add('has-overdue-tasks');
             break;
-        default:
-            // Ничего не делаем для DEFAULT
-            break;
+        // Для COLORS.DEFAULT ничего не делаем - останется без цвета
     }
 }

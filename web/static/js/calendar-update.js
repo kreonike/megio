@@ -5,6 +5,7 @@ import {
 } from "./time.js";
 import { fetchCompletedTasks } from './completed-tasks.js';
 import { initFilters, updateTaskPriorityIndicator } from "./filters.js";
+import { applyDayCellStyles } from "./colors.js";
 
 // Глобальный объект для кэширования задач
 window.tasksCache = {};
@@ -379,7 +380,6 @@ function formatCompletionTime(timestamp) {
 
 export function updateCalendar(year, month) {
     console.log(`[updateCalendar] Updating for ${year}-${month}`);
-    // Сохраняем текущие год и месяц в глобальные переменные
     window.year = year;
     window.month = month;
 
@@ -418,9 +418,8 @@ export function updateCalendar(year, month) {
             completedResults.forEach(result => {
                 completedTasksByDay[result.day] = result.completedTasks;
             });
-            console.log(`[updateCalendar] completedTasksByDay`, completedTasksByDay);
 
-            // Кэширование данных для каждого дня
+            // Кэширование данных
             for (const day in tasksByDay) {
                 window.tasksCache[`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`] = {
                     tasks: tasksByDay[day] || [],
@@ -436,9 +435,15 @@ export function updateCalendar(year, month) {
                 if (day) {
                     const tasks = tasksByDay[day] || [];
                     const completedTasks = completedTasksByDay[day] || [];
-                    console.log(`[updateCalendar] Processing day ${day}`, { tasks, completedTasks });
 
-                    dayCell.classList.remove('has-overdue-tasks', 'all-tasks-completed', 'category-work', 'category-personal', 'has-tasks');
+                    // Сброс всех классов
+                    dayCell.classList.remove(
+                        'has-overdue-tasks',
+                        'all-tasks-completed',
+                        'category-work',
+                        'category-personal',
+                        'has-tasks'
+                    );
 
                     const allTasks = [...tasks, ...completedTasks.map(task => ({
                         ...task,
@@ -486,18 +491,16 @@ export function updateCalendar(year, month) {
                             if (badge) badge.remove();
                         }
 
+                        // Применяем стили через colors.js
+                        applyDayCellStyles(dayCell, tasks, completedTasks);
+
                         if (hasOverdue) {
                             dayCell.classList.add('has-overdue-tasks');
                         } else if (allCompleted && allTasks.length > 0) {
                             dayCell.classList.add('all-tasks-completed');
-                        } else if (hasWorkCategory && !hasPersonalCategory) {
-                            dayCell.classList.add('category-work');
-                        } else if (hasPersonalCategory && !hasWorkCategory) {
-                            dayCell.classList.add('category-personal');
                         }
                     } else {
                         if (badge) badge.remove();
-                        dayCell.classList.remove('has-tasks');
                     }
                 }
             });
@@ -869,7 +872,6 @@ document.addEventListener('DOMContentLoaded', () => {
     year = today.getFullYear();
     month = today.getMonth() + 1;
     const day = today.getDate();
-    console.log(`[DOMContentLoaded] Initializing for ${year}-${month}-${day}`);
 
     updateCalendar(year, month)
         .then(() => console.log('[DOMContentLoaded] Calendar initialized'))
