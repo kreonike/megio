@@ -883,3 +883,45 @@
         text-align: center;
     }
 }
+
+/* Добавим в calendar.css */
+.day-cell.category-work {
+    background-color: rgba(255, 165, 0, 0.2);
+    border: 2px solid #FFA500;
+}
+
+.day-cell.category-personal {
+    background-color: rgba(135, 206, 235, 0.2);
+    border: 2px solid #87CEEB;
+}
+
+.day-cell.all-tasks-completed {
+    background-color: rgba(76, 175, 80, 0.2);
+    border: 2px solid #4CAF50;
+}
+
+.day-cell.has-overdue-tasks {
+    background-color: rgba(244, 67, 54, 0.2);
+    border: 2px solid #F44336;
+}
+
+/* Темная тема */
+.dark-mode .day-cell.category-work {
+    background-color: rgba(255, 165, 0, 0.3);
+    border-color: #FFA500;
+}
+
+.dark-mode .day-cell.category-personal {
+    background-color: rgba(135, 206, 235, 0.3);
+    border-color: #87CEEB;
+}
+
+.dark-mode .day-cell.all-tasks-completed {
+    background-color: rgba(76, 175, 80, 0.3);
+    border-color: #4CAF50;
+}
+
+.dark-mode .day-cell.has-overdue-tasks {
+    background-color: rgba(244, 67, 54, 0.3);
+    border-color: #F44336;
+}

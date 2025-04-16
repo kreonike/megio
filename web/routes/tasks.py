@@ -8,7 +8,6 @@ from web.services.category_service import get_user_categories, get_default_categ
 from web.utils import json_response, log_action, log_error, handle_exceptions, validate_date, handle_crud_post
 import calendar
 
-
 def tasks_routes(app):
     @app.route('/', defaults={'year': None, 'month': None})
     @app.route('/calendar/<int:year>/<int:month>', methods=['GET'])
@@ -64,7 +63,7 @@ def tasks_routes(app):
             task_text,
             time,
             priority,
-            category_ids,
+            category_ids or [],  # Убедимся, что category_ids всегда список
             repeat_days if repeat_enabled and repeat_days and repeat_days > 0 else None,
             repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
@@ -93,7 +92,7 @@ def tasks_routes(app):
             task_text,
             time,
             priority,
-            category_ids,
+            category_ids or [],  # Убедимся, что category_ids всегда список
             repeat_days if repeat_enabled and repeat_days and repeat_days > 0 else None,
             repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
             repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
@@ -128,7 +127,7 @@ def tasks_routes(app):
                 SELECT 
                     t.id, t.task, t.time, t.created, t.repeat_days, t.repeat_start, t.repeat_end, t.priority,
                     CASE WHEN ct.id IS NOT NULL THEN 1 ELSE 0 END as completed,
-                    GROUP_CONCAT(tc.category_id) AS category_ids
+                    COALESCE(GROUP_CONCAT(tc.category_id), '') AS category_ids
                 FROM tasks t
                 LEFT JOIN completed_tasks ct 
                     ON t.id = ct.task_id 
@@ -141,7 +140,7 @@ def tasks_routes(app):
             tasks = []
             for row in cursor.fetchall():
                 task = dict(row)
-                task['category_ids'] = parse_category_ids(task['category_ids'])
+                task['category_ids'] = parse_category_ids(task['category_ids']) if task['category_ids'] else []
                 tasks.append(task)
             log_action(app.logger, "Tasks", "fetched_day", current_user.id,
                        extra_info={'year': year, 'month': month, 'day': day, 'task_count': len(tasks)})
@@ -175,7 +174,7 @@ def tasks_routes(app):
                     t.day, t.id, t.task, t.priority, t.time,
                     t.repeat_days, t.repeat_start, t.repeat_end,
                     CASE WHEN ct.id IS NOT NULL THEN 1 ELSE 0 END as completed,
-                    GROUP_CONCAT(tc.category_id) AS category_ids
+                    COALESCE(GROUP_CONCAT(tc.category_id), '') AS category_ids
                 FROM tasks t
                 LEFT JOIN completed_tasks ct 
                     ON t.id = ct.task_id 
@@ -200,7 +199,7 @@ def tasks_routes(app):
                     'repeat_start': row['repeat_start'],
                     'repeat_end': row['repeat_end'],
                     'completed': row['completed'],
-                    'category_ids': parse_category_ids(row['category_ids'])
+                    'category_ids': parse_category_ids(row['category_ids']) if row['category_ids'] else []
                 }
                 tasks_by_day[day].append(task)
 
