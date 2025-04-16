@@ -941,3 +941,45 @@
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
+/* Стили для легенды цветов */
+.color-legend {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: var(--bg-secondary-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.color-legend h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.color-legend > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.color-legend > div > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .color-legend > div {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+/* Убедитесь, что выходные без задач имеют правильный цвет */
+.weekend:not(.has-tasks):not(.all-tasks-completed):not(.has-overdue-tasks):not(.category-work):not(.category-personal) {
+    background-color: var(--weekend-bg-color) !important;
+}
+
+/* Для темной темы */
+.dark-mode .weekend:not(.has-tasks):not(.all-tasks-completed):not(.has-overdue-tasks):not(.category-work):not(.category-personal) {
+    background-color: var(--weekend-bg-color) !important;
+}

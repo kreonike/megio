@@ -4,11 +4,17 @@ export const COLORS = {
     PERSONAL: '#87CEEB',   // Голубой для личного
     COMPLETED: '#4CAF50',  // Зеленый для выполненных задач
     OVERDUE: '#F44336',    // Красный для просроченных
+    WEEKEND: 'var(--weekend-bg-color)', // Цвет выходных из CSS переменных
     DEFAULT: 'transparent' // Без цвета
 };
 
-export function getDayCellBackground(tasks, completedTasks) {
+export function getDayCellBackground(tasks, completedTasks, isWeekend) {
     const allTasks = [...(tasks || []), ...(completedTasks || [])];
+
+    // Если это выходной и нет задач - возвращаем цвет выходных
+    if (isWeekend && allTasks.length === 0) {
+        return COLORS.WEEKEND;
+    }
 
     if (allTasks.length === 0) return COLORS.DEFAULT;
 
@@ -45,15 +51,16 @@ export function getDayCellBackground(tasks, completedTasks) {
     return COLORS.DEFAULT;
 }
 
-export function applyDayCellStyles(dayCell, tasks, completedTasks) {
-    const color = getDayCellBackground(tasks, completedTasks);
+export function applyDayCellStyles(dayCell, tasks, completedTasks, isWeekend) {
+    const color = getDayCellBackground(tasks, completedTasks, isWeekend);
 
     // Сброс всех цветовых классов
     dayCell.classList.remove(
         'category-work',
         'category-personal',
         'all-tasks-completed',
-        'has-overdue-tasks'
+        'has-overdue-tasks',
+        'weekend'
     );
 
     // Применяем только конкретные цветовые классы
@@ -69,6 +76,9 @@ export function applyDayCellStyles(dayCell, tasks, completedTasks) {
             break;
         case COLORS.OVERDUE:
             dayCell.classList.add('has-overdue-tasks');
+            break;
+        case COLORS.WEEKEND:
+            dayCell.classList.add('weekend');
             break;
         // Для COLORS.DEFAULT ничего не делаем - останется без цвета
     }

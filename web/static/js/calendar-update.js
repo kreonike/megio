@@ -492,7 +492,7 @@ export function updateCalendar(year, month) {
                         }
 
                         // Применяем стили через colors.js
-                        applyDayCellStyles(dayCell, tasks, completedTasks);
+                        applyDayCellStyles(dayCell, tasks, completedTasks, dayCell.classList.contains('weekend'));
 
                         if (hasOverdue) {
                             dayCell.classList.add('has-overdue-tasks');
