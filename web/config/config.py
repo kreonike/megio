@@ -39,6 +39,7 @@ def init_db(app):
         with db_connection() as db:
             cursor = db.cursor()
 
+            # Создание таблицы users
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,6 +51,7 @@ def init_db(app):
                 timezone TEXT DEFAULT 'UTC'
             )''')
 
+            # Создание таблицы tasks
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS tasks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,6 +73,7 @@ def init_db(app):
                 FOREIGN KEY (user_id) REFERENCES users (id)
             )''')
 
+            # Создание таблицы categories
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS categories (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,6 +83,7 @@ def init_db(app):
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )''')
 
+            # Создание таблицы task_categories
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS task_categories (
                 task_id INTEGER NOT NULL,
@@ -89,6 +93,7 @@ def init_db(app):
                 FOREIGN KEY (category_id) REFERENCES categories(id)
             )''')
 
+            # Создание таблицы telegram_users
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS telegram_users (
                 telegram_id INTEGER PRIMARY KEY,
@@ -96,6 +101,7 @@ def init_db(app):
                 FOREIGN KEY (user_id) REFERENCES users (id)
             )''')
 
+            # Создание таблицы completed_tasks
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS completed_tasks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -140,55 +146,25 @@ def init_db(app):
                 cursor.execute('ALTER TABLE completed_tasks ADD COLUMN original_month INTEGER')
             if 'original_day' not in completed_columns:
                 cursor.execute('ALTER TABLE completed_tasks ADD COLUMN original_day INTEGER')
+            if 'categories' not in completed_columns:
+                cursor.execute('ALTER TABLE completed_tasks ADD COLUMN categories TEXT')
 
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='categories'")
-            if not cursor.fetchone():
-                cursor.execute('''
-                CREATE TABLE categories (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER NOT NULL,
-                    name TEXT NOT NULL,
-                    color TEXT NOT NULL DEFAULT '#3498db',
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                )''')
-
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='task_categories'")
-            if not cursor.fetchone():
-                cursor.execute('''
-                CREATE TABLE task_categories (
-                    task_id INTEGER NOT NULL,
-                    category_id INTEGER NOT NULL,
-                    PRIMARY KEY (task_id, category_id),
-                    FOREIGN KEY (task_id) REFERENCES tasks(id),
-                    FOREIGN KEY (category_id) REFERENCES categories(id)
-                )''')
-
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='completed_tasks'")
-            if not cursor.fetchone():
-                cursor.execute('''
-                CREATE TABLE completed_tasks (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER NOT NULL,
-                    task_id INTEGER NOT NULL,
-                    task_text TEXT NOT NULL,
-                    completion_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    priority INTEGER DEFAULT 1,
-                    categories TEXT,
-                    original_year INTEGER,
-                    original_month INTEGER,
-                    original_day INTEGER,
-                    FOREIGN KEY (user_id) REFERENCES users(id)
-                )''')
-            else:
-                cursor.execute('PRAGMA table_info(completed_tasks)')
-                completed_tasks_columns = [row[1] for row in cursor.fetchall()]
-                if 'categories' not in completed_tasks_columns:
-                    cursor.execute('ALTER TABLE completed_tasks ADD COLUMN categories TEXT')
-                if 'original_year' not in completed_tasks_columns:
-                    cursor.execute('ALTER TABLE completed_tasks ADD COLUMN original_year INTEGER')
-                if 'original_month' not in completed_tasks_columns:
-                    cursor.execute('ALTER TABLE completed_tasks ADD COLUMN original_month INTEGER')
-                if 'original_day' not in completed_tasks_columns:
-                    cursor.execute('ALTER TABLE completed_tasks ADD COLUMN original_day INTEGER')
+            # Добавление категорий по умолчанию для каждого пользователя
+            cursor.execute('''
+                INSERT OR IGNORE INTO categories (user_id, name, color)
+                SELECT id, 'Личное', '#4CAF50' 
+                FROM users 
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM categories WHERE user_id = users.id AND name = 'Личное'
+                )
+            ''')
+            cursor.execute('''
+                INSERT OR IGNORE INTO categories (user_id, name, color)
+                SELECT id, 'Работа', '#2196F3' 
+                FROM users 
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM categories WHERE user_id = users.id AND name = 'Работа'
+                )
+            ''')
 
             db.commit()

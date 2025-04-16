@@ -6,7 +6,7 @@ import {
 import { fetchCompletedTasks } from './completed-tasks.js';
 
 export function updateTasksSection(tasks, completedTasks, date, day, categories) {
-    console.log(`[updateTasksSection] Updating tasks for ${date}`);
+    console.log(`[updateTasksSection] Updating tasks for ${date}`, { tasks, completedTasks });
     const tasksSection = document.querySelector('.tasks-section');
     if (!tasksSection) {
         console.error('[updateTasksSection] Tasks section not found in DOM');
@@ -384,12 +384,14 @@ export function updateCalendar(year, month) {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
     })
     .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) throw new Error(`Network response was not ok: ${response.status}`);
         return response.json();
     })
     .then(data => {
+        console.log(`[updateCalendar] Received data for ${year}-${month}`, data);
         if (!data.success || !data.data) throw new Error('Invalid response data');
         const tasksByDay = data.data.tasksByDay || {};
+        console.log(`[updateCalendar] tasksByDay`, tasksByDay);
 
         const promises = [];
         for (let day = 1; day <= 31; day++) {
@@ -408,6 +410,7 @@ export function updateCalendar(year, month) {
             completedResults.forEach(result => {
                 completedTasksByDay[result.day] = result.completedTasks;
             });
+            console.log(`[updateCalendar] completedTasksByDay`, completedTasksByDay);
 
             document.querySelectorAll('.day-link').forEach(link => {
                 const day = link.getAttribute('data-day');
@@ -417,6 +420,7 @@ export function updateCalendar(year, month) {
                 if (day) {
                     const tasks = tasksByDay[day] || [];
                     const completedTasks = completedTasksByDay[day] || [];
+                    console.log(`[updateCalendar] Processing day ${day}`, { tasks, completedTasks });
 
                     dayCell.classList.remove('has-overdue-tasks', 'all-tasks-completed', 'has-tasks');
 
@@ -491,6 +495,7 @@ export function updateCalendar(year, month) {
 }
 
 export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
+    console.log(`[updateTaskPriorityIndicator] Updating for dayElement`, { tasks, completedTasks });
     const badge = dayElement.querySelector('.task-count-badge');
     const allTasks = [...(tasks || []), ...(completedTasks || []).map(task => ({
         ...task,
@@ -576,6 +581,7 @@ export function bindAllTaskHandlers(year, month, day) {
             fetchCompletedTasks(year, month, dayAttr)
         ])
         .then(([taskData, completedTasks]) => {
+            console.log('[handleDayClick] Task data received:', taskData, completedTasks);
             if (taskData.success && taskData.data) {
                 updateTasksSection(
                     taskData.data.tasks || [],
@@ -770,13 +776,18 @@ export function bindAllTaskHandlers(year, month, day) {
 
     document.querySelector('.task-form')?.addEventListener('submit', function(e) {
         e.preventDefault();
+        console.log('[task-form] Submitting task form', new FormData(this));
         fetch(this.action, {
             method: 'POST',
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
             body: new FormData(this)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+        })
         .then(data => {
+            console.log('[task-form] Response:', data);
             if (data.success) {
                 this.reset();
                 Promise.all([
@@ -786,6 +797,7 @@ export function bindAllTaskHandlers(year, month, day) {
                     }).then(res => res.json()),
                     fetchCompletedTasks(year, month, day)
                 ]).then(([taskData, completedTasks]) => {
+                    console.log('[task-form] Fetched tasks after add:', taskData, completedTasks);
                     if (taskData.success && taskData.data) {
                         updateTasksSection(
                             taskData.data.tasks || [],
@@ -795,15 +807,22 @@ export function bindAllTaskHandlers(year, month, day) {
                             taskData.data.categories || []
                         );
                         updateCalendar(year, month);
+                    } else {
+                        console.error('[task-form] Invalid task data:', taskData);
+                        alert('Ошибка при загрузке задач после добавления: ' + (taskData.error || 'Неизвестная ошибка'));
                     }
+                }).catch(error => {
+                    console.error('[task-form] Error fetching tasks:', error);
+                    alert('Ошибка при обновлении задач: ' + error.message);
                 });
             } else {
+                console.error('[task-form] Server error:', data.error);
                 alert('Ошибка при добавлении задачи: ' + (data.error || 'Неизвестная ошибка'));
             }
         })
         .catch(error => {
-            console.error('[task-form] Error:', error);
-            alert('Ошибка при добавлении задачи');
+            console.error('[task-form] Network error:', error);
+            alert('Ошибка при добавлении задачи: ' + error.message);
         });
     });
 
@@ -815,7 +834,10 @@ export function bindAllTaskHandlers(year, month, day) {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 body: new FormData(this)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     this.classList.remove('active');
@@ -847,7 +869,7 @@ export function bindAllTaskHandlers(year, month, day) {
             })
             .catch(error => {
                 console.error('[edit-form] Error:', error);
-                alert('Ошибка при обновлении задачи');
+                alert('Ошибка при обновлении задачи: ' + error.message);
             });
         });
     });
@@ -870,6 +892,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchCompletedTasks(year, month, day)
     ])
     .then(([taskData, completedTasks]) => {
+        console.log('[DOMContentLoaded] Initial tasks:', taskData, completedTasks);
         if (taskData.success && taskData.data) {
             updateTasksSection(
                 taskData.data.tasks || [],

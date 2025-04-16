@@ -4,8 +4,9 @@ from flask_login import login_required, current_user
 from web.config.config import db_connection, MONTH_NAMES
 from web.routes.calendar import generate_calendar
 from web.services.task_service import add_task, edit_task, delete_task
-from web.services.category_service import get_user_categories
-from web.utils import json_response, log_action, log_error, handle_exceptions, validate_date
+from web.services.category_service import get_user_categories, get_default_categories, parse_category_ids
+from web.utils import json_response, log_action, log_error, handle_exceptions, validate_date, handle_crud_post
+import calendar
 
 
 def tasks_routes(app):
@@ -22,7 +23,7 @@ def tasks_routes(app):
 
         with db_connection() as db:
             calendar_html = generate_calendar(year, month, current_user.id, db, highlight_today=True, show_overdue=True)
-            categories = get_user_categories(db, current_user.id)
+            categories = get_default_categories(db, current_user.id)
 
         return render_template('calendar.html',
                                calendar=calendar_html,
@@ -33,90 +34,95 @@ def tasks_routes(app):
                                categories=categories,
                                current_user_id=current_user.id)
 
+    def handle_delete(db, year, month, day):
+        task_id = request.form.get('delete')
+        if not task_id:
+            raise ValueError('Идентификатор задачи обязателен')
+        delete_task(db, current_user.id, task_id)
+        log_action(app.logger, "Task", "deleted", current_user.id, entity_id=task_id,
+                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
+        return True, {'message': 'Задача удалена', 'category': 'success'}
+
+    def handle_update(db, year, month, day):
+        task_id = request.form.get('task_id')
+        task_text = request.form.get('task')
+        time = request.form.get('time')
+        priority = request.form.get('priority', 1, type=int)
+        category_ids = request.form.getlist('categories', type=int)
+        repeat_enabled = 'repeat_enabled' in request.form
+        repeat_days = request.form.get('repeat_days', type=int) if repeat_enabled else None
+        repeat_start = request.form.get('repeat_start') if repeat_enabled else None
+        repeat_end = request.form.get('repeat_end') if repeat_enabled else None
+        if not task_id:
+            raise ValueError('Идентификатор задачи обязателен')
+        if not task_text:
+            raise ValueError('Задача не может быть пустой')
+        edit_task(
+            db,
+            current_user.id,
+            task_id,
+            task_text,
+            time,
+            priority,
+            category_ids,
+            repeat_days if repeat_enabled and repeat_days and repeat_days > 0 else None,
+            repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
+            repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
+        )
+        log_action(app.logger, "Task", "updated", current_user.id, entity_id=task_id,
+                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
+        return True, {'message': 'Задача обновлена', 'category': 'success'}
+
+    def handle_add(db, year, month, day):
+        task_text = request.form.get('task')
+        time = request.form.get('time')
+        priority = request.form.get('priority', 1, type=int)
+        category_ids = request.form.getlist('categories', type=int)
+        repeat_enabled = 'repeat_enabled' in request.form
+        repeat_days = request.form.get('repeat_days', type=int) if repeat_enabled else None
+        repeat_start = request.form.get('repeat_start') if repeat_enabled else None
+        repeat_end = request.form.get('repeat_end') if repeat_enabled else None
+        if not task_text:
+            raise ValueError('Задача не может быть пустой')
+        task_id = add_task(
+            db,
+            current_user.id,
+            year,
+            month,
+            day,
+            task_text,
+            time,
+            priority,
+            category_ids,
+            repeat_days if repeat_enabled and repeat_days and repeat_days > 0 else None,
+            repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
+            repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
+        )
+        log_action(app.logger, "Task", "added", current_user.id, entity_id=task_id,
+                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
+        return True, {'message': 'Задача добавлена', 'category': 'success', 'task_id': task_id}
+
     @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
     @login_required
     def day_tasks(year, month, day):
         year, month, day = validate_date(year, month, day, redirect_endpoint='show_calendar')
         with db_connection() as db:
-            cursor = db.cursor()
-            categories = get_user_categories(db, current_user.id)
-
             if request.method == 'POST':
-                @handle_exceptions
+                @handle_crud_post(
+                    action_handlers=lambda year, month, day: {
+                        'delete': lambda: handle_delete(db, year, month, day),
+                        'update': lambda: handle_update(db, year, month, day),
+                        'add': lambda: handle_add(db, year, month, day)
+                    },
+                    redirect_endpoint='day_tasks',
+                    ajax_response_data=lambda flash_data: {'task_id': flash_data.get('task_id')} if isinstance(flash_data, dict) and flash_data.get('task_id') else {}
+                )
                 def process_post():
-                    if 'delete' in request.form:
-                        task_id = request.form.get('delete')
-                        delete_task(db, current_user.id, task_id)
-                        log_action(app.logger, "Task", "deleted", current_user.id, entity_id=task_id,
-                                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
-                        return True, {'message': 'Задача удалена', 'category': 'success'}
+                    pass
+                return process_post(year=year, month=month, day=day)
 
-                    elif 'task_id' in request.form:
-                        task_id = request.form.get('task_id')
-                        task_text = request.form.get('task')
-                        time = request.form.get('time')
-                        priority = request.form.get('priority', 1, type=int)
-                        category_ids = request.form.getlist('categories', type=int)
-                        repeat_enabled = 'repeat_enabled' in request.form
-                        repeat_days = request.form.get('repeat_days', type=int) if repeat_enabled else None
-                        repeat_start = request.form.get('repeat_start') if repeat_enabled else None
-                        repeat_end = request.form.get('repeat_end') if repeat_enabled else None
-
-                        if not task_text:
-                            raise ValueError('Task cannot be empty')
-
-                        edit_task(
-                            db,
-                            current_user.id,
-                            task_id,
-                            task_text,
-                            time,
-                            priority,
-                            category_ids,
-                            repeat_days if repeat_enabled and repeat_days and repeat_days > 0 else None,
-                            repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
-                            repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
-                        )
-                        log_action(app.logger, "Task", "updated", current_user.id, entity_id=task_id,
-                                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
-                        return True, {'message': 'Задача обновлена', 'category': 'success'}
-
-                    elif 'task' in request.form:
-                        task_text = request.form.get('task')
-                        time = request.form.get('time')
-                        priority = request.form.get('priority', 1, type=int)
-                        category_ids = request.form.getlist('categories', type=int)
-                        repeat_enabled = 'repeat_enabled' in request.form
-                        repeat_days = request.form.get('repeat_days', type=int) if repeat_enabled else None
-                        repeat_start = request.form.get('repeat_start') if repeat_enabled else None
-                        repeat_end = request.form.get('repeat_end') if repeat_enabled else None
-
-                        if not task_text:
-                            raise ValueError('Task cannot be empty')
-
-                        task_id = add_task(
-                            db,
-                            current_user.id,
-                            year,
-                            month,
-                            day,
-                            task_text,
-                            time,
-                            priority,
-                            category_ids,
-                            repeat_days if repeat_enabled and repeat_days and repeat_days > 0 else None,
-                            repeat_start if repeat_enabled and repeat_days and repeat_days > 0 else None,
-                            repeat_end if repeat_enabled and repeat_days and repeat_days > 0 else None
-                        )
-                        log_action(app.logger, "Task", "added", current_user.id, entity_id=task_id,
-                                   extra_info={'date': {'year': year, 'month': month, 'day': day}})
-                        return True, {'message': 'Задача добавлена', 'category': 'success', 'task_id': task_id}
-
-                success, flash_data = process_post()
-                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                    return json_response(True, data={'task_id': flash_data.get('task_id')})
-                flash(flash_data['message'], flash_data['category'])
-                return redirect(url_for('day_tasks', year=year, month=month, day=day))
+            cursor = db.cursor()
+            categories = get_default_categories(db, current_user.id)
 
             cursor.execute('''
                 SELECT 
@@ -135,11 +141,10 @@ def tasks_routes(app):
             tasks = []
             for row in cursor.fetchall():
                 task = dict(row)
-                try:
-                    task['category_ids'] = list(map(int, task['category_ids'].split(','))) if task['category_ids'] else []
-                except (ValueError, TypeError):
-                    task['category_ids'] = []
+                task['category_ids'] = parse_category_ids(task['category_ids'])
                 tasks.append(task)
+            log_action(app.logger, "Tasks", "fetched_day", current_user.id,
+                       extra_info={'year': year, 'month': month, 'day': day, 'task_count': len(tasks)})
 
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return json_response(True, data={
@@ -195,15 +200,17 @@ def tasks_routes(app):
                     'repeat_start': row['repeat_start'],
                     'repeat_end': row['repeat_end'],
                     'completed': row['completed'],
-                    'category_ids': [int(cid) for cid in row['category_ids'].split(',')] if row['category_ids'] else []
+                    'category_ids': parse_category_ids(row['category_ids'])
                 }
                 tasks_by_day[day].append(task)
 
-            import calendar
             cal = calendar.Calendar()
             month_days = cal.itermonthdays(year, month)
             for day in month_days:
                 if day != 0 and day not in tasks_by_day:
                     tasks_by_day[day] = []
 
-            return {'tasksByDay': tasks_by_day}
+            log_action(app.logger, "Tasks", "fetched_month", current_user.id,
+                       extra_info={'year': year, 'month': month,
+                                   'task_count': sum(len(tasks) for tasks in tasks_by_day.values())})
+            return json_response(True, data={'tasksByDay': tasks_by_day})

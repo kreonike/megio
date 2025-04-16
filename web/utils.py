@@ -1,5 +1,5 @@
 # web/utils.py
-from flask import jsonify, request, redirect, url_for
+from flask import jsonify, request, redirect, url_for, flash
 from functools import wraps
 from flask_login import current_user
 from web.services.task_service import check_ownership, PermissionError
@@ -43,17 +43,48 @@ def require_ownership(table, id_field='task_id'):
     return decorator
 
 
+def handle_crud_post(action_handlers, redirect_endpoint, ajax_response_data=None):
+    """
+    Декоратор для обработки CRUD POST-запросов.
+
+    Args:
+        action_handlers (dict or callable): Словарь обработчиков или функция, возвращающая словарь,
+                                           где ключи — действия ('delete', 'add', 'update'),
+                                           а значения — функции, возвращающие (success, flash_data).
+        redirect_endpoint (str): Имя конечной точки для редиректа.
+        ajax_response_data (callable, optional): Функция для формирования данных AJAX-ответа.
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if request.method == 'POST':
+                @handle_exceptions
+                def process_post():
+                    # Если action_handlers — функция, вызываем ее только с year, month, day
+                    handlers = action_handlers(kwargs.get('year'), kwargs.get('month'), kwargs.get('day')) if callable(action_handlers) else action_handlers
+                    for action, handler in handlers.items():
+                        if (action == 'delete' and 'delete' in request.form) or \
+                           (action == 'add' and 'task' in request.form and 'task_id' not in request.form) or \
+                           (action == 'update' and 'task_id' in request.form):
+                            return handler()
+                    raise ValueError('Недопустимое действие')
+
+                success, flash_data = process_post()
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return json_response(success, data=ajax_response_data(flash_data) if ajax_response_data and success else None, error=flash_data.get('message') if not success else None)
+                if success:
+                    flash(flash_data['message'], flash_data['category'])
+                else:
+                    flash(flash_data.get('message', 'Ошибка при выполнении действия'), 'error')
+                return redirect(url_for(redirect_endpoint, **kwargs))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+
 def log_action(logger, entity, action, user_id, entity_id=None, extra_info=None):
     """
     Универсальная функция для логирования действий над сущностями.
-
-    Args:
-        logger: Логгер для записи сообщения.
-        entity (str): Тип сущности (например, 'Task', 'Category').
-        action (str): Действие (например, 'added', 'deleted').
-        user_id: ID пользователя.
-        entity_id: ID сущности (опционально).
-        extra_info: Словарь с дополнительными параметрами для лога (например, {'date': {...}, 'count': N}).
     """
     msg = f"{entity} {entity_id or ''} {action} for user_id={user_id}"
     if extra_info:
@@ -98,18 +129,6 @@ def handle_exceptions(f):
 def validate_date(year, month, day, redirect_endpoint=None):
     """
     Проверяет и корректирует параметры даты.
-
-    Args:
-        year (int): Год.
-        month (int): Месяц.
-        day (int): День.
-        redirect_endpoint (str, optional): Имя конечной точки для редиректа при некорректном годе.
-
-    Returns:
-        tuple: (year, month, day) - скорректированные значения.
-
-    Raises:
-        ValueError: Если дата недопустима и редирект не указан.
     """
     if month > 12:
         month = 1
@@ -122,5 +141,4 @@ def validate_date(year, month, day, redirect_endpoint=None):
         if redirect_endpoint:
             return redirect(url_for(redirect_endpoint, year=now.year, month=now.month))
         raise ValueError("Invalid year")
-    # Дополнительная проверка на допустимый день может быть добавлена при необходимости
     return year, month, day
