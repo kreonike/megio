@@ -1,83 +1,102 @@
-// colors.js
-export const COLORS = {
-    WORK: '#87CEEB',       // Голубой для работы (ID 1)
-    PERSONAL: '#FFA500',   // Оранжевый для личного (ID 2)
-    COMPLETED: '#4CAF50',  // Зеленый для выполненных задач
-    OVERDUE: '#F44336',    // Красный для просроченных
-    WEEKEND: 'var(--weekend-bg-color)',
-    DEFAULT: 'transparent'
-};
+// static/js/colors.js
 
-export function getDayCellBackground(tasks, completedTasks, isWeekend) {
-    const allTasks = [...(tasks || []), ...(completedTasks || [])];
+export function applyDayCellStyles(dayCell, tasks = [], completedTasks = [], isWeekend = false) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dayDate = new Date(
+        parseInt(dayCell.dataset.year),
+        parseInt(dayCell.dataset.month) - 1,
+        parseInt(dayCell.dataset.day)
+    );
 
-    // 1. Проверка категорий (высший приоритет)
-    const categoryIds = new Set();
+    // Объединяем все задачи (активные и завершенные)
+    const allTasks = [...tasks, ...completedTasks.map(task => ({
+        ...task,
+        completed: true,
+        priority: task.priority || 1
+    }))];
+
+    // Проверяем состояния
+    let hasOverdue = false;
+    let allCompleted = allTasks.length > 0;
+    let hasWorkCategory = false;
+    let hasPersonalCategory = false;
+
     allTasks.forEach(task => {
+        // Проверка просроченных задач
+        if (dayDate < today && !task.completed) {
+            hasOverdue = true;
+        }
+
+        // Проверка завершенности всех задач
+        if (!task.completed) {
+            allCompleted = false;
+        }
+
+        // Проверка категорий
         if (task.category_ids) {
-            task.category_ids.forEach(id => categoryIds.add(id));
+            if (task.category_ids.includes(1)) hasWorkCategory = true;
+            if (task.category_ids.includes(2)) hasPersonalCategory = true;
+        } else if (task.categories) {
+            if (task.categories.includes('Работа')) hasWorkCategory = true;
+            if (task.categories.includes('Личное')) hasPersonalCategory = true;
         }
     });
 
-    // Категории (ID 1 - работа, ID 2 - личное)
-    if (categoryIds.size === 1) {
-        const categoryId = Array.from(categoryIds)[0];
-        if (categoryId === 1) return COLORS.WORK;    // Работа - оранжевый
-        if (categoryId === 2) return COLORS.PERSONAL; // Личное - голубой
-    }
-
-    // 2. Все задачи выполнены
-    const allCompleted = allTasks.length > 0 && allTasks.every(task => task.completed);
-    if (allCompleted) return COLORS.COMPLETED;
-
-    // 3. Просроченные задачи
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const taskDate = new Date(allTasks[0]?.date || now);
-
-    const hasOverdue = allTasks.some(task => !task.completed && taskDate < today);
-    if (hasOverdue) return COLORS.OVERDUE;
-
-    // 4. Выходные
-    if (isWeekend) return COLORS.WEEKEND;
-
-    return COLORS.DEFAULT;
-}
-
-export function applyDayCellStyles(dayCell, tasks, completedTasks, isWeekend) {
-    // Сброс всех классов
-    dayCell.classList.remove(
+    // Сбрасываем все классы стилей
+    const styleClasses = [
+        'has-overdue-tasks',
+        'all-tasks-completed',
         'category-work',
         'category-personal',
-        'all-tasks-completed',
-        'has-overdue-tasks',
-        'weekend',
         'has-tasks'
-    );
+    ];
+    styleClasses.forEach(cls => dayCell.classList.remove(cls));
 
-    const color = getDayCellBackground(tasks, completedTasks, isWeekend);
-
-    switch(color) {
-        case COLORS.WORK:
-            dayCell.classList.add('category-work');
-            break;
-        case COLORS.PERSONAL:
-            dayCell.classList.add('category-personal');
-            break;
-        case COLORS.COMPLETED:
-            dayCell.classList.add('all-tasks-completed');
-            break;
-        case COLORS.OVERDUE:
-            dayCell.classList.add('has-overdue-tasks');
-            break;
-        case COLORS.WEEKEND:
-            dayCell.classList.add('weekend');
-            break;
+    // Применяем соответствующие стили
+    if (allCompleted && allTasks.length > 0) {
+        dayCell.classList.add('all-tasks-completed');
+    } else if (hasOverdue) {
+        dayCell.classList.add('has-overdue-tasks');
+    } else if (tasks.length > 0) {
+        dayCell.classList.add('has-tasks');
     }
 
-    // Индикатор невыполненных задач
-    const hasIncompleteTasks = [...(tasks || [])].some(t => !t.completed);
-    if (hasIncompleteTasks) {
-        dayCell.classList.add('has-tasks');
+    if (hasWorkCategory) {
+        dayCell.classList.add('category-work');
+    }
+    if (hasPersonalCategory) {
+        dayCell.classList.add('category-personal');
+    }
+
+    // Обновляем индикатор количества задач
+    updateTaskCounter(dayCell, tasks);
+}
+
+function updateTaskCounter(dayCell, tasks = []) {
+    let badge = dayCell.querySelector('.task-count-badge');
+    const activeTasks = tasks.filter(task => !task.completed);
+
+    if (activeTasks.length > 0) {
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'task-count-badge';
+            dayCell.querySelector('.day-link').appendChild(badge);
+        }
+
+        badge.textContent = activeTasks.length;
+        badge.className = 'task-count-badge';
+
+        // Определяем максимальный приоритет среди активных задач
+        const maxPriority = Math.max(...activeTasks.map(task => task.priority || 1));
+        if (maxPriority === 3) {
+            badge.classList.add('priority-high');
+        } else if (maxPriority === 2) {
+            badge.classList.add('priority-medium');
+        } else {
+            badge.classList.add('priority-low');
+        }
+    } else if (badge) {
+        badge.remove();
     }
 }

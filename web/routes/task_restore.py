@@ -16,4 +16,4 @@ def init_task_restore_routes(app):
         new_task_id = restore_task(db, current_user.id, completed_task_id, year, month, day)
         log_action(app.logger, "Task", "restored", current_user.id, entity_id=completed_task_id,
                    extra_info={'date': {'year': year, 'month': month, 'day': day}})
-        return {"message": "Задача восстановлена"}
+        return json_response(True, data={"message": "Задача восстановлена"})

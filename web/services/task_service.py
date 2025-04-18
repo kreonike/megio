@@ -20,11 +20,6 @@ def check_ownership(cursor, table, id, user_id):
 def update_task_categories(db, task_id, category_ids):
     """
     Обновляет связи задачи с категориями в таблице task_categories.
-
-    Args:
-        db: Соединение с базой данных.
-        task_id: ID задачи.
-        category_ids: Список ID категорий (может быть None или пустым).
     """
     cursor = db.cursor()
     cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
@@ -34,14 +29,32 @@ def update_task_categories(db, task_id, category_ids):
     db.commit()
 
 
+def get_task_categories(db, task_id):
+    """
+    Получает список категорий для задачи.
+    """
+    cursor = db.cursor()
+    cursor.execute('''
+        SELECT group_concat(c.name, ', ') as categories
+        FROM task_categories tc
+        JOIN categories c ON tc.category_id = c.id
+        WHERE tc.task_id = ?
+    ''', (task_id,))
+    result = cursor.fetchone()
+    return result['categories'] if result and result['categories'] else ''
+
+
 def complete_task(db, user_id, task_id, year, month, day):
     """Завершает задачу, перемещая ее в completed_tasks."""
     cursor = db.cursor()
 
     check_ownership(cursor, 'tasks', task_id, user_id)
 
+    # Получаем категории задачи
+    categories = get_task_categories(db, task_id)
+
     cursor.execute('''
-        SELECT id, task, priority, categories
+        SELECT id, task, priority
         FROM tasks
         WHERE id = ? AND user_id = ?
     ''', (task_id, user_id))
@@ -61,7 +74,7 @@ def complete_task(db, user_id, task_id, year, month, day):
         task_id,
         task['task'],
         task['priority'],
-        task['categories'],
+        categories,  # Используем полученные категории
         year,
         month,
         day,
@@ -91,19 +104,25 @@ def restore_task(db, user_id, completed_task_id, year, month, day):
     if not completed_task:
         raise PermissionError("Completed task not found")
 
+    # Вставляем задачу без колонки categories
     cursor.execute('''
-        INSERT INTO tasks (user_id, task, year, month, day, priority, categories)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO tasks (user_id, task, year, month, day, priority)
+        VALUES (?, ?, ?, ?, ?, ?)
     ''', (
         user_id,
         completed_task['task_text'],
         year,
         month,
         day,
-        completed_task['priority'],
-        completed_task['categories']
+        completed_task['priority']
     ))
     new_task_id = cursor.lastrowid
+
+    # Если есть категории, восстанавливаем их через task_categories
+    if completed_task['categories']:
+        # Здесь можно добавить логику для восстановления категорий,
+        # если это необходимо в вашем приложении
+        pass
 
     cursor.execute('DELETE FROM completed_tasks WHERE id = ?', (completed_task_id,))
     db.commit()

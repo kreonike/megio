@@ -46,13 +46,6 @@ def require_ownership(table, id_field='task_id'):
 def handle_crud_post(action_handlers, redirect_endpoint, ajax_response_data=None):
     """
     Декоратор для обработки CRUD POST-запросов.
-
-    Args:
-        action_handlers (dict or callable): Словарь обработчиков или функция, возвращающая словарь,
-                                           где ключи — действия ('delete', 'add', 'update'),
-                                           а значения — функции, возвращающие (success, flash_data).
-        redirect_endpoint (str): Имя конечной точки для редиректа.
-        ajax_response_data (callable, optional): Функция для формирования данных AJAX-ответа.
     """
     def decorator(f):
         @wraps(f)
@@ -60,7 +53,6 @@ def handle_crud_post(action_handlers, redirect_endpoint, ajax_response_data=None
             if request.method == 'POST':
                 @handle_exceptions
                 def process_post():
-                    # Если action_handlers — функция, вызываем ее только с year, month, day
                     handlers = action_handlers(kwargs.get('year'), kwargs.get('month'), kwargs.get('day')) if callable(action_handlers) else action_handlers
                     for action, handler in handlers.items():
                         if (action == 'delete' and 'delete' in request.form) or \
@@ -105,7 +97,7 @@ def log_error(logger, message, exc_info=False):
 
 def handle_exceptions(f):
     """
-    Декоратор для централизованной обработки исключений и автоматического формирования JSON-ответов.
+    Декоратор для централизованной обработки исключений.
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):

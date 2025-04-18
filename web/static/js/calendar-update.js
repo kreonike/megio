@@ -427,86 +427,33 @@ export function updateCalendar(year, month) {
 
             // Кэширование данных
             for (const day in tasksByDay) {
-                window.tasksCache[`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`] = {
+                const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                window.tasksCache[dateKey] = {
                     tasks: tasksByDay[day] || [],
                     completedTasks: completedTasksByDay[day] || []
                 };
             }
 
+            // Обновляем стили для всех дней
             document.querySelectorAll('.day-link').forEach(link => {
                 const day = link.getAttribute('data-day');
                 const dayCell = link.closest('.day-cell');
-                let badge = link.querySelector('.task-count-badge');
 
                 if (day) {
                     const tasks = tasksByDay[day] || [];
                     const completedTasks = completedTasksByDay[day] || [];
 
-                    // Сброс всех классов
-                    dayCell.classList.remove(
-                        'has-overdue-tasks',
-                        'all-tasks-completed',
-                        'category-work',
-                        'category-personal',
-                        'has-tasks'
+                    // Применяем стили через colors.js
+                    applyDayCellStyles(
+                        dayCell,
+                        tasks,
+                        completedTasks,
+                        dayCell.classList.contains('weekend')
                     );
 
-                    const allTasks = [...tasks, ...completedTasks.map(task => ({
-                        ...task,
-                        completed: 1,
-                        priority: task.priority || 1
-                    }))];
-
-                    if (allTasks.length > 0) {
-                        const now = new Date();
-                        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                        const taskDate = new Date(year, month - 1, day);
-
-                        let hasOverdue = false;
-                        let allCompleted = true;
-                        let hasIncompleteTasks = false;
-                        let hasWorkCategory = false;
-                        let hasPersonalCategory = false;
-
-                        allTasks.forEach(task => {
-                            if (taskDate < today && !task.completed) {
-                                hasOverdue = true;
-                            }
-                            if (!task.completed) {
-                                allCompleted = false;
-                                hasIncompleteTasks = true;
-                            }
-                            if (task.category_ids && task.category_ids.includes(1)) hasWorkCategory = true;
-                            if (task.category_ids && task.category_ids.includes(2)) hasPersonalCategory = true;
-                        });
-
-                        if (hasIncompleteTasks) {
-                            dayCell.classList.add('has-tasks');
-                            if (!badge) {
-                                badge = document.createElement('span');
-                                badge.className = 'task-count-badge';
-                                link.appendChild(badge);
-                            }
-                            badge.textContent = allTasks.filter(task => !task.completed).length;
-                            badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-                            const maxPriority = Math.max(...allTasks.filter(task => !task.completed).map(task => task.priority || 1));
-                            if (maxPriority === 3) badge.classList.add('priority-high');
-                            else if (maxPriority === 2) badge.classList.add('priority-medium');
-                            else badge.classList.add('priority-low');
-                        } else {
-                            if (badge) badge.remove();
-                        }
-
-                        // Применяем стили через colors.js
-                        applyDayCellStyles(dayCell, tasks, completedTasks, dayCell.classList.contains('weekend'));
-
-                        if (hasOverdue) {
-                            dayCell.classList.add('has-overdue-tasks');
-                        } else if (allCompleted && allTasks.length > 0) {
-                            dayCell.classList.add('all-tasks-completed');
-                        }
-                    } else {
-                        if (badge) badge.remove();
+                    // Логирование для отладки
+                    if (completedTasks.length > 0) {
+                        console.log(`[updateCalendar] Day ${day} has completed tasks:`, completedTasks);
                     }
                 }
             });

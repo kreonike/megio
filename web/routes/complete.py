@@ -14,10 +14,13 @@ def complete_routes(app):
         year, month, day = validate_date(year, month, day)
         data = request.get_json()
         task_id = data.get('task_id')
+
         completed_id = complete_task(db, current_user.id, task_id, year, month, day)
-        log_action(app.logger, "Task", "marked as completed", current_user.id, entity_id=task_id,
+
+        log_action(app.logger, "Task", "marked as completed", current_user.id,
+                   entity_id=task_id,
                    extra_info={'date': {'year': year, 'month': month, 'day': day}})
-        return {"message": "Задача отмечена как выполненная"}
+        return json_response(True, data={"message": "Задача отмечена как выполненная"})
 
     @app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
     @login_required
@@ -43,5 +46,6 @@ def complete_routes(app):
                 for row in cursor.fetchall()
             ]
             log_action(app.logger, "Task", "fetched completed tasks", current_user.id,
-                       extra_info={'date': {'year': year, 'month': month, 'day': day}, 'count': len(completed_tasks)})
-            return {'completedTasks': completed_tasks}
+                       extra_info={'date': {'year': year, 'month': month, 'day': day},
+                                   'count': len(completed_tasks)})
+            return json_response(True, data={'completedTasks': completed_tasks})

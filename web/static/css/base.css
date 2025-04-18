@@ -7,7 +7,6 @@
     --border-color: #d1d9e6;
     --bg-secondary-color: #f8fafc;
 
-
     /* Цвета текста */
     --text-primary: #2c3e50;
     --text-secondary: #4a5568;
@@ -20,10 +19,16 @@
     --today-text-color: #ffffff;
     --has-tasks-bg-color: #ffeda3;
     --has-tasks-text-color: #1a202c;
-    --weekend-color: #f87171; /* Мягче красный */
+    --weekend-color: #f87171;
     --weekend-bg-color: #ffffff;
-    --task-counter-bg: #66bb6a; /* Мягче зелёный */
+    --task-counter-bg: #66bb6a;
     --task-counter-text: #ffffff;
+
+    /* Цвета категорий */
+    --category-work-color: #2196F3;
+    --category-personal-color: #4CAF50;
+    --category-work-bg: rgba(33, 150, 243, 0.2);
+    --category-personal-bg: rgba(76, 175, 80, 0.2);
 
     /* Эффекты */
     --transition-base: background-color 0.2s ease, box-shadow 0.2s ease;
@@ -37,16 +42,18 @@
     --text-secondary: #a0aec0;
     --border-color: #4b5563;
     --bg-secondary-color: #2d3748;
-    --th-bg-color: #60a5fa; /* Синий для заголовков */
+    --th-bg-color: #60a5fa;
     --day-number-color: #dbeafe;
     --today-bg-color: #60a5fa;
     --today-text-color: #1e293b;
-    --has-tasks-bg-color: #eab308; /* Приглушённый жёлтый */
+    --has-tasks-bg-color: #eab308;
     --has-tasks-text-color: #1e293b;
     --weekend-color: #fb7185;
     --weekend-bg-color: #1e293b;
     --task-counter-bg: #6ee7b7;
     --task-counter-text: #1e293b;
+    --category-work-bg: rgba(33, 150, 243, 0.3);
+    --category-personal-bg: rgba(76, 175, 80, 0.3);
 }
 
 /* Базовые стили */
@@ -129,44 +136,6 @@ body {
     background: rgba(52, 152, 219, 0.1);
 }
 
-/* Стили чисел календаря */
-.day-number {
-    color: var(--day-number-color);
-    display: block;
-    text-align: center;
-    font-weight: 600;
-}
-
-.dark-mode .day-number {
-    font-weight: 700;
-}
-
-.has-tasks .day-number {
-    font-weight: bold;
-    color: var(--has-tasks-text-color);
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-}
-
-.weekend .day-number {
-    color: var(--weekend-color);
-}
-
-.dark-mode .weekend .day-number {
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
-}
-
-.today .day-number {
-    background-color: var(--today-bg-color);
-    color: var(--today-text-color);
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    margin: 0 auto;
-    box-shadow: 0 0 0 2px var(--bg-color);
-    font-weight: bold;
-}
-
 /* Уведомления */
 .flash-messages {
     position: fixed;
@@ -232,20 +201,7 @@ body {
     }
 }
 
-/* ... существующие стили ... */
-
-@media (max-width: 400px) {
-    .calendar-table td {
-        height: 25px;
-        font-size: 0.8rem;
-    }
-
-    .day-number {
-        font-size: 0.8rem;
-    }
-}
-
-/* Новые стили для статуса Telegram */
+/* Стили для статуса Telegram */
 .telegram-status {
     padding: 8px 12px;
     border-radius: 4px;

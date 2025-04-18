@@ -131,7 +131,7 @@
 .today .day-number {
     margin-left: 0;
     position: relative;
-    left: 40px;
+    left: -20px;
     background-color: var(--today-bg-color);
     color: var(--today-text-color);
     border-radius: 50%;
@@ -896,8 +896,8 @@
 }
 
 .day-cell.all-tasks-completed {
-    background-color: rgba(76, 175, 80, 0.2);
-    border: 2px solid #4CAF50;
+    background-color: rgba(76, 175, 80, 0.2) !important;
+    border: 2px solid #4CAF50 !important;
 }
 
 .day-cell.has-overdue-tasks {
@@ -917,8 +917,8 @@
 }
 
 .dark-mode .day-cell.all-tasks-completed {
-    background-color: rgba(76, 175, 80, 0.3);
-    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.3) !important;
+    border-color: #4CAF50 !important;
 }
 
 .dark-mode .day-cell.has-overdue-tasks {

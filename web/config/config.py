@@ -149,22 +149,4 @@ def init_db(app):
             if 'categories' not in completed_columns:
                 cursor.execute('ALTER TABLE completed_tasks ADD COLUMN categories TEXT')
 
-            # Добавление категорий по умолчанию для каждого пользователя
-            cursor.execute('''
-                INSERT OR IGNORE INTO categories (user_id, name, color)
-                SELECT id, 'Личное', '#4CAF50' 
-                FROM users 
-                WHERE NOT EXISTS (
-                    SELECT 1 FROM categories WHERE user_id = users.id AND name = 'Личное'
-                )
-            ''')
-            cursor.execute('''
-                INSERT OR IGNORE INTO categories (user_id, name, color)
-                SELECT id, 'Работа', '#2196F3' 
-                FROM users 
-                WHERE NOT EXISTS (
-                    SELECT 1 FROM categories WHERE user_id = users.id AND name = 'Работа'
-                )
-            ''')
-
             db.commit()
