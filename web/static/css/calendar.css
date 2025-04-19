@@ -91,7 +91,7 @@
 }
 
 .day-cell.has-tasks {
-    border: 1px solid var(--border-color);
+    background-color: var(--has-tasks-bg-color);
 }
 
 .day-cell.has-overdue-tasks {
@@ -131,7 +131,7 @@
 .today .day-number {
     margin-left: 0;
     position: relative;
-    left: -20px;
+    left: 40px;
     background-color: var(--today-bg-color);
     color: var(--today-text-color);
     border-radius: 50%;
@@ -882,148 +882,4 @@
         width: 100%;
         text-align: center;
     }
-}
-
-/* Добавим в calendar.css */
-.day-cell.category-work {
-    background-color: rgba(255, 165, 0, 0.2);
-    border: 2px solid #FFA500;
-}
-
-.day-cell.category-personal {
-    background-color: rgba(135, 206, 235, 0.2);
-    border: 2px solid #87CEEB;
-}
-
-.day-cell.all-tasks-completed {
-    background-color: rgba(76, 175, 80, 0.2) !important;
-    border: 2px solid #4CAF50 !important;
-}
-
-.day-cell.has-overdue-tasks {
-    background-color: rgba(244, 67, 54, 0.2);
-    border: 2px solid #F44336;
-}
-
-/* Темная тема */
-.dark-mode .day-cell.category-work {
-    background-color: rgba(255, 165, 0, 0.3);
-    border-color: #FFA500;
-}
-
-.dark-mode .day-cell.category-personal {
-    background-color: rgba(135, 206, 235, 0.3);
-    border-color: #87CEEB;
-}
-
-.dark-mode .day-cell.all-tasks-completed {
-    background-color: rgba(76, 175, 80, 0.3) !important;
-    border-color: #4CAF50 !important;
-}
-
-.dark-mode .day-cell.has-overdue-tasks {
-    background-color: rgba(244, 67, 54, 0.3);
-    border-color: #F44336;
-}
-/* В dark-mode секции добавьте: */
-.dark-mode .has-tasks .day-number {
-    color: white;
-    font-weight: bold;
-}
-
-/* Уберите text-shadow из .has-tasks .day-number (если он есть) */
-.has-tasks .day-number {
-    text-shadow: none;
-}
-
-/* Улучшим контраст для бейджей в темной теме */
-.dark-mode .task-count-badge {
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-/* Стили для легенды цветов */
-.color-legend {
-    margin-top: 30px;
-    padding: 15px;
-    background-color: var(--bg-secondary-color);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
-
-.color-legend h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: var(--primary-color);
-}
-
-.color-legend > div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.color-legend > div > div {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-@media (max-width: 768px) {
-    .color-legend > div {
-        flex-direction: column;
-        gap: 10px;
-    }
-}
-/* Убедитесь, что выходные без задач имеют правильный цвет */
-.weekend:not(.has-tasks):not(.all-tasks-completed):not(.has-overdue-tasks):not(.category-work):not(.category-personal) {
-    background-color: var(--weekend-bg-color) !important;
-}
-
-/* Для темной темы */
-.dark-mode .weekend:not(.has-tasks):not(.all-tasks-completed):not(.has-overdue-tasks):not(.category-work):not(.category-personal) {
-    background-color: var(--weekend-bg-color) !important;
-}
-
-/* Было */
-.day-cell.category-work {
-    background-color: rgba(255, 165, 0, 0.2) !important;
-    border: 2px solid #FFA500 !important;
-}
-
-.day-cell.category-personal {
-    background-color: rgba(135, 206, 235, 0.2) !important;
-    border: 2px solid #87CEEB !important;
-}
-
-/* Темная тема для категорий */
-.dark-mode .day-cell.category-work {
-    background-color: rgba(255, 165, 0, 0.3) !important;
-    border-color: #FFA500 !important;
-}
-
-.dark-mode .day-cell.category-personal {
-    background-color: rgba(135, 206, 235, 0.3) !important;
-    border-color: #87CEEB !important;
-}
-
-/* Стало */
-.day-cell.category-work {
-    background-color: rgba(135, 206, 235, 0.2) !important;
-    border: 2px solid #87CEEB !important;
-}
-
-.day-cell.category-personal {
-    background-color: rgba(255, 165, 0, 0.2) !important;
-    border: 2px solid #FFA500 !important;
-}
-
-/* Темная тема для категорий */
-.dark-mode .day-cell.category-work {
-    background-color: rgba(135, 206, 235, 0.3) !important;
-    border-color: #87CEEB !important;
-}
-
-.dark-mode .day-cell.category-personal {
-    background-color: rgba(255, 165, 0, 0.3) !important;
-    border-color: #FFA500 !important;
 }
