@@ -61,12 +61,15 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
             <div class="task-categories">
                 <label>Категории:</label>
                 <div class="category-options">
-                    ${categories.map(cat => `
-                        <label>
-                            <input type="checkbox" name="categories" value="${cat.id}">
-                            <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
-                        </label>
-                    `).join('')}
+                    ${categories && categories.length > 0 ?
+                        categories.map(cat => `
+                            <label class="category-option">
+                                <input type="checkbox" name="categories" value="${cat.id}">
+                                <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                            </label>
+                        `).join('')
+                        : '<p class="no-categories">Нет доступных категорий</p>'
+                    }
                 </div>
             </div>
             <div class="repeat-options">
