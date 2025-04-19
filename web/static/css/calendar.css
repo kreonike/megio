@@ -916,3 +916,84 @@
     margin-right: 4px;
 }
 
+/* Стили для секции возможностей */
+.features-description {
+    margin-top: 40px;
+    padding: 30px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.features-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+    font-size: 1.8rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.feature-card {
+    background: var(--bg-secondary-color);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.feature-card h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Темная тема */
+.dark-mode .feature-card {
+    background: var(--bg-color);
+    border-color: var(--border-color);
+}
+
+.dark-mode .feature-card:hover {
+    box-shadow: 0 8px 25px rgba(255,255,255,0.05);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+    }
+
+    .feature-card {
+        min-height: auto;
+        padding: 1.5rem;
+    }
+}
