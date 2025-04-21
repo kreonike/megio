@@ -1,12 +1,5 @@
 // static/js/time.js
 
-export function handleTimeInput(e) {
-    this.value = formatTimeInput(this.value);
-    this.addEventListener('blur', () => {
-        this.value = validateTime(this.value);
-    });
-}
-
 // Функции для работы с временем
 function formatTimeInput(value) {
     let numbers = value.replace(/\D/g, '');
@@ -82,11 +75,111 @@ function bindTimeSpinnerEvents(timeInput) {
         updateTime(this, e.deltaY > 0 ? -5 : 5);
     });
 
-    const upBtn = timeInput.parentElement.querySelector('.time-btn.up');
-    const downBtn = timeInput.parentElement.querySelector('.time-btn.down');
-    if (upBtn) upBtn.addEventListener('click', () => updateTime(timeInput, 5));
-    if (downBtn) downBtn.addEventListener('click', () => updateTime(timeInput, -5));
+    const timeSelector = timeInput.closest('.time-selector');
+    if (timeSelector) {
+        const upBtn = timeSelector.querySelector('.time-btn.up');
+        const downBtn = timeSelector.querySelector('.time-btn.down');
+        if (upBtn) upBtn.addEventListener('click', () => updateTime(timeInput, 5));
+        if (downBtn) downBtn.addEventListener('click', () => updateTime(timeInput, -5));
+    }
 }
+
+// Инициализация обработчиков событий
+document.addEventListener('DOMContentLoaded', function() {
+    // Основной ввод времени
+    const mainTimeInput = document.getElementById('task-time');
+    if (mainTimeInput) {
+        bindTimeSpinnerEvents(mainTimeInput);
+        mainTimeInput.value = validateTime(mainTimeInput.value);
+    }
+
+    // Поля редактирования времени
+    document.querySelectorAll('.edit-time-input').forEach(input => {
+        bindTimeSpinnerEvents(input);
+        input.value = validateTime(input.value);
+    });
+
+    // Поля ввода даты (для repeat_start и repeat_end)
+    document.querySelectorAll('input[name="repeat_start"], input[name="repeat_end"]').forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = formatDateForInput(this.value);
+ස: if (input.value) {
+                this.value = formatDateForInput(this.value);
+            }
+        });
+        input.addEventListener('blur', function() {
+            this.value = formatDateForInput(this.value);
+        });
+    });
+
+    // Обработчики кнопок редактирования
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const taskId = this.dataset.taskId;
+            const form = document.getElementById(`edit-form-${taskId}`);
+            form.classList.toggle('active');
+
+            // Инициализация времени при открытии формы
+            const timeInput = form.querySelector('.edit-time-input');
+            if (timeInput) {
+                timeInput.value = validateTime(timeInput.value);
+            }
+        });
+    });
+
+    // Обработчики кнопок "Отмена"
+    document.querySelectorAll('.cancel-edit').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const taskId = this.dataset.taskId;
+            const form = document.getElementById(`edit-form-${taskId}`);
+            form.classList.remove('active');
+        });
+    });
+
+    // Обработчики кнопок "Удалить"
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const taskItem = this.closest('.task-item');
+            const taskId = this.querySelector('[name="delete"]').value;
+
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при удалении задачи');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Плавное исчезновение удалённой задачи
+                taskItem.style.transition = 'opacity 0.3s';
+                taskItem.style.opacity = '0';
+
+                setTimeout(() => {
+                    taskItem.remove();
+
+                    // Если задач не осталось, показываем сообщение
+                    if (document.querySelectorAll('.task-item').length === 0) {
+                        const taskList = document.querySelector('.task-list');
+                        taskList.innerHTML = '<li class="no-tasks">Нет задач на эту дату</li>';
+                    }
+                }, 300);
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Не удалось удалить задачу');
+            });
+        });
+    });
+});
 
 // Экспорт функций для использования в других файлах
 export {

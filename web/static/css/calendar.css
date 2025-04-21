@@ -325,18 +325,89 @@
 }
 
 /* Стили для категорий */
+.category-selector {
+    margin: 15px 0;
+}
+
+.category-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.category-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.category-option input {
+    margin-right: 5px;
+}
+
 .category-badge,
 .category-tag {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 4px 8px;
     border-radius: 12px;
-    font-size: 0.8em;
-    margin-right: 5px;
+    font-size: 12px;
     color: white;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    margin-left: 4px;
+}
+
+.task-item .category-tag {
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: white;
+    margin-right: 4px;
+}
+
+.no-categories {
+    color: #999;
+    font-style: italic;
+    margin: 5px 0;
 }
 
 /* Стили для приоритетов */
+.priority-selector {
+    margin: 15px 0;
+}
+
+.priority-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.priority-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.priority-badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.priority-badge.high {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.priority-badge.medium {
+    background-color: #4ecdc4;
+    color: white;
+}
+
+.priority-badge.low {
+    background-color: #a5d8ff;
+    color: #333;
+}
+
 .priority-marker {
     display: inline-block;
     width: 16px;
@@ -359,15 +430,63 @@
     background-color: #4caf50;
 }
 
+/* Стили для индикаторов приоритета */
+.tasks-sidebar .task-meta .priority-indicator.priority-1,
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-1 {
+    color: #4caf50;
+    background-color: transparent;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.tasks-sidebar .task-meta .priority-indicator.priority-2,
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-2 {
+    color: #ff9800;
+    background-color: transparent;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.tasks-sidebar .task-meta .priority-indicator.priority-3,
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-3 {
+    color: #f44336;
+    background-color: transparent;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.tasks-sidebar .task-meta .priority-indicator.priority-1,
+.tasks-sidebar .task-meta .priority-indicator.priority-2,
+.tasks-sidebar .task-meta .priority-indicator.priority-3 {
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+}
+
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-1,
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-2,
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-3 {
+    font-size: 0.75em;
+    letter-spacing: 0.2px;
+}
+
 /* Список активных задач */
 .active-tasks-header,
 .completed-tasks-header {
-    color: var(--primary-color); /* Основной цвет темы (например, синий/фиолетовый) */
+    color: var(--primary-color);
     font-size: 1.2em;
     font-weight: 600;
     margin: 20px 0 10px;
     padding-bottom: 5px;
-    border-bottom: 2px solid var(--border-color); /* Лёгкая линия под заголовком */
+    border-bottom: 2px solid var(--border-color);
 }
 
 .task-list {
@@ -433,7 +552,7 @@
     color: var(--text-primary);
     font-family: var(--main-font, 'Arial', sans-serif);
     font-size: 1em;
-    font-weight:400;
+    font-weight: 400;
     padding: 10px;
     margin: 0;
     text-align: left;
@@ -475,7 +594,7 @@
     gap: 6px;
     align-items: center;
     margin-bottom: 5px;
-    max-height: 24px; /* Уменьшено для более раннего переноса */
+    max-height: 24px;
 }
 
 .completed-time {
@@ -517,9 +636,9 @@
 }
 
 .completed-task-item .restore-btn {
-    width: 100%; /* Кнопка на всю ширину */
-    margin-top: 5px; /* Отступ сверху */
-    text-align: center; /* Центрирование текста */
+    width: 100%;
+    margin-top: 5px;
+    text-align: center;
 }
 
 .restore-btn:hover {
@@ -782,10 +901,14 @@
     color: #90caf9;
 }
 
-.dark-mode .active-tasks-header,
+.dark-mode .active-tasks-header {
     color: #64B5F6;
-.dark-mode .completed-tasks-header,
+}
+
+.dark-mode .completed-tasks-header {
     color: #81C784;
+}
+
 .dark-mode .no-completed-tasks {
     color: #FFFFFF;
 }
@@ -885,35 +1008,6 @@
         width: 100%;
         text-align: center;
     }
-}
-
-.category-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.category-option {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.category-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    color: white;
-    margin-left: 4px;
-}
-
-.task-item .category-tag {
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-size: 11px;
-    color: white;
-    margin-right: 4px;
 }
 
 /* Стили для секции возможностей */
