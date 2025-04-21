@@ -10,17 +10,15 @@ from web.logging_config import configure_logging
 from web.routes.stats import stats_routes
 from web.config.config import init_db, db_connection
 from web.models.models import User
-from web.routes.profile import profile_routes
+from web.routes.profile import init_profile_routes
 from web.routes.telegram import telegram_routes
-from web.routes.register import register_routes
-from web.routes.login import login_routes
-from web.routes.logout import logout_routes
+from web.routes.auth import init_auth_routes
 from web.routes.google import google_routes, google_sync_scheduler
-#from web.routes.task_restore import task_restore_routes
 from web.routes.categories import categories_routes
 from web.routes.remind import remind_routes
 from web.routes.complete import complete_routes
 from web.routes.tasks import tasks_routes
+from web.routes.task_restore import init_task_restore_routes
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
@@ -43,14 +41,11 @@ configure_logging(app)
 logger = app.logger
 
 # Инициализация маршрутов
-profile_routes(app)
+init_profile_routes(app)
 telegram_routes(app)
-register_routes(app, bcrypt)
-login_routes(app, bcrypt)
-logout_routes(app)
+init_auth_routes(app, bcrypt)  # Объединенные auth routes вместо login/register/logout
 google_routes(app)
 stats_routes(app)
-from web.routes.task_restore import init_task_restore_routes
 init_task_restore_routes(app)
 categories_routes(app)
 remind_routes(app)

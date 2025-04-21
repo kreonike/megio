@@ -2,6 +2,10 @@
 
 {% block title %}Профиль пользователя{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="profile-container">
     <h1 class="profile-title">{{ user.username }}</h1>
@@ -91,7 +95,7 @@
             </div>
         {% endif %}
 
-        <form method="POST" action="{{ url_for('link_telegram') }}">
+        <form method="POST" action="{{ url_for('link_telegram') }}" class="telegram-form">
             <div class="form-group">
                 <input type="text" name="telegram_id"
                        placeholder="Введите Telegram ID"

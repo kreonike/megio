@@ -17,9 +17,9 @@
     <form class="task-form" method="POST" action="{{ url_for('day_tasks', year=year, month=month, day=day) }}">
         <input type="text" name="task" class="task-input" placeholder="Добавить новую задачу..." required>
 
-        <div class="time-selector">
+        <div class="time-input-group">
             <input type="text" id="task-time" name="time" class="time-input" value="12:00"
-                   pattern="[02]:[0-9]{2}" title="Формат: ЧЧ:ММ (24 часа), можно ввести 1212 → 12:12">
+                   pattern="[0-9]{2}:[0-9]{2}" title="Формат: ЧЧ:ММ (24 часа), можно ввести 1212 → 12:12">
             <div class="time-spinner">
                 <button type="button" class="time-btn up">▲</button>
                 <button type="button" class="time-btn down">▼</button>
@@ -42,7 +42,7 @@
             <div class="task-actions">
                 <small class="task-created">{{ task.created }}</small>
                 <button type="button" class="edit-btn" data-task-id="{{ task.id }}">Редактировать</button>
-                <form method="POST" action="{{ url_for('day_tasks', year=year, month=month, day=day) }}" class="delete-form" style="margin: 0;">
+                <form method="POST" action="{{ url_for('day_tasks', year=year, month=month, day=day) }}" class="delete-form">
                     <input type="hidden" name="delete" value="{{ task.id }}">
                     <button type="submit" class="delete-btn">Удалить</button>
                 </form>
@@ -53,8 +53,8 @@
                 <input type="hidden" name="task_id" value="{{ task.id }}">
                 <input type="text" name="task" class="task-input" value="{{ task.task }}" required>
 
-                <div class="time-selector">
-                    <input type="text" name="time" class="edit-time-input" value="{{ task.time if task.time else '12:00' }}"
+                <div class="time-input-group">
+                    <input type="text" name="time" class="time-input" value="{{ task.time if task.time else '12:00' }}"
                            pattern="[0-9]{2}:[0-9]{2}">
                     <div class="time-spinner">
                         <button type="button" class="time-btn up">▲</button>
