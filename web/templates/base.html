@@ -14,7 +14,7 @@
             <h1>Календарь задач</h1>
             <div class="auth-links">
                 {% if current_user.is_authenticated %}
-                    <span>Привет, {{ current_user.username }}!</span>
+                    <a href="{{ url_for('show_calendar') }}">Привет, {{ current_user.username }}!</a>
                     <a href="{{ url_for('profile') }}">Профиль</a>
                     <a href="{{ url_for('stats') }}">Статистика</a>
                     <a href="{{ url_for('logout') }}">Выйти</a>

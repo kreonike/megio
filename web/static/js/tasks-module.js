@@ -1,17 +1,10 @@
-import {
-    formatDateToRussian,
-    formatDateForInput,
-    bindTimeSpinnerEvents
-} from "./time.js";
-import { fetchCompletedTasks } from './completed-tasks.js';
-import { applyFilters } from './filters.js';
-import { updateCalendar } from './calendar-module.js';
+import { formatDateToRussian, formatDateForInput, formatCompletionTime } from './utils.js';
 
 export function updateTasksSection(tasks, completedTasks, date, day, categories) {
-    console.log(`[updateTasksSection] Updating tasks for ${date}, tasks: ${tasks.length}, completed: ${completedTasks.length}, categories: ${categories.length}`);
+    console.log(`[tasks-module/updateTasksSection] Updating tasks for ${date}, tasks: ${tasks.length}, completed: ${completedTasks.length}, categories: ${categories.length}`);
     const tasksSection = document.querySelector('.tasks-section');
     if (!tasksSection) {
-        console.error('[updateTasksSection] Tasks section not found in DOM');
+        console.error('[tasks-module/updateTasksSection] Tasks section not found in DOM');
         return;
     }
 
@@ -21,15 +14,18 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
     const dayNum = dateParts[2];
     const formattedDate = `${dayNum.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
 
-    const validCompletedTasks = completedTasks
+    const validCompletedTasks = (completedTasks || [])
         .filter(task => task.id && task.task_text)
         .sort((a, b) => new Date(b.completion_time) - new Date(a.completion_time));
+
+    const validTasks = (tasks || []).filter(task => task.id && task.task);
+    const validCategories = (categories || []).filter(cat => cat.id && cat.name);
 
     tasksSection.innerHTML = `
         <div class="calendar-filters">
             <select id="category-filter">
                 <option value="">Все категории</option>
-                ${categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
+                ${validCategories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
             </select>
             <select id="priority-filter">
                 <option value="">Все приоритеты</option>
@@ -46,8 +42,8 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
                 <input type="text" id="task-time" name="time" class="time-input" value="12:00"
                        pattern="[0-9]{2}:[0-9]{2}" title="Формат: ЧЧ:ММ (24 часа)">
                 <div class="time-spinner">
-                    <button type="button" class="time-btn up">▲</button>
-                    <button type="button" class="time-btn down">▼</button>
+                    <button type="button" class="time-btn up" aria-label="Увеличить время">▲</button>
+                    <button type="button" class="time-btn down" aria-label="Уменьшить время">▼</button>
                 </div>
             </div>
             <div class="task-priority">
@@ -61,11 +57,11 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
             <div class="task-categories">
                 <label>Категории:</label>
                 <div class="category-options">
-                    ${categories && categories.length > 0 ?
-                        categories.map(cat => `
+                    ${validCategories.length > 0 ?
+                        validCategories.map(cat => `
                             <label class="category-option">
                                 <input type="checkbox" name="categories" value="${cat.id}">
-                                <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                                <span class="category-badge" style="background-color: ${cat.color || '#ccc'}">${cat.name}</span>
                             </label>
                         `).join('')
                         : '<p class="no-categories">Нет доступных категорий</p>'
@@ -97,8 +93,8 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
         </form>
         <h4 class="active-tasks-header">Активные задачи</h4>
         <ul class="task-list">
-            ${tasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : tasks.map(task => `
-                <li class="task-item" data-priority="${task.priority}" data-categories="${task.category_ids ? task.category_ids.join(',') : ''}">
+            ${validTasks.length === 0 ? '<li class="no-tasks">Нет задач</li>' : validTasks.map(task => `
+                <li class="task-item" data-priority="${task.priority || 1}" data-categories="${task.category_ids ? task.category_ids.join(',') : ''}">
                     <div class="task-content">
                         ${task.time ? `<span class="task-time">${task.time}</span>` : ''}
                         <span class="priority-marker"></span>
@@ -106,14 +102,14 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
                         ${task.repeat_days ? `<span class="task-repeat-badge">🔁 Каждые ${task.repeat_days} дней</span>` : ''}
                     </div>
                     <div class="task-meta">
-                        <span class="priority-indicator priority-${task.priority}">
+                        <span class="priority-indicator priority-${task.priority || 1}">
                             ${task.priority == 3 ? '❗ Высокий приоритет' :
                               task.priority == 2 ? '🔹 Средний приоритет' :
                               '🔸 Низкий приоритет'}
                         </span>
                         ${task.category_ids ? task.category_ids.map(cat_id => {
-                            const cat = categories.find(c => c.id == cat_id);
-                            return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
+                            const cat = validCategories.find(c => c.id == cat_id);
+                            return cat ? `<span class="category-tag" style="background-color: ${cat.color || '#ccc'}">${cat.name}</span>` : '';
                         }).join('') : ''}
                     </div>
                     <div class="task-actions">
@@ -147,10 +143,10 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
                         <input type="text" name="task" class="task-input" value="${task.task}" required>
                         <div class="time-selector">
                             <input type="text" name="time" class="edit-time-input" value="${task.time || '12:00'}"
-                                   pattern="[0-9]{2}:[0-9]{2}">
+                                   pattern="[0-9]{2}:[0-9]{2}" title="Формат: ЧЧ:ММ">
                             <div class="time-spinner">
-                                <button type="button" class="time-btn up">▲</button>
-                                <button type="button" class="time-btn down">▼</button>
+                                <button type="button" class="time-btn up" aria-label="Увеличить время">▲</button>
+                                <button type="button" class="time-btn down" aria-label="Уменьшить время">▼</button>
                             </div>
                         </div>
                         <div class="task-priority">
@@ -164,11 +160,11 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
                         <div class="task-categories">
                             <label>Категории:</label>
                             <div class="category-options">
-                                ${categories.map(cat => `
+                                ${validCategories.map(cat => `
                                     <label>
                                         <input type="checkbox" name="categories" value="${cat.id}"
                                                ${task.category_ids && task.category_ids.includes(cat.id) ? 'checked' : ''}>
-                                        <span class="category-badge" style="background-color: ${cat.color}">${cat.name}</span>
+                                        <span class="category-badge" style="background-color: ${cat.color || '#ccc'}">${cat.name}</span>
                                     </label>
                                 `).join('')}
                             </div>
@@ -209,20 +205,20 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
         <h4 class="completed-tasks-header">Завершённые задачи</h4>
         <ul class="completed-task-list">
             ${validCompletedTasks.length === 0 ? '<li class="no-completed-tasks">Нет завершённых задач</li>' : validCompletedTasks.map(task => `
-                <li class="completed-task-item" data-task-id="${task.id}" data-priority="${task.priority}">
+                <li class="completed-task-item" data-task-id="${task.id}" data-priority="${task.priority || 1}">
                     <div class="completed-task-content">
                         <span class="completed-task-text">${task.task_text}</span>
                     </div>
                     <div class="completed-task-meta">
                         ${task.completion_time ? `<span class="completed-time">Завершено: ${formatCompletionTime(task.completion_time)}</span>` : ''}
-                        <span class="priority-indicator priority-${task.priority}">
+                        <span class="priority-indicator priority-${task.priority || 1}">
                             ${task.priority == 3 ? '❗ Высокий приоритет' :
                               task.priority == 2 ? '🔹 Средний приоритет' :
                               '🔸 Низкий приоритет'}
                         </span>
                         ${task.categories ? task.categories.split(',').map(cat_id => {
-                            const cat = categories.find(c => c.id == parseInt(cat_id));
-                            return cat ? `<span class="category-tag" style="background-color: ${cat.color}">${cat.name}</span>` : '';
+                            const cat = validCategories.find(c => c.id == parseInt(cat_id));
+                            return cat ? `<span class="category-tag" style="background-color: ${cat.color || '#ccc'}">${cat.name}</span>` : '';
                         }).filter(tag => tag).join('') : ''}
                     </div>
                     <button type="button" class="restore-btn" data-task-id="${task.id}">Восстановить</button>
@@ -230,396 +226,4 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
             `).join('')}
         </ul>
     `;
-
-    const yearNum = parseInt(year);
-    const monthNum = parseInt(month);
-    bindTaskEventHandlers(yearNum, monthNum, day);
-
-    document.querySelectorAll('.edit-time-input').forEach(input => {
-        bindTimeSpinnerEvents(input);
-    });
-
-    const taskTimeInput = document.getElementById('task-time');
-    if (taskTimeInput) {
-        bindTimeSpinnerEvents(taskTimeInput);
-    }
-
-    const mainRepeatCheckbox = document.getElementById('main-repeat-checkbox');
-    if (mainRepeatCheckbox) {
-        mainRepeatCheckbox.addEventListener('change', function(e) {
-            e.stopPropagation();
-            const details = this.closest('.repeat-options').querySelector('.repeat-details');
-            if (details) {
-                details.style.display = this.checked ? 'block' : 'none';
-                if (!this.checked) {
-                    details.querySelector('input[name="repeat_days"]').value = '1';
-                    details.querySelector('input[name="repeat_start"]').value = date;
-                    details.querySelector('input[name="repeat_end"]').value = '';
-                }
-            }
-        });
-    }
-
-    document.querySelectorAll('.edit-repeat-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function(e) {
-            e.stopPropagation();
-            const details = this.closest('.repeat-options').querySelector('.repeat-details');
-            if (details) {
-                details.style.display = this.checked ? 'block' : 'none';
-                if (!this.checked) {
-                    details.querySelector('input[name="repeat_days"]').value = '1';
-                    const dateInput = details.querySelector('input[name="repeat_start"]');
-                    dateInput.value = formatDateForInput(new Date());
-                    details.querySelector('input[name="repeat_end"]').value = '';
-                }
-            }
-        });
-    });
-
-    document.getElementById('category-filter')?.addEventListener('change', applyFilters);
-    document.getElementById('priority-filter')?.addEventListener('change', applyFilters);
-
-    document.querySelectorAll('.restore-btn').forEach(button => {
-        button.removeEventListener('click', handleRestore);
-        button.addEventListener('click', handleRestore);
-    });
-
-    function handleRestore(e) {
-        e.preventDefault();
-        const button = e.target;
-        const taskId = button.getAttribute('data-task-id');
-        console.log(`[handleRestore] Restoring task ${taskId} for ${year}-${month}-${day}`);
-
-        if (!taskId) {
-            console.error('[handleRestore] No taskId found');
-            alert('Ошибка: ID задачи не найден');
-            return;
-        }
-
-        fetch(`/tasks/${year}/${month}/${day}/restore`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({ completed_task_id: taskId })
-        })
-        .then(response => {
-            if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Задача не найдена в завершённых');
-                } else if (response.status === 409) {
-                    throw new Error('Задача уже восстановлена');
-                }
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                console.log(`[handleRestore] Task ${taskId} restored`);
-                Promise.all([
-                    fetch(`/tasks/${year}/${month}/${day}`, {
-                        method: 'GET',
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    }).then(res => res.json()),
-                    fetchCompletedTasks(year, month, day)
-                ]).then(([taskData, completedTasks]) => {
-                    if (taskData.success && taskData.data) {
-                        updateTasksSection(
-                            taskData.data.tasks || [],
-                            completedTasks,
-                            `${year}-${month}-${day}`,
-                            day,
-                            taskData.data.categories || []
-                        );
-                        updateCalendar(yearNum, monthNum).catch(error => {
-                            console.error('[handleRestore] Error updating calendar:', error);
-                        });
-                    } else {
-                        console.error('[handleRestore] Invalid task data:', taskData);
-                        alert('Ошибка: некорректные данные после восстановления');
-                    }
-                }).catch(error => {
-                    console.error('[handleRestore] Error refreshing tasks:', error);
-                    alert('Ошибка при обновлении задач: ' + error.message);
-                });
-            } else {
-                console.error('[handleRestore] Restore failed:', data.error);
-                alert('Ошибка при восстановлении задачи: ' + (data.error || 'Неизвестная ошибка'));
-            }
-        })
-        .catch(error => {
-            console.error('[handleRestore] Error:', error);
-            alert('Ошибка при восстановлении задачи: ' + error.message);
-        });
-    }
-}
-
-export function formatCompletionTime(timestamp) {
-    try {
-        const date = new Date(timestamp);
-        return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-    } catch (e) {
-        console.warn('[formatCompletionTime] Invalid timestamp:', timestamp);
-        return '';
-    }
-}
-
-export function bindTaskEventHandlers(year, month, day) {
-    console.log(`[bindTaskEventHandlers] Binding task handlers for ${year}-${month}-${day}`);
-
-    document.querySelectorAll('.remind-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const taskId = this.getAttribute('data-task-id');
-            const remindForm = document.getElementById(`remind-form-${taskId}`);
-            document.querySelectorAll('.remind-form.active, .edit-form.active').forEach(form => {
-                if (form !== remindForm) form.classList.remove('active');
-            });
-            remindForm.classList.toggle('active');
-        });
-    });
-
-    document.querySelectorAll('.remind-confirm-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const taskId = this.getAttribute('data-task-id');
-            const remindForm = this.closest('.remind-form');
-            const selectedReminders = Array.from(
-                remindForm.querySelectorAll('input[name="remind_times"]:checked')
-            ).map(el => parseInt(el.value));
-
-            if (selectedReminders.length === 0) {
-                alert('Выберите хотя бы одно время напоминания');
-                return;
-            }
-
-            fetch(`/tasks/${year}/${month}/${day}/remind`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    task_id: taskId,
-                    remind_times: selectedReminders
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    remindForm.classList.remove('active');
-                    console.log('[remind] Reminders set for task', taskId);
-                } else {
-                    console.error('[remind] Error setting reminders:', data.error);
-                    alert('Ошибка при установке напоминаний: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('[remind] Error:', error);
-                alert('Ошибка при отправке запроса');
-            });
-        });
-    });
-
-    document.querySelectorAll('.cancel-remind').forEach(button => {
-        button.addEventListener('click', function() {
-            this.closest('.remind-form').classList.remove('active');
-        });
-    });
-
-    document.querySelectorAll('.edit-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const taskId = this.getAttribute('data-task-id');
-            const editForm = document.getElementById(`edit-form-${taskId}`);
-            document.querySelectorAll('.edit-form.active, .remind-form.active').forEach(form => {
-                if (form !== editForm) form.classList.remove('active');
-            });
-            editForm.classList.toggle('active');
-        });
-    });
-
-    document.querySelectorAll('.cancel-edit').forEach(button => {
-        button.addEventListener('click', function() {
-            this.closest('.edit-form').classList.remove('active');
-        });
-    });
-
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            if (!confirm('Вы уверены, что хотите удалить эту задачу?')) return;
-            const taskId = this.getAttribute('data-task-id');
-
-            fetch(`/tasks/${year}/${month}/${day}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: `delete=${taskId}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Promise.all([
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        }).then(res => res.json()),
-                        fetchCompletedTasks(year, month, day)
-                    ]).then(([taskData, completedTasks]) => {
-                        if (taskData.success && taskData.data) {
-                            updateTasksSection(
-                                taskData.data.tasks || [],
-                                completedTasks || [],
-                                `${year}-${month}-${day}`,
-                                day,
-                                taskData.data.categories || []
-                            );
-                            updateCalendar(year, month).catch(error => {
-                                console.error('[delete] Error updating calendar:', error);
-                            });
-                        }
-                    });
-                } else {
-                    alert('Ошибка при удалении задачи: ' + (data.error || 'Неизвестная ошибка'));
-                }
-            })
-            .catch(error => {
-                console.error('[delete] Error:', error);
-                alert('Ошибка при удалении задачи');
-            });
-        });
-    });
-
-    document.querySelectorAll('.complete-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const taskId = this.getAttribute('data-task-id');
-
-            fetch(`/tasks/${year}/${month}/${day}/complete`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({ task_id: taskId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Promise.all([
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        }).then(res => res.json()),
-                        fetchCompletedTasks(year, month, day)
-                    ]).then(([taskData, completedTasks]) => {
-                        if (taskData.success && taskData.data) {
-                            updateTasksSection(
-                                taskData.data.tasks || [],
-                                completedTasks,
-                                `${year}-${month}-${day}`,
-                                day,
-                                taskData.data.categories || []
-                            );
-                            updateCalendar(year, month).catch(error => {
-                                console.error('[complete] Error updating calendar:', error);
-                            });
-                        }
-                    });
-                } else {
-                    alert('Ошибка при выполнении задачи: ' + (data.error || 'Неизвестная ошибка'));
-                }
-            })
-            .catch(error => {
-                console.error('[complete] Error:', error);
-                alert('Ошибка при выполнении задачи');
-            });
-        });
-    });
-
-    document.querySelector('.task-form')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        fetch(this.action, {
-            method: 'POST',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-            body: new FormData(this)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                this.reset();
-                Promise.all([
-                    fetch(`/tasks/${year}/${month}/${day}`, {
-                        method: 'GET',
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    }).then(res => res.json()),
-                    fetchCompletedTasks(year, month, day)
-                ]).then(([taskData, completedTasks]) => {
-                    if (taskData.success && taskData.data) {
-                        updateTasksSection(
-                            taskData.data.tasks || [],
-                            completedTasks || [],
-                            `${year}-${month}-${day}`,
-                            day,
-                            taskData.data.categories || []
-                        );
-                        updateCalendar(year, month).catch(error => {
-                            console.error('[task-form] Error updating calendar:', error);
-                        });
-                    }
-                });
-            } else {
-                alert('Ошибка при добавлении задачи: ' + (data.error || 'Неизвестная ошибка'));
-            }
-        })
-        .catch(error => {
-            console.error('[task-form] Error:', error);
-            alert('Ошибка при добавлении задачи');
-        });
-    });
-
-    document.querySelectorAll('.edit-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            fetch(this.action, {
-                method: 'POST',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                body: new FormData(this)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.classList.remove('active');
-                    Promise.all([
-                        fetch(`/tasks/${year}/${month}/${day}`, {
-                            method: 'GET',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        }).then(res => res.json()),
-                        fetchCompletedTasks(year, month, day)
-                    ]).then(([taskData, completedTasks]) => {
-                        if (taskData.success && taskData.data) {
-                            updateTasksSection(
-                                taskData.data.tasks || [],
-                                completedTasks || [],
-                                `${year}-${month}-${day}`,
-                                day,
-                                taskData.data.categories || []
-                            );
-                            updateCalendar(year, month).catch(error => {
-                                console.error('[edit-form] Error updating calendar:', error);
-                            });
-                        }
-                    });
-                } else {
-                    alert('Ошибка при обновлении задачи: ' + (data.error || 'Неизвестная ошибка'));
-                }
-            })
-            .catch(error => {
-                console.error('[edit-form] Error:', error);
-                alert('Ошибка при обновлении задачи');
-            });
-        });
-    });
 }

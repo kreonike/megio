@@ -419,3 +419,10 @@ body {
 .btn-danger:hover::after {
     opacity: 1;
 }
+.auth-links a {
+    text-decoration: none;
+    color: inherit;
+}
+.auth-links a:hover {
+    text-decoration: underline;
+}
