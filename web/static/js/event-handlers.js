@@ -12,7 +12,7 @@ export function bindDayClickHandlers(year, month) {
         return;
     }
     links.forEach(link => {
-        link.removeEventListener('click', handleDayClick); // Удаляем старые обработчики
+        link.removeEventListener('click', handleDayClick);
         link.addEventListener('click', handleDayClick);
     });
 
@@ -23,7 +23,7 @@ export function bindDayClickHandlers(year, month) {
         this.classList.add('selected');
         const dayAttr = this.getAttribute('data-day');
         if (!dayAttr || isNaN(dayAttr)) {
-            console.error('[event-handlers/handleDayClick] Invalid day attribute:', dayAttr);
+            console.error('[event-handlers/handleDayClick] Inactive day link:', dayAttr);
             alert('Ошибка: некорректный день');
             return;
         }
@@ -53,7 +53,6 @@ export function bindDayClickHandlers(year, month) {
                     parseInt(dayAttr),
                     taskData.data.categories || []
                 );
-                // Повторно привязываем обработчики после обновления DOM
                 bindTaskEventHandlers(year, month, parseInt(dayAttr));
                 updateTaskPriorityIndicator(
                     this.closest('.day-cell'),
@@ -74,16 +73,14 @@ export function bindDayClickHandlers(year, month) {
 export function bindTaskEventHandlers(year, month, day) {
     console.log(`[event-handlers/bindTaskEventHandlers] Binding task handlers for ${year}-${month}-${day}`);
 
-    // Привязка спиннеров времени
     const timeInputs = document.querySelectorAll('.edit-time-input, #task-time');
     timeInputs.forEach(input => {
         if (!input.dataset.spinnerBound) {
             bindTimeSpinnerEvents(input);
-            input.dataset.spinnerBound = 'true'; // Предотвращаем повторную привязку
+            input.dataset.spinnerBound = 'true';
         }
     });
 
-    // Обработчик повторяющихся задач
     const mainRepeatCheckbox = document.getElementById('main-repeat-checkbox');
     if (mainRepeatCheckbox) {
         mainRepeatCheckbox.addEventListener('change', function (e) {
@@ -115,13 +112,11 @@ export function bindTaskEventHandlers(year, month, day) {
         });
     });
 
-    // Фильтры
     const categoryFilter = document.getElementById('category-filter');
     const priorityFilter = document.getElementById('priority-filter');
     if (categoryFilter) categoryFilter.addEventListener('change', applyFilters);
     if (priorityFilter) priorityFilter.addEventListener('change', applyFilters);
 
-    // Кнопки напоминаний
     document.querySelectorAll('.remind-btn').forEach(button => {
         button.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -171,7 +166,6 @@ export function bindTaskEventHandlers(year, month, day) {
         });
     });
 
-    // Кнопки редактирования
     document.querySelectorAll('.edit-btn').forEach(button => {
         button.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -191,7 +185,6 @@ export function bindTaskEventHandlers(year, month, day) {
         });
     });
 
-    // Кнопки удаления
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', async function () {
             if (!confirm('Вы уверены, что хотите удалить эту задачу?')) return;
@@ -212,8 +205,9 @@ export function bindTaskEventHandlers(year, month, day) {
                             day,
                             taskData.data.categories || []
                         );
-                        bindTaskEventHandlers(year, month, day); // Повторная привязка
+                        bindTaskEventHandlers(year, month, day);
                         await updateCalendar(year, month);
+                        bindDayClickHandlers(year, month);
                     }
                 } else {
                     alert('Ошибка при удалении задачи: ' + (data.error || 'Неизвестная ошибка'));
@@ -225,7 +219,6 @@ export function bindTaskEventHandlers(year, month, day) {
         });
     });
 
-    // Кнопки завершения
     document.querySelectorAll('.complete-btn').forEach(button => {
         button.addEventListener('click', async function () {
             const taskId = this.getAttribute('data-task-id');
@@ -245,8 +238,9 @@ export function bindTaskEventHandlers(year, month, day) {
                             day,
                             taskData.data.categories || []
                         );
-                        bindTaskEventHandlers(year, month, day); // Повторная привязка
+                        bindTaskEventHandlers(year, month, day);
                         await updateCalendar(year, month);
+                        bindDayClickHandlers(year, month);
                     }
                 } else {
                     alert('Ошибка при выполнении задачи: ' + (data.error || 'Неизвестная ошибка'));
@@ -258,7 +252,6 @@ export function bindTaskEventHandlers(year, month, day) {
         });
     });
 
-    // Восстановление задач
     document.querySelectorAll('.restore-btn').forEach(button => {
         button.addEventListener('click', async function (e) {
             e.preventDefault();
@@ -287,8 +280,9 @@ export function bindTaskEventHandlers(year, month, day) {
                             day,
                             taskData.data.categories || []
                         );
-                        bindTaskEventHandlers(year, month, day); // Повторная привязка
+                        bindTaskEventHandlers(year, month, day);
                         await updateCalendar(year, month);
+                        bindDayClickHandlers(year, month);
                     } else {
                         console.error('[event-handlers/handleRestore] Invalid task data:', taskData);
                         alert('Ошибка: некорректные данные после восстановления');
@@ -304,7 +298,6 @@ export function bindTaskEventHandlers(year, month, day) {
         });
     });
 
-    // Форма добавления задачи
     const taskForm = document.querySelector('.task-form');
     if (taskForm) {
         taskForm.addEventListener('submit', async function (e) {
@@ -325,8 +318,9 @@ export function bindTaskEventHandlers(year, month, day) {
                             day,
                             taskData.data.categories || []
                         );
-                        bindTaskEventHandlers(year, month, day); // Повторная привязка
+                        bindTaskEventHandlers(year, month, day);
                         await updateCalendar(year, month);
+                        bindDayClickHandlers(year, month);
                     }
                 } else {
                     alert('Ошибка при добавлении задачи: ' + (data.error || 'Неизвестная ошибка'));
@@ -338,7 +332,6 @@ export function bindTaskEventHandlers(year, month, day) {
         });
     }
 
-    // Формы редактирования
     document.querySelectorAll('.edit-form').forEach(form => {
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -358,8 +351,9 @@ export function bindTaskEventHandlers(year, month, day) {
                             day,
                             taskData.data.categories || []
                         );
-                        bindTaskEventHandlers(year, month, day); // Повторная привязка
+                        bindTaskEventHandlers(year, month, day);
                         await updateCalendar(year, month);
+                        bindDayClickHandlers(year, month);
                     }
                 } else {
                     alert('Ошибка при обновлении задачи: ' + (data.error || 'Неизвестная ошибка'));

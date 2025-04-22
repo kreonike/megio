@@ -1,12 +1,5 @@
 // static/js/api.js
-const cache = new Map();
-
 export async function fetchTasks(year, month, day) {
-    const key = `tasks-${year}-${month}-${day}`;
-    if (cache.has(key)) {
-        console.log(`[api/fetchTasks] Returning cached tasks for ${year}-${month}-${day}`);
-        return cache.get(key);
-    }
     try {
         const response = await fetch(`/tasks/${year}/${month}/${day}`, {
             method: 'GET',
@@ -19,7 +12,6 @@ export async function fetchTasks(year, month, day) {
             console.warn(`[api/fetchTasks] Invalid response data for ${year}-${month}-${day}:`, data);
             return { success: false, data: null };
         }
-        cache.set(key, data);
         return data;
     } catch (error) {
         console.error(`[api/fetchTasks] Error for ${year}-${month}-${day}:`, error);
@@ -28,11 +20,6 @@ export async function fetchTasks(year, month, day) {
 }
 
 export async function fetchMonthTasks(year, month) {
-    const key = `month-tasks-${year}-${month}`;
-    if (cache.has(key)) {
-        console.log(`[api/fetchMonthTasks] Returning cached tasks for ${year}-${month}`);
-        return cache.get(key);
-    }
     try {
         const response = await fetch(`/tasks/${year}/${month}`, {
             method: 'GET',
@@ -45,7 +32,6 @@ export async function fetchMonthTasks(year, month) {
             console.warn(`[api/fetchMonthTasks] Invalid response data for ${year}-${month}:`, data);
             return { success: false, data: null };
         }
-        cache.set(key, data);
         return data;
     } catch (error) {
         console.error(`[api/fetchMonthTasks] Error for ${year}-${month}:`, error);
@@ -54,11 +40,6 @@ export async function fetchMonthTasks(year, month) {
 }
 
 export async function fetchCompletedTasks(year, month, day) {
-    const key = `completed-tasks-${year}-${month}-${day}`;
-    if (cache.has(key)) {
-        console.log(`[api/fetchCompletedTasks] Returning cached completed tasks for ${year}-${month}-${day}`);
-        return cache.get(key);
-    }
     try {
         const response = await fetch(`/tasks/${year}/${month}/${day}/completed`, {
             method: 'GET',
@@ -73,7 +54,6 @@ export async function fetchCompletedTasks(year, month, day) {
             return [];
         }
         const completedTasks = data.data.completedTasks || [];
-        cache.set(key, completedTasks);
         return completedTasks;
     } catch (error) {
         console.error(`[api/fetchCompletedTasks] Error for ${year}-${month}-${day}:`, error);
