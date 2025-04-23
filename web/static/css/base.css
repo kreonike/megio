@@ -113,19 +113,81 @@ body {
 
 /* Кнопка темы */
 .theme-toggle {
-    background: transparent;
-    border: none;
-    color: var(--primary-color);
-    cursor: pointer;
-    padding: 8px;
+    background: var(--bg-secondary-color);
+    border: 1px solid var(--border-color);
     border-radius: 50%;
-    transition: background-color 0.2s ease;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .theme-toggle:hover {
-    background: rgba(52, 152, 219, 0.1);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Стили для SVG-иконок */
+.theme-icon {
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+    position: absolute;
+    stroke: var(--text-color);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.moon-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+.sun-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+}
+
+/* Тёмная тема - показываем солнце */
+.dark-mode .moon-icon {
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+.dark-mode .sun-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+/* Эффекты при наведении */
+.theme-toggle:hover .theme-icon {
+    stroke: var(--text-inverse);
+}
+
+/* Тёмная тема */
+.dark-mode .theme-toggle {
+    background: var(--bg-secondary-color);
+    border-color: var(--border-color);
+}
+
+.dark-mode .theme-toggle:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 /* Стили чисел календаря */
