@@ -144,3 +144,38 @@ export function bindTimeSpinnerEvents(timeInput) {
         updateTime(timeInput, -5);
     }
 }
+
+export function showNotification(message, type = 'info') {
+    console.log(`[utils/showNotification] Showing notification: ${message}, type: ${type}`);
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`; // Тип: info, success, error
+    notification.textContent = message;
+
+    // Стили для уведомления
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.padding = '10px 20px';
+    notification.style.backgroundColor = type === 'error' ? '#f44336' : type === 'success' ? '#4caf50' : '#2196f3';
+    notification.style.color = '#fff';
+    notification.style.borderRadius = '4px';
+    notification.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+    notification.style.zIndex = '1000';
+    notification.style.opacity = '0';
+    notification.style.transition = 'opacity 0.3s ease-in-out';
+
+    document.body.appendChild(notification);
+
+    // Показать уведомление
+    setTimeout(() => {
+        notification.style.opacity = '1';
+    }, 100);
+
+    // Скрыть и удалить уведомление через 3 секунды
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
