@@ -1,0 +1,181 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.calendar-view {
+    flex: 1;
+    min-width: 300px;
+    margin-right: 20px;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendar-day {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.calendar-day.has-tasks {
+    background-color: #e0f7fa;
+}
+
+.calendar-day.today {
+    background-color: #ffeb3b;
+}
+
+.calendar-day.has-overdue-tasks {
+    background-color: #ffebee;
+}
+
+.calendar-day.active {
+    background-color: #4caf50;
+    color: white;
+}
+
+.tasks-section {
+    flex: 0 0 300px;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-form input,
+.task-form select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.task-form button {
+    padding: 10px;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.task-form button:hover {
+    background: #45a049;
+}
+
+.tasks-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task-item {
+    background: white;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.task-content {
+    display: flex;
+    gap: 10px;
+}
+
+.task-text,
+.task-time {
+    flex: 1;
+    padding: 5px;
+}
+
+.task-meta {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.priority-indicator {
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.priority-3 { background: #f44336; color: white; }
+.priority-2 { background: #ff9800; color: white; }
+.priority-1 { background: #4caf50; color: white; }
+
+.category-tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: white;
+}
+
+.task-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.task-actions button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-btn { background: #2196f3; color: white; }
+.edit-btn:hover { background: #1976d2; }
+.delete-btn { background: #f44336; color: white; }
+.delete-btn:hover { background: #d32f2f; }
+.complete-btn { background: #4caf50; color: white; }
+.complete-btn:hover { background: #45a049; }
+
+.completed-tasks-section {
+    flex: 0 0 300px;
+    margin-top: 20px;
+}
+
+.completed-tasks-list {
+    list-style: none;
+    padding: 0;
+}
+
+.completed-task-item {
+    background: #e0e0e0;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+}
+
+.completed-task-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.completed-task-actions button {
+    padding: 5px 10px;
+    background: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.completed-task-actions button:hover {
+    background: #1976d2;
+}
+
+.no-tasks, .no-completed-tasks {
+    color: #888;
+    font-style: italic;
+}

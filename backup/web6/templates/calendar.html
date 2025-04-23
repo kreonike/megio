@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Календарь на {{ russian_month_name }} {{ year }}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calendar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tasks.css') }}">
+    <style>
+        .category-selector {
+            margin: 15px 0;
+        }
+
+        .category-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .category-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .category-option input {
+            margin-right: 5px;
+        }
+
+        .category-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: white;
+            background-color: #666;
+        }
+
+        .no-categories {
+            color: #999;
+            font-style: italic;
+            margin: 5px 0;
+        }
+
+        .priority-selector {
+            margin: 15px 0;
+        }
+
+        .priority-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .priority-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .priority-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .priority-badge.high {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .priority-badge.medium {
+            background-color: #4ecdc4;
+            color: white;
+        }
+
+        .priority-badge.low {
+            background-color: #a5d8ff;
+            color: #333;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const currentUserId = {{ current_user_id | tojson }};
+        const currentDate = {
+            year: {{ year }},
+            month: {{ month }},
+            day: new Date().getDate()
+        };
+    </script>
+    <script type="module" src="{{ url_for('static', filename='js/calendar-update.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="calendar-header">
+        <h1 class="calendar-title">Календарь на {{ russian_month_name }} {{ year }}</h1>
+        
+        <div class="month-nav-wrapper">
+            <a href="{{ url_for('show_calendar', year=year, month=month-1) }}" class="month-nav-btn">
+                ← Предыдущий месяц
+            </a>
+            <span class="current-month">{{ russian_month_name }} {{ year }}</span>
+            <a href="{{ url_for('show_calendar', year=year, month=month+1) }}" class="month-nav-btn">
+                Следующий месяц →
+            </a>
+        </div>
+    </div>
+
+    <div class="calendar-wrapper">
+        <div class="calendar-table-container">
+            {{ calendar|safe }}
+        </div>
+
+        <div class="tasks-sidebar">
+            <div class="tasks-section">
+                <div class="task-date-header"></div>
+                
+                <form class="task-form" method="POST" action="">
+                    <input type="hidden" name="date" value="">
+                    
+                    <div class="task-input-container">
+                        <input type="text" name="task" class="task-input" placeholder="Добавить новую задачу..." required>
+                    </div>
+                    
+                    <div class="time-selector">
+                        <input type="text" id="task-time" name="time" class="time-input" value="12:00"
+                               pattern="[0-9]{2}:[0-9]{2}" title="Формат: ЧЧ:ММ (24 часа)">
+                        <div class="time-spinner">
+                            <button type="button" class="time-btn up">▲</button>
+                            <button type="button" class="time-btn down">▼</button>
+                        </div>
+                    </div>
+                    
+                    <div class="task-priority">
+                        <label>Приоритет:</label>
+                        <select name="priority" id="task-priority-select">
+                            <option value="1">Низкий</option>
+                            <option value="2" selected>Средний</option>
+                            <option value="3">Высокий</option>
+                        </select>
+                    </div>
+                    
+                    <div class="task-categories">
+    <label>Категории:</label>
+    <div class="category-options">
+        {% if categories %}
+            {% for cat in categories %}
+                <label class="category-option">
+                    <input type="checkbox" name="categories" value="{{ cat.id }}">
+                    <span class="category-badge" style="background-color: {{ cat.color }}">{{ cat.name }}</span>
+                </label>
+            {% endfor %}
+        {% else %}
+            <label class="category-option">
+                <input type="checkbox" name="categories" value="personal">
+                <span class="category-badge" style="background-color: #4ecdc4">Личное</span>
+            </label>
+            <label class="category-option">
+                <input type="checkbox" name="categories" value="work">
+                <span class="category-badge" style="background-color: #ff6b6b">Работа</span>
+            </label>
+        {% endif %}
+    </div>
+</div>
+                    
+                    <div class="repeat-options">
+                        <label>
+                            <input type="checkbox" name="repeat_enabled" id="main-repeat-checkbox">
+                            Повторять задачу
+                        </label>
+                        <div class="repeat-details" style="display: none;">
+                            <div>
+                                <span>Каждые</span>
+                                <input type="number" name="repeat_days" min="1" max="365" value="1" style="width: 50px;">
+                                <span>дней</span>
+                            </div>
+                            <div>
+                                <span>Начиная с</span>
+                                <input type="date" name="repeat_start" value="">
+                            </div>
+                            <div>
+                                <span>Заканчивая</span>
+                                <input type="date" name="repeat_end">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="task-button">Добавить задачу</button>
+                </form>
+                
+                <h4 class="active-tasks-header">Активные задачи</h4>
+                <ul class="task-list">
+                    <li class="no-tasks">Выберите день для просмотра задач</li>
+                </ul>
+                
+                <h4 class="completed-tasks-header">Завершённые задачи</h4>
+                <ul class="completed-task-list">
+                    <li class="no-completed-tasks">Нет завершённых задач</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-description">
+        <h2>Возможности менеджера задач</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>📅 Управление задачами</h3>
+                <p>Нажмите на любой день в календаре, чтобы просмотреть, добавить или отредактировать задачи.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🏷️ Категории и теги</h3>
+                <p>Организуйте задачи по категориям с цветовой маркировкой и фильтруйте их.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔔 Напоминания</h3>
+                <p>Устанавливайте напоминания для важных задач за 15 минут, 2 часа или 24 часа.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
