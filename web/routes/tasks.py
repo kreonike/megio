@@ -3,7 +3,7 @@ from flask import jsonify, request, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 from web.config.config import db_connection, MONTH_NAMES
 from web.routes.calendar import generate_calendar
-from web.services.task_service import add_task, edit_task, delete_task, complete_task
+from web.services.task_service import add_task, edit_task, delete_task
 from web.services.category_service import get_user_categories
 from web.utils import json_response, log_action, log_error, handle_exceptions
 
@@ -32,70 +32,14 @@ def tasks_routes(app):
             calendar_html = generate_calendar(year, month, current_user.id, db, highlight_today=True, show_overdue=True)
             categories = get_user_categories(db, current_user.id)
 
-            # Загружаем задачи для текущего дня
-            today = now.day if year == now.year and month == now.month else 1
-            cursor = db.cursor()
-            cursor.execute('''
-                SELECT 
-                    t.id, t.task, t.time, t.created, t.repeat_days, t.repeat_start, t.repeat_end, t.priority,
-                    CASE WHEN ct.id IS NOT NULL THEN 1 ELSE 0 END as completed,
-                    GROUP_CONCAT(tc.category_id) AS category_ids
-                FROM tasks t
-                LEFT JOIN completed_tasks ct 
-                    ON t.id = ct.task_id 
-                    AND ct.user_id = t.user_id
-                LEFT JOIN task_categories tc ON t.id = tc.task_id
-                WHERE t.user_id = ? AND t.year = ? AND t.month = ? AND t.day = ?
-                GROUP BY t.id
-                ORDER BY t.priority DESC, t.time, t.created
-            ''', (current_user.id, year, month, today))
-            tasks = []
-            for row in cursor.fetchall():
-                task = dict(row)
-                try:
-                    task['category_ids'] = list(map(int, task['category_ids'].split(','))) if task['category_ids'] else []
-                except (ValueError, TypeError):
-                    task['category_ids'] = []
-                tasks.append(task)
-
-            # Загружаем завершённые задачи
-            cursor.execute('''
-                SELECT 
-                    ct.id, ct.task_text, ct.completion_time, ct.priority,
-                    GROUP_CONCAT(tc.category_id) AS category_ids
-                FROM completed_tasks ct
-                LEFT JOIN task_categories tc ON ct.task_id = tc.task_id
-                WHERE ct.user_id = ? 
-                    AND ct.original_year = ? 
-                    AND ct.original_month = ? 
-                    AND ct.original_day = ?
-                GROUP BY ct.id
-            ''', (current_user.id, year, month, today))
-            completed_tasks = []
-            for row in cursor.fetchall():
-                completed_task = {
-                    'id': row['id'],
-                    'task_text': row['task_text'],
-                    'completion_time': row['completion_time'],
-                    'priority': row['priority'],
-                    'category_ids': [int(cid) for cid in row['category_ids'].split(',')] if row['category_ids'] else []
-                }
-                completed_tasks.append(completed_task)
-
         return render_template('calendar.html',
                                calendar=calendar_html,
                                year=year,
                                month=month,
-                               russian_month_name=MONTH_NAMES[month - 1],
+                               russian_month_name=MONTH_NAMES[month],
                                username=current_user.username,
                                categories=categories,
-                               current_user_id=current_user.id,
-                               tasks_data={
-                                   'tasks': tasks,
-                                   'completed_tasks': completed_tasks,
-                                   'categories': categories
-                               },
-                               today=today)
+                               current_user_id=current_user.id)
 
     @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
     @login_required
@@ -105,15 +49,9 @@ def tasks_routes(app):
             categories = get_user_categories(db, current_user.id)
 
             if request.method == 'POST':
+                # Внутренняя функция для обработки POST-запроса
                 @handle_exceptions
                 def process_post():
-                    if 'complete' in request.form:
-                        task_id = request.form.get('complete')
-                        completed_id = complete_task(db, current_user.id, task_id, year, month, day)
-                        log_action(app.logger, "Task", "completed", current_user.id, entity_id=task_id,
-                                   date={'year': year, 'month': month, 'day': day})
-                        return True, {'message': 'Задача завершена', 'category': 'success', 'completed_id': completed_id}
-
                     if 'delete' in request.form:
                         task_id = request.form.get('delete')
                         delete_task(db, current_user.id, task_id)
@@ -184,11 +122,10 @@ def tasks_routes(app):
 
                 success, flash_data = process_post()
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                    return json_response(True, data={'task_id': flash_data.get('task_id'), 'completed_id': flash_data.get('completed_id')})
+                    return json_response(True, data={'task_id': flash_data.get('task_id')})
                 flash(flash_data['message'], flash_data['category'])
                 return redirect(url_for('day_tasks', year=year, month=month, day=day))
 
-            cursor = db.cursor()
             cursor.execute('''
                 SELECT 
                     t.id, t.task, t.time, t.created, t.repeat_days, t.repeat_start, t.repeat_end, t.priority,
@@ -227,39 +164,6 @@ def tasks_routes(app):
                                    date_str=date_str,
                                    tasks=tasks,
                                    categories=categories)
-
-    @app.route('/tasks/<int:year>/<int:month>/<int:day>/completed', methods=['GET'])
-    @login_required
-    def completed_tasks(year, month, day):
-        with db_connection() as db:
-            cursor = db.cursor()
-            cursor.execute('''
-                SELECT 
-                    ct.id, ct.task_text, ct.completion_time, ct.priority,
-                    GROUP_CONCAT(tc.category_id) AS category_ids
-                FROM completed_tasks ct
-                LEFT JOIN task_categories tc ON ct.task_id = tc.task_id
-                WHERE ct.user_id = ? 
-                    AND ct.original_year = ? 
-                    AND ct.original_month = ? 
-                    AND ct.original_day = ?
-                GROUP BY ct.id
-            ''', (current_user.id, year, month, day))
-            completed_tasks = []
-            for row in cursor.fetchall():
-                completed_task = {
-                    'id': row['id'],
-                    'task_text': row['task_text'],
-                    'completion_time': row['completion_time'],
-                    'priority': row['priority'],
-                    'category_ids': [int(cid) for cid in row['category_ids'].split(',')] if row['category_ids'] else []
-                }
-                completed_tasks.append(completed_task)
-
-            return json_response(True, data={
-                'completed_tasks': completed_tasks,
-                'date': f"{year}-{month:02d}-{day:02d}"
-            })
 
     @app.route('/tasks/<int:year>/<int:month>', methods=['GET'])
     @login_required
@@ -309,4 +213,4 @@ def tasks_routes(app):
                 if day != 0 and day not in tasks_by_day:
                     tasks_by_day[day] = []
 
-            return json_response(True, data={'tasksByDay': tasks_by_day})
+            return {'tasksByDay': tasks_by_day}

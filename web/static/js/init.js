@@ -1,39 +1,60 @@
+// static/js/init.js
+import { updateCalendar } from './calendar-module.js';
+import { fetchTasks, fetchCompletedTasks } from './api.js';
+import { updateTasksSection } from './tasks-module.js';
 import { bindDayClickHandlers } from './event-handlers.js';
-import { renderTasks } from './tasks-module.js';
-import { initFilters } from './filters.js';
 
-async function init() {
-    console.log('[init] window.initialTasksData:', window.initialTasksData);
-    console.log('[init] window.currentDate:', window.currentDate);
+document.addEventListener('DOMContentLoaded', async () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    console.log(`[init] Initializing for ${year}-${month}-${day}`);
 
-    const defaultDate = {
-        year: new Date().getFullYear(),
-        month: new Date().getMonth() + 1,
-        day: new Date().getDate()
-    };
-    const defaultTasksData = {
-        tasks: [],
-        categories: [],
-        completed_tasks: []
-    };
+    // Инициализация календаря
+    try {
+        await updateCalendar(year, month);
+        console.log('[init] Calendar initialized');
+    } catch (err) {
+        console.error('[init] Error initializing calendar:', err);
+    }
 
-    const tasksData = window.initialTasksData || defaultTasksData;
-    const date = window.currentDate || defaultDate;
+    // Загрузка задач для текущего дня
+    const tasksSection = document.querySelector('.tasks-section');
+    if (!tasksSection) {
+        console.error('[init] Tasks section not found in DOM');
+        return;
+    }
+    tasksSection.innerHTML = '<p>Загрузка...</p>';
 
-    console.log('[init] Rendering initial tasks for', date);
-    renderTasks(
-        tasksData.tasks,
-        tasksData.categories,
-        date.year,
-        date.month,
-        date.day,
-        tasksData.completed_tasks
-    );
+    try {
+        const [taskData, completedTasks] = await Promise.all([
+            fetchTasks(year, month, day),
+            fetchCompletedTasks(year, month, day)
+        ]);
+        if (taskData.success && taskData.data) {
+            updateTasksSection(
+                taskData.data.tasks || [],
+                completedTasks || [],
+                `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+                day,
+                taskData.data.categories || []
+            );
+        } else {
+            console.error('[init] Invalid task data:', taskData);
+            tasksSection.innerHTML = '<p>Ошибка загрузки задач</p>';
+        }
+    } catch (error) {
+        console.error('[init] Error loading initial tasks:', error);
+        tasksSection.innerHTML = '<p>Ошибка загрузки задач</p>';
+    }
 
-    bindDayClickHandlers();
-    initFilters();
-}
+    // Привязка обработчиков кликов по дням
+    bindDayClickHandlers(year, month);
 
-init().catch(error => {
-    console.error('[init] Initialization error:', error);
+    // Выделение текущего дня
+    const todayLink = document.querySelector(`.day-link[data-day="${day}"]`);
+    if (todayLink) {
+        todayLink.classList.add('selected');
+    }
 });

@@ -41,22 +41,32 @@ export function updateCalendar(year, month) {
 
                         dayCell.classList.remove('has-overdue-tasks', 'all-tasks-completed', 'has-tasks');
 
-                        if (tasks.length > 0) {
+                        const allTasks = [...tasks, ...completedTasks.map(task => ({
+                            ...task,
+                            completed: 1,
+                            priority: task.priority || 1
+                        }))];
+
+                        if (allTasks.length > 0) {
                             const now = new Date();
                             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                             const taskDate = new Date(year, month - 1, day);
 
                             let hasOverdue = false;
+                            let allCompleted = allTasks.length > 0;
                             let maxPriority = 1;
 
-                            tasks.forEach(task => {
+                            allTasks.forEach(task => {
                                 if (taskDate < today && !task.completed) hasOverdue = true;
+                                if (!task.completed) allCompleted = false;
                                 maxPriority = Math.max(maxPriority, task.priority || 1);
                             });
 
                             dayCell.classList.add('has-tasks');
                             if (hasOverdue) {
                                 dayCell.classList.add('has-overdue-tasks');
+                            } else if (allCompleted && allTasks.length > 0) {
+                                dayCell.classList.add('all-tasks-completed');
                             }
 
                             if (!badge) {
@@ -65,7 +75,7 @@ export function updateCalendar(year, month) {
                                 link.appendChild(badge);
                             }
 
-                            badge.textContent = tasks.length;
+                            badge.textContent = allTasks.length;
                             badge.classList.remove('priority-low', 'priority-medium', 'priority-high');
                             if (maxPriority === 3) {
                                 badge.classList.add('priority-high');
@@ -74,9 +84,6 @@ export function updateCalendar(year, month) {
                             } else {
                                 badge.classList.add('priority-low');
                             }
-                        } else if (completedTasks.length > 0) {
-                            dayCell.classList.add('all-tasks-completed');
-                            if (badge) badge.remove();
                         } else {
                             if (badge) badge.remove();
                             dayCell.classList.remove('has-tasks');
@@ -100,51 +107,37 @@ export function updateCalendar(year, month) {
 export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
     console.log(`[calendar-module/updateTaskPriorityIndicator] Updating priority indicator, tasks: ${tasks.length}, completed: ${completedTasks.length}`);
     const badge = dayElement.querySelector('.task-count-badge');
+    const allTasks = [...(tasks || []), ...(completedTasks || []).map(task => ({
+        ...task,
+        priority: task.priority || 1
+    }))];
 
-    // Не удаляем has-overdue-tasks, чтобы сохранить красный цвет
-    dayElement.classList.remove('has-tasks', 'all-tasks-completed');
-
-    if (tasks.length > 0) {
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const day = parseInt(dayElement.querySelector('.day-link').getAttribute('data-day'));
-        const taskDate = new Date(dayElement.closest('.calendar-table').dataset.year, dayElement.closest('.calendar-table').dataset.month - 1, day);
-
-        let hasOverdue = taskDate < today && tasks.some(task => !task.completed);
-
-        if (!badge) {
-            const link = dayElement.querySelector('.day-link');
-            if (link) {
-                const newBadge = document.createElement('span');
-                newBadge.className = 'task-count-badge';
-                link.appendChild(newBadge);
-            }
-        }
-
-        const updatedBadge = dayElement.querySelector('.task-count-badge');
-        if (updatedBadge) {
-            let maxPriority = 1;
-            tasks.forEach(task => {
-                maxPriority = Math.max(maxPriority, task.priority || 1);
-            });
-
-            updatedBadge.textContent = tasks.length;
-            updatedBadge.classList.remove('priority-low', 'priority-medium', 'priority-high');
-            if (maxPriority === 3) updatedBadge.classList.add('priority-high');
-            else if (maxPriority === 2) updatedBadge.classList.add('priority-medium');
-            else updatedBadge.classList.add('priority-low');
-
-            // Добавляем класс has-tasks только если нет просроченных задач
-            if (!hasOverdue) {
-                dayElement.classList.add('has-tasks');
-            } else {
-                dayElement.classList.add('has-overdue-tasks');
-            }
-        }
-    } else if (completedTasks.length > 0) {
+    if (allTasks.length === 0) {
+        dayElement.classList.remove('has-tasks', 'has-overdue-tasks', 'all-tasks-completed');
         if (badge) badge.remove();
-        dayElement.classList.add('all-tasks-completed');
-    } else {
-        if (badge) badge.remove();
+        return;
+    }
+
+    if (!badge) {
+        const link = dayElement.querySelector('.day-link');
+        if (link) {
+            const newBadge = document.createElement('span');
+            newBadge.className = 'task-count-badge';
+            link.appendChild(newBadge);
+        }
+    }
+
+    const updatedBadge = dayElement.querySelector('.task-count-badge');
+    if (updatedBadge) {
+        let maxPriority = 1;
+        allTasks.forEach(task => {
+            maxPriority = Math.max(maxPriority, task.priority || 1);
+        });
+
+        updatedBadge.textContent = allTasks.length;
+        updatedBadge.classList.remove('priority-low', 'priority-medium', 'priority-high');
+        if (maxPriority === 3) updatedBadge.classList.add('priority-high');
+        else if (maxPriority === 2) updatedBadge.classList.add('priority-medium');
+        else updatedBadge.classList.add('priority-low');
     }
 }
