@@ -85,7 +85,14 @@
                                     </label>
                                 {% endfor %}
                             {% else %}
-                                <p class="no-categories">Нет доступных категорий. <a href="{{ url_for('manage_categories') }}">Создать категорию</a></p>
+                                <label class="category-option">
+                                    <input type="checkbox" name="categories" value="personal">
+                                    <span class="category-badge" style="background-color: #4ecdc4">Личное</span>
+                                </label>
+                                <label class="category-option">
+                                    <input type="checkbox" name="categories" value="work">
+                                    <span class="category-badge" style="background-color: #ff6b6b">Работа</span>
+                                </label>
                             {% endif %}
                         </div>
                     </div>
