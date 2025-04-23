@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="12.04.2025 6">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/tasks.db" beforeDir="false" afterPath="$PROJECT_DIR$/database/tasks.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/calendar.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/css/calendar.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/css/tasks.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/css/tasks.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/static/js/calendar-update.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/static/js/calendar-update.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/templates/calendar.html" afterDir="false" />
-    </list>
+    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="23.04.2025 4" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,11 +21,12 @@
     <branch-grouping />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="test" />
+        <entry key="$PROJECT_DIR$" value="alfa" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -60,7 +53,7 @@
     "Python.tt (2).executor": "Run",
     "Python.tt.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "alfa",
+    "git-widget-placeholder": "Merging beta2",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/kreon/Dropbox/python_advanced_final",
     "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
@@ -75,11 +68,11 @@
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\config" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final" />
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\static\icons" />
+      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\database" />
       <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\services" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\routes" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\web\logs" />
-      <recent name="C:\Users\kreon\Dropbox\python_advanced_final\bot\locales" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -200,11 +193,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.app" />
-        <item itemvalue="Python.analize_db" />
         <item itemvalue="Python.tt (2)" />
         <item itemvalue="Python.tt (1)" />
         <item itemvalue="Python.tt" />
+        <item itemvalue="Python.app" />
+        <item itemvalue="Python.analize_db" />
       </list>
     </recent_temporary>
   </component>
@@ -223,38 +216,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1743005307087</updated>
-    </task>
-    <task id="LOCAL-00020" summary="05.04.2025 динамический всё обновляется 6">
-      <option name="closed" value="true" />
-      <created>1743858966533</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1743858966533</updated>
-    </task>
-    <task id="LOCAL-00021" summary="05.04.2025 динамический всё обновляется 6">
-      <option name="closed" value="true" />
-      <created>1743859034627</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1743859034627</updated>
-    </task>
-    <task id="LOCAL-00022" summary="05.04.2025 динамический всё обновляется 7">
-      <option name="closed" value="true" />
-      <created>1743866106637</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1743866106637</updated>
-    </task>
-    <task id="LOCAL-00023" summary="05.04.2025 динамический всё обновляется 8">
-      <option name="closed" value="true" />
-      <created>1743872539858</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1743872539858</updated>
     </task>
     <task id="LOCAL-00024" summary="05.04.2025 динамический всё обновляется 9">
       <option name="closed" value="true" />
@@ -616,8 +577,43 @@
       <option name="project" value="LOCAL" />
       <updated>1744494714636</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="23.04.2025">
+      <option name="closed" value="true" />
+      <created>1745401367924</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1745401367924</updated>
+    </task>
+    <task id="LOCAL-00070" summary="23.04.2025 2">
+      <option name="closed" value="true" />
+      <created>1745405850794</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1745405850794</updated>
+    </task>
+    <task id="LOCAL-00071" summary="23.04.2025 3">
+      <option name="closed" value="true" />
+      <created>1745424470609</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1745424470609</updated>
+    </task>
+    <task id="LOCAL-00072" summary="23.04.2025 4">
+      <option name="closed" value="true" />
+      <created>1745425291121</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1745425291121</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="RECENT_FILTERS">
@@ -645,6 +641,17 @@
                   <entry key="Show.Git.Branches" value="true" />
                 </map>
               </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="alfa" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
               <option name="HIGHLIGHTERS">
                 <map>
                   <entry key="CURRENT_BRANCH" value="true" />
@@ -658,10 +665,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="08.04.2025 test" />
-    <MESSAGE value="08.04.2025" />
-    <MESSAGE value="08.04.2025 1" />
-    <MESSAGE value="08.04.2025 2" />
     <MESSAGE value="08.04.2025 3" />
     <MESSAGE value="08.04.2025 4" />
     <MESSAGE value="08.04.2025 5" />
@@ -683,7 +686,11 @@
     <MESSAGE value="12.04.2025 4" />
     <MESSAGE value="12.04.2025 5" />
     <MESSAGE value="12.04.2025 6" />
-    <option name="LAST_COMMIT_MESSAGE" value="12.04.2025 6" />
+    <MESSAGE value="23.04.2025" />
+    <MESSAGE value="23.04.2025 2" />
+    <MESSAGE value="23.04.2025 3" />
+    <MESSAGE value="23.04.2025 4" />
+    <option name="LAST_COMMIT_MESSAGE" value="23.04.2025 4" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
