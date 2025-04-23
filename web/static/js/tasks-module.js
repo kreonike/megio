@@ -19,7 +19,20 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
         .sort((a, b) => new Date(b.completion_time) - new Date(a.completion_time));
 
     const validTasks = (tasks || []).filter(task => task.id && task.task);
-    const validCategories = (categories || []).filter(cat => cat.id && cat.name);
+
+    // Используем категории из аргумента, но если их нет, берем из DOM
+    let validCategories = (categories || []).filter(cat => cat.id && cat.name);
+    if (!validCategories.length) {
+        validCategories = Array.from(document.querySelectorAll('.category-options .category-option')).map(option => {
+            const input = option.querySelector('input');
+            const badge = option.querySelector('.category-badge');
+            return {
+                id: input.value,
+                name: badge.textContent,
+                color: badge.style.backgroundColor
+            };
+        });
+    }
 
     tasksSection.innerHTML = `
         <div class="calendar-filters">

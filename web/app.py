@@ -1,11 +1,9 @@
 import os
 import atexit
 from datetime import datetime
-
-from flask import Flask, render_template, request, redirect, flash, jsonify
+from flask import Flask, render_template, request, redirect, flash, jsonify, make_response, send_from_directory
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_required, current_user
-
 from web.logging_config import configure_logging
 from web.routes.stats import stats_routes
 from web.config.config import init_db, db_connection
@@ -43,7 +41,7 @@ logger = app.logger
 # Инициализация маршрутов
 init_profile_routes(app)
 telegram_routes(app)
-init_auth_routes(app, bcrypt)  # Объединенные auth routes вместо login/register/logout
+init_auth_routes(app, bcrypt)
 google_routes(app)
 stats_routes(app)
 init_task_restore_routes(app)
@@ -66,6 +64,23 @@ if not hasattr(app, 'google_scheduler') and (not app.debug or os.environ.get('WE
 
 # Инициализация базы данных
 init_db(app)
+
+# Добавление CSP-заголовка
+@app.after_request
+def apply_csp(response):
+    response.headers['Content-Security-Policy'] = (
+        "script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; "
+        "object-src 'none'; "
+        "default-src 'self'; "
+        "connect-src 'self'; "
+        "style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline';"
+    )
+    return response
+
+# Маршрут для favicon.ico
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(app.static_folder, 'favicon.ico')
 
 @login_manager.user_loader
 def load_user(user_id):

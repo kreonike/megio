@@ -1,10 +1,13 @@
-// static/js/init.js
 import { updateCalendar } from './calendar-module.js';
 import { fetchTasks, fetchCompletedTasks } from './api.js';
 import { updateTasksSection } from './tasks-module.js';
 import { bindDayClickHandlers } from './event-handlers.js';
 
+console.log('[init] Starting initialization');
+console.log('[init] Loaded scripts:', Array.from(document.scripts).map(s => s.src));
+
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('[init] DOMContentLoaded fired');
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 completedTasks || [],
                 `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
                 day,
-                taskData.data.categories || []
+                [] // Категории уже в DOM
             );
         } else {
             console.error('[init] Invalid task data:', taskData);
