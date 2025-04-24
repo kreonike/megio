@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Управление категориями{% endblock %}
+
+{% block content %}
+<div class="categories-container">
+    <h1>Управление категориями</h1>
+
+    <form method="POST" class="category-form">
+        <h2>Добавить новую категорию</h2>
+        <input type="text" name="name" placeholder="Название категории" required>
+        <input type="color" name="color" value="#3498db">
+        <button type="submit" class="btn">Добавить</button>
+    </form>
+
+    <div class="categories-list">
+        <h2>Мои категории</h2>
+        {% if not categories %}
+        <p>У вас пока нет категорий</p>
+        {% else %}
+        <ul>
+            {% for cat in categories %}
+            <li class="category-item">
+                <span class="category-badge" style="background-color: {{ cat.color }}">
+                    {{ cat.name }}
+                </span>
+                <form method="POST" style="display: inline;">
+                    <input type="hidden" name="delete" value="{{ cat.id }}">
+                    <button type="submit" class="btn-delete">Удалить</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

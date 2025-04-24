@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Задачи на {{ date_str }}{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calendar.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="{{ url_for('static', filename='js/time.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Управление полями повторения для формы добавления
+            const repeatEnabled = document.getElementById('repeat-enabled');
+            const repeatInputs = document.querySelectorAll('.repeat-input-group input:not([type=checkbox])');
+
+            if (repeatEnabled) {
+                repeatEnabled.addEventListener('change', () => {
+                    repeatInputs.forEach(input => {
+                        input.disabled = !repeatEnabled.checked;
+                    });
+                });
+            }
+
+            // Управление полями повторения для форм редактирования
+            document.querySelectorAll('.edit-form').forEach(form => {
+                const repeatEnabledEdit = form.querySelector('[id^="repeat-enabled-"]');
+                const repeatInputsEdit = form.querySelectorAll('.repeat-input-group input:not([type=checkbox])');
+
+                if (repeatEnabledEdit) {
+                    repeatEnabledEdit.addEventListener('change', () => {
+                        repeatInputsEdit.forEach(input => {
+                            input.disabled = !repeatEnabledEdit.checked;
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="tasks-container">
+    <h1>Задачи на {{ date_str }}</h1>
+
+    <form class="task-form" method="POST" action="{{ url_for('day_tasks', year=year, month=month, day=day) }}">
+        <input type="text" name="task" class="task-input" placeholder="Добавить новую задачу..." required>
+
+        <div class="time-input-group">
+            <input type="text" id="task-time" name="time" class="time-input" value="12:00"
+                   pattern="[0-9]{2}:[0-9]{2}" title="Формат: ЧЧ:ММ (24 часа), можно ввести 1212 → 12:12">
+            <div class="time-spinner">
+                <button type="button" class="time-btn up">▲</button>
+                <button type="button" class="time-btn down">▼</button>
+            </div>
+        </div>
+
+        <div class="priority-input-group">
+            <label>Приоритет:</label>
+            <select name="priority">
+                <option value="1">Низкий</option>
+                <option value="2">Средний</option>
+                <option value="3">Высокий</option>
+            </select>
+        </div>
+
+        <div class="category-input-group">
+            <label>Категории:</label>
+            {% for category in categories %}
+                <label>
+                    <input type="checkbox" name="categories" value="{{ category.id }}"> {{ category.name }}
+                </label>
+            {% endfor %}
+        </div>
+
+        <div class="repeat-input-group">
+            <label>
+                <input type="checkbox" name="repeat_enabled" id="repeat-enabled"> Повторять задачу
+            </label>
+            <input type="number" name="repeat_days" min="1" placeholder="Интервал (дни)" class="repeat-input" disabled>
+            <input type="date" name="repeat_start" placeholder="Начало повторения" disabled>
+            <input type="date" name="repeat_end" placeholder="Конец повторения" disabled>
+        </div>
+
+        <button type="submit" class="task-button">Добавить задачу</button>
+    </form>
+
+    <ul class="task-list">
+    {% if tasks %}
+        {% for task in tasks.stream %}
+        <li class="task-item">
+            <div class="task-content">
+                {% if task.time %}
+                <span class="task-time">{{ task.time }}</span>
+                {% endif %}
+                <span class="task-text">{{ task.task }}</span>
+                {% if task.repeat_days %}
+                <span class="task-repeat-badge">Повтор: каждые {{ task.repeat_days }} дн.</span>
+                {% endif %}
+            </div>
+            <div class="task-actions">
+                <small class="task-created">{{ task.created }}</small>
+                <button type="button" class="edit-btn" data-task-id="{{ task.id }}">Редактировать</button>
+                <form method="POST" action="{{ url_for('day_tasks', year=year, month=month, day=day) }}" class="delete-form">
+                    <input type="hidden" name="delete" value="{{ task.id }}">
+                    <button type="submit" class="delete-btn">Удалить</button>
+                </form>
+            </div>
+
+            <form id="edit-form-{{ task.id }}" class="edit-form" method="POST"
+                  action="{{ url_for('day_tasks', year=year, month=month, day=day) }}">
+                <input type="hidden" name="task_id" value="{{ task.id }}">
+                <input type="text" name="task" class="task-input" value="{{ task.task }}" required>
+
+                <div class="time-input-group">
+                    <input type="text" name="time" class="time-input" value="{{ task.time if task.time else '12:00' }}"
+                           pattern="[0-9]{2}:[0-9]{2}">
+                    <div class="time-spinner">
+                        <button type="button" class="time-btn up">▲</button>
+                        <button type="button" class="time-btn down">▼</button>
+                    </div>
+                </div>
+
+                <div class="priority-input-group">
+                    <label>Приоритет:</label>
+                    <select name="priority">
+                        <option value="1" {% if task.priority == 1 %}selected{% endif %}>Низкий</option>
+                        <option value="2" {% if task.priority == 2 %}selected{% endif %}>Средний</option>
+                        <option value="3" {% if task.priority == 3 %}selected{% endif %}>Высокий</option>
+                    </select>
+                </div>
+
+                <div class="category-input-group">
+                    <label>Категории:</label>
+                    {% for category in categories %}
+                        <label>
+                            <input type="checkbox" name="categories" value="{{ category.id }}"
+                                   {% if category.id in task.category_ids %}checked{% endif %}> {{ category.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+
+                <div class="repeat-input-group">
+                    <label>
+                        <input type="checkbox" name="repeat_enabled" id="repeat-enabled-{{ task.id }}"
+                               {% if task.repeat_days %}checked{% endif %}> Повторять задачу
+                    </label>
+                    <input type="number" name="repeat_days" min="1" value="{{ task.repeat_days or '' }}"
+                           placeholder="Интервал (дни)" class="repeat-input" {% if not task.repeat_days %}disabled{% endif %}>
+                    <input type="date" name="repeat_start" value="{{ task.repeat_start or '' }}"
+                           placeholder="Начало повторения" {% if not task.repeat_days %}disabled{% endif %}>
+                    <input type="date" name="repeat_end" value="{{ task.repeat_end or '' }}"
+                           placeholder="Конец повторения" {% if not task.repeat_days %}disabled{% endif %}>
+                </div>
+
+                <div class="edit-buttons">
+                    <button type="submit" class="task-button">Сохранить</button>
+                    <button type="button" class="cancel-edit" data-task-id="{{ task.id }}">Отмена</button>
+                </div>
+            </form>
+        </li>
+        {% endfor %}
+    {% else %}
+        <li class="no-tasks">Нет задач на эту дату</li>
+    {% endif %}
+    </ul>
+
+    <a href="{{ url_for('show_calendar', year=year, month=month) }}" class="back-link">← Вернуться к календарю</a>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{
+  "menu": {
+    "calendar": "📅 Календарь",
+    "language": "🌍 Сменить язык",
+    "help": "❓ Помощь"
+  },
+  "language": {
+    "choose": "🌍 Выберите язык интерфейса:",
+    "changed": "Язык изменен на {lang}"
+  },
+  "start": {
+    "authorized": "🔷 <b>Ваш идентификатор:</b>\n\n🆔 <b>Telegram ID:</b> <code>{telegram_id}</code>\nℹ️ Нажмите на ID, чтобы скопировать",
+    "unauthorized": "🔷 <b>Ваш идентификатор:</b>\n\n🆔 <b>Telegram ID:</b> <code>{telegram_id}</code>\n\n🔐 <b>Вы не авторизованы</b>\nЧтобы получить доступ, привяжите этот Telegram ID на сайте\n\nℹ️ Нажмите на ID, чтобы скопировать"
+  },
+  "tasks": {
+    "day_header": "📌 *Задачи на {date}:*",
+    "today_header": "📅 Задачи на сегодня ({day:02d}.{month:02d}.{year}):",
+    "no_tasks": "\nНет задач.",
+    "time_prefix": "⏰ {time} ",
+    "add_instructions": "📅 Чтобы добавить задачу:\n1. Выберите день в календаре\n2. Нажмите кнопку '➕ Добавить задачу'\n3. Введите задачу в формате: ЧЧ:ММ Текст задачи\n\nПример: <code>15:00 Встреча с клиентом</code>"
+  },
+  "calendar": {
+    "title": "📅 *Календарь на {month} {year}*",
+    "prev_month": "←",
+    "next_month": "→"
+  }
+}

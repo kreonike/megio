@@ -1,0 +1,87 @@
+/* Стили для приоритетов в боковой панели задач */
+
+/* Низкий приоритет - активные задачи */
+.tasks-sidebar .task-meta .priority-indicator.priority-1 {
+    color: #4caf50 !important; /* Зелёный текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em; /* Оставляем как есть */
+    letter-spacing: 0.5px; /* Оставляем как есть */
+    font-weight: 500; /* Оставляем */
+    display: inline-block;
+}
+
+/* Низкий приоритет - завершённые задачи */
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-1 {
+    color: #4caf50 !important; /* Зелёный текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em; /* Уменьшено */
+    letter-spacing: 0.2px; /* Уменьшено */
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+/* Средний приоритет - активные задачи */
+.tasks-sidebar .task-meta .priority-indicator.priority-2 {
+    color: #ff9800 !important; /* Оранжевый текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em; /* Оставляем */
+    letter-spacing: 0.5px; /* Оставляем */
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Средний приоритет - завершённые задачи */
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-2 {
+    color: #ff9800 !important; /* Оранжевый текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em; /* Уменьшено */
+    letter-spacing: 0.2px; /* Уменьшено */
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+/* Высокий приоритет - активные задачи */
+.tasks-sidebar .task-meta .priority-indicator.priority-3 {
+    color: #f44336 !important; /* Красный текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em; /* Оставляем */
+    letter-spacing: 0.5px; /* Оставляем */
+    font-weight: 500;
+    display: inline-block;
+}
+
+/* Высокий приоритет - завершённые задачи */
+.tasks-sidebar .completed-task-meta .priority-indicator.priority-3 {
+    color: #f44336 !important; /* Красный текст */
+    background-color: transparent !important; /* Прозрачный фон */
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em; /* Уменьшено */
+    letter-spacing: 0.2px; /* Уменьшено */
+    font-weight: 500;
+    display: inline-block;
+    white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+/* Поддержка тёмной темы (те же цвета текста) */
+.dark-mode .tasks-sidebar .task-meta .priority-indicator.priority-1,
+.dark-mode .tasks-sidebar .task-meta .priority-indicator.priority-2,
+.dark-mode .tasks-sidebar .task-meta .priority-indicator.priority-3,
+.dark-mode .tasks-sidebar .completed-task-meta .priority-indicator.priority-1,
+.dark-mode .tasks-sidebar .completed-task-meta .priority-indicator.priority-2,
+.dark-mode .tasks-sidebar .completed-task-meta .priority-indicator.priority-3 {
+    background-color: transparent !important; /* Прозрачный фон */
+}
+

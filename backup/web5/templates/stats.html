@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика выполненных задач{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/stats.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Статистика выполненных задач</h1>
+
+    <!-- Фильтры -->
+    <div class="stats-filters">
+        <div class="filters-row">
+            <div class="filter-group">
+                <label for="start-date">С даты:</label>
+                <input type="date" id="start-date" name="start-date">
+            </div>
+            <div class="filter-group">
+                <label for="end-date">По дату:</label>
+                <input type="date" id="end-date" name="end-date">
+            </div>
+            <div class="filter-group">
+                <label for="priority-filter">Приоритет:</label>
+                <select id="priority-filter" name="priority-filter">
+                    <option value="">Все приоритеты</option>
+                    <option value="3">Высокий</option>
+                    <option value="2">Средний</option>
+                    <option value="1">Низкий</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-button-wrapper">
+            <button id="apply-filters" class="filter-button">Применить</button>
+        </div>
+    </div>
+
+    <!-- Таблица статистики -->
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th class="sortable" data-column="month">Месяц <span class="sort-indicator"></span></th>
+                <th class="sortable" data-column="total">Всего <span class="sort-indicator"></span></th>
+                <th class="sortable" data-column="high_priority">Высокий приоритет <span class="sort-indicator"></span></th>
+                <th class="sortable" data-column="medium_priority">Средний приоритет <span class="sort-indicator"></span></th>
+                <th class="sortable" data-column="low_priority">Низкий приоритет <span class="sort-indicator"></span></th>
+            </tr>
+        </thead>
+        <tbody id="stats-table-body">
+            {% for stat in stats %}
+            <tr>
+                <td>{{ stat['month'] }}</td>
+                <td><span class="stat-value">{{ stat['total'] }}</span></td>
+                <td><span class="stat-value priority-high">{{ stat['high_priority'] }}</span></td>
+                <td><span class="stat-value priority-medium">{{ stat['medium_priority'] }}</span></td>
+                <td><span class="stat-value priority-low">{{ stat['low_priority'] }}</span></td>
+            </tr>
+            {% endfor %}
+            {% if not stats %}
+            <tr>
+                <td colspan="5" class="no-data">Нет данных за выбранный период</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <!-- Список задач -->
+    <div class="tasks-list-section">
+        <h2>Список выполненных задач</h2>
+        <ul id="tasks-list" class="tasks-list">
+            <!-- Задачи будут добавлены через JavaScript -->
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/stats.js') }}"></script>
+{% endblock %}
