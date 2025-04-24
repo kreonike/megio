@@ -1283,3 +1283,1092 @@
 2025-04-24 12:05:43 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
 2025-04-24 12:09:06 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
 2025-04-24 12:09:07 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
+2025-04-24 12:12:20 | INFO     | app                  | utils.py:66 | Profile  updated for user_id=1
+2025-04-24 12:12:29 | INFO     | app                  | utils.py:66 | Category  added for user_id=1, name=Личное
+2025-04-24 12:12:40 | INFO     | app                  | utils.py:66 | Category  added for user_id=1, name=Личное
+2025-04-24 12:12:47 | INFO     | app                  | utils.py:66 | Category  added for user_id=1, name=Личное
+2025-04-24 12:13:06 | INFO     | app                  | utils.py:66 | Category  added for user_id=1, name=Работа
+2025-04-24 12:13:10 | INFO     | app                  | utils.py:66 | Category  added for user_id=1, name=Работа
+2025-04-24 12:13:14 | INFO     | app                  | utils.py:66 | Category 2 deleted for user_id=1
+2025-04-24 12:13:20 | INFO     | app                  | utils.py:66 | Category 5 deleted for user_id=1
+2025-04-24 12:13:26 | INFO     | app                  | utils.py:66 | Category 3 deleted for user_id=1
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}}
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:82 | days_colors: {}
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:13:34 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:13:34 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}}
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:82 | days_colors: {}
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:13:37 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:13:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:16:17 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:16:20 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:16:21 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:16:22 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:16:23 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:16:24 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:16:25 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}}
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:82 | days_colors: {}
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:16:27 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:16:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:16:28 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:16:30 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}}
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:82 | days_colors: {}
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:16:31 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:16:31 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:16:32 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:16:40 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task 30 added for user_id=1, date=2025-04-26
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:16:44 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task 30 deleted for user_id=1, date=2025-04-26
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:16:54 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:16:55 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:55 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:16:55 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task 31 added for user_id=1, date=2025-04-26
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:17:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:17:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:17:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:17:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:17:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:17:12 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:12 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:12 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:12 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:12 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:17:12 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:17:12 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:13 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:14 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:17:14 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:17:14 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:17:14 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:17:15 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:15 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:15 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:15 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:17:16 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:17:16 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:18:04 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:18:05 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:18:08 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:18:10 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:18:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:18:11 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:26:00 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
+2025-04-24 12:26:01 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:26:04 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:26:04 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:26:08 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:26:09 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:26:26 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:26:27 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:26:55 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:26:56 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:29:32 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
+2025-04-24 12:29:33 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:29:36 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:29:36 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:29:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:29:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:29:37 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:29:46 | INFO     | app                  | utils.py:66 | Category  added for user_id=1, name=арп
+2025-04-24 12:29:49 | INFO     | app                  | utils.py:66 | Category  added for user_id=1, name=арп
+2025-04-24 12:29:51 | INFO     | app                  | utils.py:66 | Category 6 deleted for user_id=1
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:33:41 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:33:41 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:33:42 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:33:53 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:33:53 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:36:08 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
+2025-04-24 12:36:08 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:81 | days_tasks: {9: {'count': 1, 'priority': 3}, 14: {'count': 1, 'priority': 1}, 16: {'count': 1, 'priority': 1}, 26: {'count': 1, 'priority': 3}}
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:82 | days_colors: {26: {'#3498db'}}
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:83 | overdue_days: {16, 9, 14}
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:84 | completed_days: set()
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 1: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 2: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 3: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 4: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 5: classes = ['day-cell', 'weekend']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 6: classes = ['day-cell', 'weekend']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 7: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 8: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 9: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 10: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 11: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 12: classes = ['day-cell', 'weekend']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 13: classes = ['day-cell', 'weekend']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 14: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 15: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 16: classes = ['day-cell', 'has-tasks', 'has-overdue-tasks']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 17: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 18: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 19: classes = ['day-cell', 'weekend']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 20: classes = ['day-cell', 'weekend']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 21: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 22: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 23: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 24: classes = ['day-cell', 'today']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 25: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 26: classes = ['day-cell', 'has-tasks', 'weekend']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 27: classes = ['day-cell', 'weekend']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 28: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 29: classes = ['day-cell']
+2025-04-24 12:36:09 | DEBUG    | app                  | calendar.py:110 | Day 30: classes = ['day-cell']
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-02, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-01, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-04, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-03, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-06, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-07, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-08, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-11, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-12, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-13, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-05, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-09, count=1
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-16, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-17, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-15, count=1
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-18, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-14, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-21, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-20, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-22, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-23, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-25, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-26, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-19, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-10, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-30, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-31, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-28, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-27, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-29, count=0
+2025-04-24 12:36:10 | INFO     | app                  | utils.py:66 | Task  fetched completed tasks for user_id=1, date=2025-04-24, count=0
+2025-04-24 12:36:17 | INFO     | app                  | utils.py:66 | Category 7 deleted for user_id=1
+2025-04-24 12:36:25 | INFO     | app                  | utils.py:66 | Category  added for user_id=1, name=ghjghj
+2025-04-24 12:41:23 | INFO     | app                  | app.py:59 | Initializing Google Scheduler...

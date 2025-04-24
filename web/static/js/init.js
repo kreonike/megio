@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('[init] DOMContentLoaded fired');
     const tasksSection = document.querySelector('.tasks-section');
@@ -24,19 +23,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         await updateCalendar(year, month);
         console.log('[init] Calendar initialized');
 
-        // Загрузка задач
+        // Загрузка задач и завершенных задач
         const [taskData, completedTasks] = await Promise.all([
             fetchTasks(year, month, day),
             fetchCompletedTasks(year, month, day)
         ]);
 
         if (taskData.success && taskData.data) {
+            console.log('[init] Task data received:', taskData.data);
+            // Передаем категории из taskData.data.categories
             updateTasksSection(
                 taskData.data.tasks || [],
                 completedTasks || [],
                 `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
                 day,
-                []
+                taskData.data.categories || [] // Используем категории из API
             );
             tasksSection.classList.add('loaded');
         } else {

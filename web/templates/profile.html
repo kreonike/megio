@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
 {% endblock %}
 
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/categories-module.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="profile-container">
     <h1 class="profile-title">{{ user.username }}</h1>
@@ -43,7 +47,7 @@
     <div class="profile-section">
         <h2><i class="fas fa-tags"></i> Управление категориями</h2>
 
-        <form method="POST" class="category-form">
+        <form method="POST" class="category-form" id="category-form">
             <div class="form-row">
                 <div class="form-group" style="flex-grow: 1;">
                     <input type="text" name="name" placeholder="Введите название категории"
@@ -64,11 +68,9 @@
             {% else %}
                 <div class="category-grid">
                     {% for cat in categories %}
-                    <div class="category-item">
-                        <span class="category-badge" style="background-color: {{ cat.color }}">
-                            {{ cat.name }}
-                        </span>
-                        <form method="POST" style="margin: 0;">
+                    <div class="category-item" data-category-id="{{ cat.id }}">
+                        <span class="category-badge" style="background-color: {{ cat.color }}">{{ cat.name }}</span>
+                        <form method="POST" class="delete-category-form" style="margin: 0;">
                             <input type="hidden" name="delete_category" value="{{ cat.id }}">
                             <button type="submit" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash-alt"></i>

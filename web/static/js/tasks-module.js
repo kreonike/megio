@@ -20,18 +20,22 @@ export function updateTasksSection(tasks, completedTasks, date, day, categories)
 
     const validTasks = (tasks || []).filter(task => task.id && task.task);
 
-    // Используем категории из аргумента, но если их нет, берем из DOM
+    // Используем категории из аргумента
     let validCategories = (categories || []).filter(cat => cat.id && cat.name);
+    console.log('[tasks-module/updateTasksSection] Categories received:', validCategories);
+
+    // Если категории не переданы, пытаемся взять их из DOM
     if (!validCategories.length) {
         validCategories = Array.from(document.querySelectorAll('.category-options .category-option')).map(option => {
             const input = option.querySelector('input');
             const badge = option.querySelector('.category-badge');
             return {
-                id: input.value,
-                name: badge.textContent,
-                color: badge.style.backgroundColor
+                id: input?.value,
+                name: badge?.textContent,
+                color: badge?.style.backgroundColor
             };
-        });
+        }).filter(cat => cat.id && cat.name);
+        console.log('[tasks-module/updateTasksSection] Fallback to DOM categories:', validCategories);
     }
 
     tasksSection.innerHTML = `
