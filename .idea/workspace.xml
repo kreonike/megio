@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="23.04.2025 4" />
+    <list default="true" id="4592187f-fd29-40ae-9750-76aa1246474c" name="Changes" comment="23.04.2025 5">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/logs/flask_debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/web/logs/flask_debug.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/logs/flask_error.log" beforeDir="false" afterPath="$PROJECT_DIR$/web/logs/flask_error.log" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,10 +58,10 @@
     "Python.tt (2).executor": "Run",
     "Python.tt.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging beta2",
+    "git-widget-placeholder": "beta2",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/kreon/Dropbox/python_advanced_final",
-    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -193,10 +198,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.app" />
         <item itemvalue="Python.tt (2)" />
         <item itemvalue="Python.tt (1)" />
         <item itemvalue="Python.tt" />
-        <item itemvalue="Python.app" />
         <item itemvalue="Python.analize_db" />
       </list>
     </recent_temporary>
@@ -216,14 +221,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1743005307087</updated>
-    </task>
-    <task id="LOCAL-00024" summary="05.04.2025 динамический всё обновляется 9">
-      <option name="closed" value="true" />
-      <created>1743876060756</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1743876060756</updated>
     </task>
     <task id="LOCAL-00025" summary="05.04.2025 рабочий           вариант">
       <option name="closed" value="true" />
@@ -609,7 +606,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745425291121</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="23.04.2025 5">
+      <option name="closed" value="true" />
+      <created>1745426494742</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1745426494742</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -665,7 +670,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="08.04.2025 3" />
     <MESSAGE value="08.04.2025 4" />
     <MESSAGE value="08.04.2025 5" />
     <MESSAGE value="08.04.2025 6" />
@@ -690,7 +694,8 @@
     <MESSAGE value="23.04.2025 2" />
     <MESSAGE value="23.04.2025 3" />
     <MESSAGE value="23.04.2025 4" />
-    <option name="LAST_COMMIT_MESSAGE" value="23.04.2025 4" />
+    <MESSAGE value="23.04.2025 5" />
+    <option name="LAST_COMMIT_MESSAGE" value="23.04.2025 5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
