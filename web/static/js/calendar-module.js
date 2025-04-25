@@ -1,4 +1,3 @@
-// static/js/calendar-module.js
 import { fetchMonthTasks, fetchCompletedTasks } from './api.js';
 
 export function updateCalendar(year, month) {
@@ -41,6 +40,9 @@ export function updateCalendar(year, month) {
 
                         dayCell.classList.remove('has-overdue-tasks', 'all-tasks-completed', 'has-tasks');
 
+                        // Очищаем существующие стили
+                        dayCell.style.background = '';
+
                         if (tasks.length > 0) {
                             const now = new Date();
                             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -48,15 +50,27 @@ export function updateCalendar(year, month) {
 
                             let hasOverdue = false;
                             let maxPriority = 1;
+                            let colors = new Set();
 
                             tasks.forEach(task => {
                                 if (taskDate < today && !task.completed) hasOverdue = true;
                                 maxPriority = Math.max(maxPriority, task.priority || 1);
+                                if (task.category_colors) {
+                                    task.category_colors.forEach(color => colors.add(color));
+                                }
                             });
 
                             dayCell.classList.add('has-tasks');
                             if (hasOverdue) {
                                 dayCell.classList.add('has-overdue-tasks');
+                            }
+
+                            // Устанавливаем стиль на основе цветов категорий
+                            if (colors.size === 1) {
+                                dayCell.style.backgroundColor = `${[...colors][0]}20`; // Полупрозрачный фон
+                            } else if (colors.size > 1) {
+                                const gradient = [...colors].map(color => `${color} 0%, ${color} 50%`).join(',');
+                                dayCell.style.background = `linear-gradient(135deg, ${gradient})`;
                             }
 
                             if (!badge) {

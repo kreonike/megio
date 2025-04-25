@@ -160,6 +160,18 @@ function addCategoryToList(category) {
             showFlashMessage('Ошибка связи с сервером', 'error');
         }
     });
+
+    // Обновляем календарь после добавления категории
+    const calendarTable = document.querySelector('.calendar-table');
+    if (calendarTable) {
+        const year = parseInt(calendarTable.dataset.year);
+        const month = parseInt(calendarTable.dataset.month);
+        import('./calendar-module.js').then(({ updateCalendar }) => {
+            updateCalendar(year, month).then(() => {
+                console.log('[categories-module] Calendar updated after adding category');
+            });
+        });
+    }
 }
 
 // Функция для удаления категории из списка
@@ -173,6 +185,18 @@ function removeCategoryFromList(categoryId) {
     if (categoryGrid && categoryGrid.children.length === 0) {
         const categoriesList = document.querySelector('.categories-list');
         categoriesList.innerHTML = '<p class="no-categories">Нет созданных категорий</p>';
+    }
+
+    // Обновляем календарь после удаления категории
+    const calendarTable = document.querySelector('.calendar-table');
+    if (calendarTable) {
+        const year = parseInt(calendarTable.dataset.year);
+        const month = parseInt(calendarTable.dataset.month);
+        import('./calendar-module.js').then(({ updateCalendar }) => {
+            updateCalendar(year, month).then(() => {
+                console.log('[categories-module] Calendar updated after removing category');
+            });
+        });
     }
 }
 

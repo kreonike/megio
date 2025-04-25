@@ -177,12 +177,14 @@ def tasks_routes(app):
                     t.day, t.id, t.task, t.priority, t.time,
                     t.repeat_days, t.repeat_start, t.repeat_end,
                     CASE WHEN ct.id IS NOT NULL THEN 1 ELSE 0 END as completed,
-                    GROUP_CONCAT(tc.category_id) AS category_ids
+                    GROUP_CONCAT(tc.category_id) AS category_ids,
+                    GROUP_CONCAT(c.color) AS category_colors
                 FROM tasks t
                 LEFT JOIN completed_tasks ct 
                     ON t.id = ct.task_id 
                     AND ct.user_id = t.user_id
                 LEFT JOIN task_categories tc ON t.id = tc.task_id
+                LEFT JOIN categories c ON tc.category_id = c.id
                 WHERE t.user_id = ? AND t.year = ? AND t.month = ?
                 GROUP BY t.id
                 ORDER BY t.day
@@ -202,7 +204,8 @@ def tasks_routes(app):
                     'repeat_start': row['repeat_start'],
                     'repeat_end': row['repeat_end'],
                     'completed': row['completed'],
-                    'category_ids': [int(cid) for cid in row['category_ids'].split(',')] if row['category_ids'] else []
+                    'category_ids': [int(cid) for cid in row['category_ids'].split(',')] if row['category_ids'] else [],
+                    'category_colors': row['category_colors'].split(',') if row['category_colors'] else []
                 }
                 tasks_by_day[day].append(task)
 
