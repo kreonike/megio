@@ -1,6 +1,7 @@
 # web/services/task_service.py
 from datetime import datetime, timedelta
 import json
+from flask import current_app as app
 
 
 class PermissionError(Exception):
@@ -23,10 +24,22 @@ def check_ownership(cursor, table, id, user_id):
     cursor.execute(f'SELECT user_id FROM {table} WHERE id = ?', (id,))
     record = cursor.fetchone()
     if not record or record['user_id'] != user_id:
-        raise PermissionError(f"No access to {table} with id {id}")
+        raise PermissionError(f"Нет доступа к {table} с id {id}")
 
 
 def complete_task(db, user_id, task_id, year, month, day):
+    """
+    Завершает задачу, перемещая её в таблицу завершённых задач и удаляя из активных.
+
+    Args:
+        db: Соединение с базой данных.
+        user_id: ID пользователя.
+        task_id: ID задачи.
+        year, month, day: Дата задачи.
+
+    Returns:
+        ID завершённой задачи.
+    """
     cursor = db.cursor()
     check_ownership(cursor, 'tasks', task_id, user_id)
 
@@ -39,7 +52,7 @@ def complete_task(db, user_id, task_id, year, month, day):
     task = cursor.fetchone()
 
     if not task:
-        raise PermissionError("Task not found")
+        raise PermissionError("Задача не найдена")
 
     # Получаем категории задачи
     cursor.execute('''
@@ -79,6 +92,18 @@ def complete_task(db, user_id, task_id, year, month, day):
 
 
 def restore_task(db, user_id, completed_task_id, year, month, day):
+    """
+    Восстанавливает завершённую задачу в активные задачи.
+
+    Args:
+        db: Соединение с базой данных.
+        user_id: ID пользователя.
+        completed_task_id: ID завершённой задачи.
+        year, month, day: Дата восстановления.
+
+    Returns:
+        ID восстановленной задачи.
+    """
     cursor = db.cursor()
     check_ownership(cursor, 'completed_tasks', completed_task_id, user_id)
 
@@ -90,7 +115,7 @@ def restore_task(db, user_id, completed_task_id, year, month, day):
     completed_task = cursor.fetchone()
 
     if not completed_task:
-        raise PermissionError("Completed task not found")
+        raise PermissionError("Завершённая задача не найдена")
 
     # Восстанавливаем задачу в tasks
     cursor.execute('''
@@ -122,9 +147,49 @@ def restore_task(db, user_id, completed_task_id, year, month, day):
 
 def add_task(db, user_id, year, month, day, task_text, time=None, priority=1, category_ids=None, repeat_days=None,
              repeat_start=None, repeat_end=None):
+    """
+    Добавляет новую задачу в базу данных. Сохраняет только основную задачу, повторяющиеся экземпляры обрабатываются динамически.
+
+    Args:
+        db: Соединение с базой данных.
+        user_id: ID пользователя.
+        year, month, day: Дата задачи.
+        task_text: Текст задачи.
+        time: Время задачи (опционально).
+        priority: Приоритет (1=низкий, 2=средний, 3=высокий).
+        category_ids: Список ID категорий.
+        repeat_days: Количество дней для повторения (опционально).
+        repeat_start: Дата начала повторения (опционально).
+        repeat_end: Дата окончания повторения (опционально).
+
+    Returns:
+        ID созданной задачи.
+    """
     cursor = db.cursor()
 
-    # Создаем начальную задачу
+    # Проверяем параметры повторения
+    if repeat_days or repeat_start or repeat_end:
+        if not (repeat_days and repeat_start and repeat_end):
+            app.logger.warning(f"Некорректные параметры повторения для задачи: repeat_days={repeat_days}, repeat_start={repeat_start}, repeat_end={repeat_end}")
+            repeat_days = None
+            repeat_start = None
+            repeat_end = None
+        else:
+            try:
+                start_date = datetime.strptime(repeat_start, '%Y-%m-%d')
+                end_date = datetime.strptime(repeat_end, '%Y-%m-%d')
+                if start_date > end_date or repeat_days <= 0:
+                    app.logger.warning(f"Некорректные параметры повторения для задачи: start_date={repeat_start}, end_date={repeat_end}, repeat_days={repeat_days}")
+                    repeat_days = None
+                    repeat_start = None
+                    repeat_end = None
+            except ValueError as e:
+                app.logger.error(f"Некорректный формат даты для повторения задачи: {e}")
+                repeat_days = None
+                repeat_start = None
+                repeat_end = None
+
+    # Создаём начальную задачу
     cursor.execute('''
         INSERT INTO tasks (user_id, year, month, day, task, time, priority, repeat_days, repeat_start, repeat_end, created)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -148,68 +213,52 @@ def add_task(db, user_id, year, month, day, task_text, time=None, priority=1, ca
         for cat_id in category_ids:
             cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)', (task_id, cat_id))
 
-    # Создаем повторяющиеся задачи, если указаны параметры
-    if repeat_days and repeat_start and repeat_end and repeat_days > 0:
-        try:
-            start_date = datetime.strptime(repeat_start, '%Y-%m-%d')
-            end_date = datetime.strptime(repeat_end, '%Y-%m-%d')
-            current_date = start_date + timedelta(days=repeat_days)
-
-            while current_date <= end_date:
-                cursor.execute('''
-                    INSERT INTO tasks (user_id, year, month, day, task, time, priority, repeat_days, repeat_start, repeat_end, created)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                    user_id,
-                    current_date.year,
-                    current_date.month,
-                    current_date.day,
-                    task_text,
-                    time,
-                    priority,
-                    repeat_days,
-                    repeat_start,
-                    repeat_end,
-                    datetime.now()
-                ))
-                new_task_id = cursor.lastrowid
-                if category_ids:
-                    for cat_id in category_ids:
-                        cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)',
-                                       (new_task_id, cat_id))
-
-                current_date += timedelta(days=repeat_days)
-        except ValueError as e:
-            db.rollback()
-            raise ValueError(f"Ошибка в формате дат повторения: {e}")
-
     db.commit()
+    app.logger.debug(f"Создана задача {task_id} для {year}-{month}-{day}, repeat_days={repeat_days}, repeat_start={repeat_start}, repeat_end={repeat_end}")
     return task_id
 
 
 def edit_task(db, user_id, task_id, task_text, time=None, priority=1, category_ids=None, repeat_days=None,
               repeat_start=None, repeat_end=None):
+    """
+    Редактирует существующую задачу. Обновляет только основную задачу.
+
+    Args:
+        db: Соединение с базой данных.
+        user_id: ID пользователя.
+        task_id: ID задачи.
+        task_text: Новый текст задачи.
+        time: Новое время задачи (опционально).
+        priority: Новый приоритет.
+        category_ids: Новый список ID категорий.
+        repeat_days: Новое количество дней для повторения (опционально).
+        repeat_start: Новая дата начала повторения (опционально).
+        repeat_end: Новая дата окончания повторения (опционально).
+    """
     cursor = db.cursor()
     check_ownership(cursor, 'tasks', task_id, user_id)
 
-    # Получаем данные текущей задачи
-    cursor.execute('SELECT repeat_start FROM tasks WHERE id = ?', (task_id,))
-    original_task = cursor.fetchone()
-    original_repeat_start = original_task['repeat_start'] if original_task else None
-
-    # Удаляем все связанные повторяющиеся задачи (если были)
-    if original_repeat_start:
-        cursor.execute('''
-            DELETE FROM tasks
-            WHERE user_id = ? AND repeat_start = ? AND id != ?
-        ''', (user_id, original_repeat_start, task_id))
-        cursor.execute('''
-            DELETE FROM task_categories
-            WHERE task_id IN (
-                SELECT id FROM tasks
-                WHERE user_id = ? AND repeat_start = ? AND id != ?
-            )
-        ''', (user_id, original_repeat_start, task_id))
+    # Проверяем параметры повторения
+    if repeat_days or repeat_start or repeat_end:
+        if not (repeat_days and repeat_start and repeat_end):
+            app.logger.warning(f"Некорректные параметры повторения для задачи {task_id}: repeat_days={repeat_days}, repeat_start={repeat_start}, repeat_end={repeat_end}")
+            repeat_days = None
+            repeat_start = None
+            repeat_end = None
+        else:
+            try:
+                start_date = datetime.strptime(repeat_start, '%Y-%m-%d')
+                end_date = datetime.strptime(repeat_end, '%Y-%m-%d')
+                if start_date > end_date or repeat_days <= 0:
+                    app.logger.warning(f"Некорректные параметры повторения для задачи {task_id}: start_date={repeat_start}, end_date={repeat_end}, repeat_days={repeat_days}")
+                    repeat_days = None
+                    repeat_start = None
+                    repeat_end = None
+            except ValueError as e:
+                app.logger.error(f"Некорректный формат даты для повторения задачи {task_id}: {e}")
+                repeat_days = None
+                repeat_start = None
+                repeat_end = None
 
     # Обновляем текущую задачу
     cursor.execute('''
@@ -224,69 +273,24 @@ def edit_task(db, user_id, task_id, task_text, time=None, priority=1, category_i
         for cat_id in category_ids:
             cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)', (task_id, cat_id))
 
-    # Создаем новые повторяющиеся задачи
-    if repeat_days and repeat_start and repeat_end and repeat_days > 0:
-        try:
-            start_date = datetime.strptime(repeat_start, '%Y-%m-%d')
-            end_date = datetime.strptime(repeat_end, '%Y-%m-%d')
-            current_date = start_date + timedelta(days=repeat_days)
-
-            while current_date <= end_date:
-                cursor.execute('''
-                    INSERT INTO tasks (user_id, year, month, day, task, time, priority, repeat_days, repeat_start, repeat_end, created)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                    user_id,
-                    current_date.year,
-                    current_date.month,
-                    current_date.day,
-                    task_text,
-                    time,
-                    priority,
-                    repeat_days,
-                    repeat_start,
-                    repeat_end,
-                    datetime.now()
-                ))
-                new_task_id = cursor.lastrowid
-                if category_ids:
-                    for cat_id in category_ids:
-                        cursor.execute('INSERT INTO task_categories (task_id, category_id) VALUES (?, ?)',
-                                       (new_task_id, cat_id))
-
-                current_date += timedelta(days=repeat_days)
-        except ValueError as e:
-            db.rollback()
-            raise ValueError(f"Ошибка в формате дат повторения: {e}")
-
     db.commit()
+    app.logger.debug(f"Обновлена задача {task_id} для repeat_days={repeat_days}, repeat_start={repeat_start}, repeat_end={repeat_end}")
 
 
 def delete_task(db, user_id, task_id):
+    """
+    Удаляет задачу и связанные категории.
+
+    Args:
+        db: Соединение с базой данных.
+        user_id: ID пользователя.
+        task_id: ID задачи.
+    """
     cursor = db.cursor()
     check_ownership(cursor, 'tasks', task_id, user_id)
-
-    # Получаем repeat_start для удаления связанных задач
-    cursor.execute('SELECT repeat_start FROM tasks WHERE id = ?', (task_id,))
-    task = cursor.fetchone()
-    repeat_start = task['repeat_start'] if task else None
 
     # Удаляем текущую задачу
     cursor.execute('DELETE FROM task_categories WHERE task_id = ?', (task_id,))
     cursor.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
-
-    # Удаляем связанные повторяющиеся задачи
-    if repeat_start:
-        cursor.execute('''
-            DELETE FROM tasks
-            WHERE user_id = ? AND repeat_start = ?
-        ''', (user_id, repeat_start))
-        cursor.execute('''
-            DELETE FROM task_categories
-            WHERE task_id IN (
-                SELECT id FROM tasks
-                WHERE user_id = ? AND repeat_start = ?
-            )
-        ''', (user_id, repeat_start))
 
     db.commit()

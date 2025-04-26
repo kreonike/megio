@@ -1,3 +1,4 @@
+# web/routes/tasks.py
 from datetime import datetime
 from flask import jsonify, request, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
@@ -8,10 +9,26 @@ from web.services.category_service import get_user_categories
 from web.utils import json_response, log_action, log_error, handle_exceptions
 
 def tasks_routes(app):
+    """
+    Регистрирует маршруты для работы с задачами и календарем.
+
+    Args:
+        app: Экземпляр приложения Flask.
+    """
     @app.route('/', defaults={'year': None, 'month': None})
     @app.route('/calendar/<int:year>/<int:month>', methods=['GET'])
     @login_required
     def show_calendar(year=None, month=None):
+        """
+        Отображает календарь для указанного года и месяца.
+
+        Args:
+            year: Год календаря (опционально, по умолчанию текущий год).
+            month: Месяц календаря (опционально, по умолчанию текущий месяц).
+
+        Returns:
+            Отрендеренный шаблон calendar.html или редирект при некорректных параметрах.
+        """
         now = datetime.now()
         if year is None or month is None:
             year = now.year
@@ -44,6 +61,17 @@ def tasks_routes(app):
     @app.route('/tasks/<int:year>/<int:month>/<int:day>', methods=['GET', 'POST'])
     @login_required
     def day_tasks(year, month, day):
+        """
+        Обрабатывает задачи для указанного дня (отображение, создание, редактирование, удаление).
+
+        Args:
+            year: Год задачи.
+            month: Месяц задачи.
+            day: День задачи.
+
+        Returns:
+            Отрендеренный шаблон tasks.html для GET-запросов или JSON/редирект для POST-запросов.
+        """
         with db_connection() as db:
             cursor = db.cursor()
             categories = get_user_categories(db, current_user.id)
@@ -169,6 +197,16 @@ def tasks_routes(app):
     @login_required
     @handle_exceptions
     def month_tasks(year, month):
+        """
+        Возвращает задачи за указанный месяц в формате JSON.
+
+        Args:
+            year: Год задач.
+            month: Месяц задач.
+
+        Returns:
+            Словарь с задачами, сгруппированными по дням.
+        """
         with db_connection() as db:
             cursor = db.cursor()
 

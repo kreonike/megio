@@ -1,3 +1,4 @@
+// static/js/init.js
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('[init] DOMContentLoaded fired');
     const tasksSection = document.querySelector('.tasks-section');
@@ -6,6 +7,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // Получаем year и month из currentDate или из атрибутов calendar-table
+    let year, month, day;
+    if (window.currentDate && window.currentDate.year && window.currentDate.month) {
+        year = window.currentDate.year;
+        month = window.currentDate.month;
+        day = window.currentDate.day;
+        console.log('[init] currentDate:', window.currentDate);
+    } else {
+        console.warn('[init] currentDate не определён, используем данные из calendar-table');
+        const calendarTable = document.querySelector('.calendar-table');
+        if (calendarTable) {
+            year = parseInt(calendarTable.dataset.year, 10);
+            month = parseInt(calendarTable.dataset.month, 10);
+            day = new Date().getDate();
+            console.log('[init] Получены данные из calendar-table:', { year, month, day });
+        } else {
+            console.error('[init] Не удалось определить year и month, используем текущую дату');
+            const today = new Date();
+            year = today.getFullYear();
+            month = today.getMonth() + 1;
+            day = today.getDate();
+        }
+    }
+
+    console.log(`[init] Initializing for ${year}-${month}-${day}`);
+
     try {
         // Динамические импорты для избежания ошибок загрузки модулей
         const { updateCalendar } = await import('./calendar-module.js');
@@ -13,17 +40,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { updateTasksSection } = await import('./tasks-module.js');
         const { bindDayClickHandlers, bindTaskEventHandlers } = await import('./event-handlers.js');
 
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth() + 1;
-        const day = today.getDate();
-        console.log(`[init] Initializing for ${year}-${month}-${day}`);
-
         // Инициализация календаря
         await updateCalendar(year, month);
         console.log('[init] Calendar initialized');
 
-        // Загрузка задач и завершенных задач
+        // Загрузка задач и завершённых задач
         const [taskData, completedTasks] = await Promise.all([
             fetchTasks(year, month, day),
             fetchCompletedTasks(year, month, day)
@@ -34,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Передаем категории из taskData.data.categories
             updateTasksSection(
                 taskData.data.tasks || [],
-                completedTasks || [],
+                completedTasks?.data?.completedTasks || [],
                 `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
                 day,
                 taskData.data.categories || []
@@ -52,10 +73,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Привязка обработчиков
         bindDayClickHandlers(year, month);
 
-        // Выделение текущего дня
-        const todayLink = document.querySelector(`.day-link[data-day="${day}"]`);
-        if (todayLink) {
-            todayLink.classList.add('selected');
+        // Выделение текущего дня (только если это текущий месяц и год)
+        const today = new Date();
+        const isCurrentMonth = year === today.getFullYear() && month === today.getMonth() + 1;
+        if (isCurrentMonth) {
+            const todayLink = document.querySelector(`.day-link[data-day="${day}"]`);
+            if (todayLink) {
+                todayLink.classList.add('selected');
+            }
         }
     } catch (error) {
         console.error('[init] Error:', error);

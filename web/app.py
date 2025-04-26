@@ -1,3 +1,4 @@
+# app.py
 import os
 import atexit
 from datetime import datetime
@@ -6,7 +7,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_required, current_user
 from web.logging_config import configure_logging
 from web.routes.stats import stats_routes
-from web.config.config import init_db, db_connection
+from web.config.config import init_db, db_connection, MONTH_NAMES
 from web.models.models import User
 from web.routes.profile import init_profile_routes
 from web.routes.telegram import telegram_routes
@@ -56,7 +57,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # Инициализация Google Scheduler
-logger.info("Initializing Google Scheduler...")
+logger.info("Инициализация Google Scheduler...")
 if not hasattr(app, 'google_scheduler') and (not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true'):
     app.google_scheduler = google_sync_scheduler(app)
     app.google_scheduler.start()
@@ -68,6 +69,15 @@ init_db(app)
 # Добавление CSP-заголовка
 @app.after_request
 def apply_csp(response):
+    """
+    Добавляет заголовок Content-Security-Policy к каждому ответу.
+
+    Args:
+        response: Ответ Flask.
+
+    Returns:
+        Модифицированный ответ с заголовком CSP.
+    """
     response.headers['Content-Security-Policy'] = (
         "script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; "
         "object-src 'none'; "
@@ -80,10 +90,25 @@ def apply_csp(response):
 # Маршрут для favicon.ico
 @app.route('/favicon.ico')
 def favicon():
+    """
+    Возвращает favicon.ico из папки static.
+
+    Returns:
+        Файл favicon.ico.
+    """
     return send_from_directory(app.static_folder, 'favicon.ico')
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    Загружает пользователя по ID для Flask-Login.
+
+    Args:
+        user_id: ID пользователя.
+
+    Returns:
+        Объект User или None, если пользователь не найден.
+    """
     with db_connection() as db:
         cursor = db.cursor()
         cursor.execute('SELECT id, username, email, telegram_token, google_token, timezone FROM users WHERE id = ?', (user_id,))

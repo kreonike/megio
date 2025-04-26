@@ -1,13 +1,38 @@
-# category_service.py (дополненная версия)
+# web/services/category_service.py
 from web.config.config import db_connection
 from web.utils import log_action
 
+
 def get_user_categories(db, user_id):
+    """
+    Получает список категорий пользователя.
+
+    Args:
+        db: Соединение с базой данных.
+        user_id: ID пользователя.
+
+    Returns:
+        Список словарей с полями id, name, color.
+    """
     cursor = db.cursor()
     cursor.execute('SELECT id, name, color FROM categories WHERE user_id = ?', (user_id,))
     return [dict(row) for row in cursor.fetchall()]
 
+
 def add_category(db, user_id, name, color, logger=None):
+    """
+    Добавляет новую категорию для пользователя.
+
+    Args:
+        db: Соединение с базой данных.
+        user_id: ID пользователя.
+        name: Название категории.
+        color: Цвет категории (в формате HEX).
+        logger: Логгер для записи действия (опционально).
+
+    Returns:
+        ID созданной категории.
+    """
     cursor = db.cursor()
     cursor.execute('''
         INSERT INTO categories (user_id, name, color) 
@@ -19,7 +44,20 @@ def add_category(db, user_id, name, color, logger=None):
         log_action(logger, "Category", "added", user_id, name=name)
     return category_id
 
+
 def delete_category(db, user_id, category_id, logger=None):
+    """
+    Удаляет категорию пользователя и связанные с ней связи с задачами.
+
+    Args:
+        db: Соединение с базой данных.
+        user_id: ID пользователя.
+        category_id: ID категории.
+        logger: Логгер для записи действия (опционально).
+
+    Returns:
+        Количество удалённых строк (0 или 1).
+    """
     cursor = db.cursor()
     # Удаляем связи с задачами
     cursor.execute('''
