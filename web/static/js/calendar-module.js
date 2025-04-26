@@ -1,4 +1,3 @@
-// static/js/calendar-module.js
 import { fetchMonthTasks } from './api.js';
 
 export function updateCalendar(year, month) {
@@ -9,14 +8,17 @@ export function updateCalendar(year, month) {
      * @param {number} month - Месяц календаря.
      */
     console.log(`[calendar-module/updateCalendar] Обновление для ${year}-${month}`);
-    document.querySelectorAll('.task-count-badge').forEach(badge => {
-        badge.classList.add('updating');
-    });
+    const badges = document.querySelectorAll('.task-count-badge');
+    badges.forEach(badge => badge.classList.add('updating'));
+
+    const calendarTable = document.querySelector('.calendar-table-container');
+    calendarTable.classList.add('loading');
 
     return fetchMonthTasks(year, month)
         .then(data => {
             if (!data.success || !data.data) throw new Error('Некорректные данные ответа');
             const tasksByDay = data.data.tasksByDay || {};
+            console.log('[calendar-module/updateCalendar] tasksByDay:', tasksByDay);
 
             document.querySelectorAll('.day-link').forEach(link => {
                 const day = link.getAttribute('data-day');
@@ -26,7 +28,6 @@ export function updateCalendar(year, month) {
                 if (day) {
                     const tasks = tasksByDay[day] || [];
                     dayCell.classList.remove('has-overdue-tasks', 'all-tasks-completed', 'has-tasks');
-
                     dayCell.style.background = '';
 
                     if (tasks.length > 0) {
@@ -42,7 +43,9 @@ export function updateCalendar(year, month) {
                             if (taskDate < today && !task.completed) hasOverdue = true;
                             maxPriority = Math.max(maxPriority, task.priority || 1);
                             if (task.category_colors) {
-                                task.category_colors.forEach(color => colors.add(color));
+                                task.category_colors.forEach(color => {
+                                    if (/^#[0-9A-F]{6}$/i.test(color)) colors.add(color);
+                                });
                             }
                         });
 
@@ -51,10 +54,11 @@ export function updateCalendar(year, month) {
                             dayCell.classList.add('has-overdue-tasks');
                         }
 
-                        if (colors.size === 1) {
-                            dayCell.style.backgroundColor = `${[...colors][0]}20`;
-                        } else if (colors.size > 1) {
-                            const gradient = [...colors].map(color => `${color} 0%, ${color} 50%`).join(',');
+                        const validColors = [...colors];
+                        if (validColors.length === 1) {
+                            dayCell.style.backgroundColor = `${validColors[0]}20`;
+                        } else if (validColors.length > 1) {
+                            const gradient = validColors.map(color => `${color} 0%, ${color} 50%`).join(',');
                             dayCell.style.background = `linear-gradient(135deg, ${gradient})`;
                         }
 
@@ -86,16 +90,15 @@ export function updateCalendar(year, month) {
             throw error;
         })
         .finally(() => {
-            document.querySelectorAll('.task-count-badge').forEach(badge => {
-                badge.classList.remove('updating');
-            });
+            badges.forEach(badge => badge.classList.remove('updating'));
+            calendarTable.classList.remove('loading');
         });
 }
 
 export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
     /**
      * Обновляет индикатор приоритета для дня в календаре.
-
+     *
      * @param {HTMLElement} dayElement - Элемент дня в календаре.
      * @param {Array} tasks - Список задач.
      * @param {Array} completedTasks - Список завершённых задач.

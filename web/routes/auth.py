@@ -1,13 +1,44 @@
-# auth.py (объединенная версия)
-from flask import render_template, redirect, url_for, flash, request
+# auth.py
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+import random
+import string
+import re
+import sqlite3
 from web.config.config import db_connection
 from web.models.models import User
 from web.utils import log_action
 
-
 def init_auth_routes(app, bcrypt):
+    def generate_strong_password(length=12):
+        """Генерирует надежный пароль с гарантированными типами символов"""
+        lower = string.ascii_lowercase
+        upper = string.ascii_uppercase
+        digits = string.digits
+        symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+
+        # Гарантируем минимум по одному символу каждого типа
+        password = [
+            random.choice(lower),
+            random.choice(upper),
+            random.choice(digits),
+            random.choice(symbols)
+        ]
+
+        # Заполняем оставшуюся длину случайными символами
+        all_chars = lower + upper + digits + symbols
+        password.extend(random.choice(all_chars) for _ in range(length - 4))
+
+        # Перемешиваем и объединяем
+        random.shuffle(password)
+        return ''.join(password)
+
+    @app.route('/generate-password', methods=['GET'])
+    def generate_password():
+        """API endpoint для генерации пароля"""
+        password = generate_strong_password()
+        return jsonify({'password': password})
+
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if current_user.is_authenticated:
@@ -54,13 +85,32 @@ def init_auth_routes(app, bcrypt):
             return redirect(url_for('show_calendar'))
 
         if request.method == 'POST':
-            username = request.form.get('username')
-            email = request.form.get('email')
-            password = request.form.get('password')
+            username = request.form.get('username', '').strip()
+            email = request.form.get('email', '').strip()
+            password = request.form.get('password', '')
 
-            if not username or not email or not password:
-                flash('Заполните все поля', 'error')
-                return redirect(url_for('register'))
+            # Валидация
+            errors = False
+
+            if not username or len(username) < 3:
+                flash('Имя пользователя должно содержать минимум 3 символа', 'error')
+                errors = True
+
+            if not email or not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+                flash('Введите корректный email', 'error')
+                errors = True
+
+            if (not password or len(password) < 8 or
+                    not re.search(r'[A-Z]', password) or
+                    not re.search(r'[a-z]', password) or
+                    not re.search(r'\d', password)):
+                flash('Пароль должен содержать минимум 8 символов, включая цифры, заглавные и строчные буквы', 'error')
+                errors = True
+
+            if errors:
+                return render_template('register.html',
+                                    username=username,
+                                    email=email)
 
             try:
                 with db_connection() as db:
@@ -76,9 +126,19 @@ def init_auth_routes(app, bcrypt):
                     log_action(app.logger, "User", "registered", user_id)
                     flash('Регистрация прошла успешно. Теперь вы можете войти', 'success')
                     return redirect(url_for('login'))
+            except sqlite3.IntegrityError as e:
+                if 'username' in str(e):
+                    flash('Это имя пользователя уже занято', 'error')
+                elif 'email' in str(e):
+                    flash('Этот email уже используется', 'error')
+                return render_template('register.html',
+                                    username=username,
+                                    email=email)
             except Exception as e:
-                app.logger.error(f"Registration error: {str(e)}")
-                flash('Имя пользователя или email уже заняты', 'error')
+                flash(f'Ошибка при регистрации: {str(e)}', 'error')
+                return render_template('register.html',
+                                    username=username,
+                                    email=email)
 
         return render_template('register.html')
 

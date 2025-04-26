@@ -1,71 +1,233 @@
 /* static/css/register.css */
+:root {
+    /* Светлая тема */
+    --primary-color: #4a6fa5;
+    --primary-dark: #3a5a80;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --text-inverse: #fff;
+    --bg-color: #fff;
+    --bg-secondary-color: #f8f9fa;
+    --border-color: #ddd;
+    --hover-color: rgba(0, 0, 0, 0.05);
+    --error-color: #dc3545;
+    --success-color: #28a745;
+    --strength-weak: #ff3b30;
+    --strength-medium: #ff9500;
+    --strength-good: #ffcc00;
+    --strength-strong: #34c759;
+    --strength-very-strong: #28cd41;
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #5d8bd8;
+        --primary-dark: #4a6fa5;
+        --text-primary: #f0f0f0;
+        --text-secondary: #b0b0b0;
+        --bg-color: #1e1e1e;
+        --bg-secondary-color: #2d2d2d;
+        --border-color: #444;
+        --hover-color: rgba(255, 255, 255, 0.05);
+        --strength-weak: #ff6b6b;
+        --strength-medium: #ffa726;
+        --strength-good: #ffee58;
+        --strength-strong: #66bb6a;
+        --strength-very-strong: #4caf50;
+    }
+}
+
 .registration-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 450px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.registration-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    font-size: 1.8rem;
+}
+
+.flash-messages {
+    margin-bottom: 1.5rem;
+}
+
+.flash-message {
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.flash-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.flash-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--error-color);
+    border: 1px solid rgba(220, 53, 69, 0.2);
 }
 
 .registration-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 1.25rem;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 }
 
 .form-control {
     width: 100%;
-    padding: 10px;
+    padding: 0.75rem;
     border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+}
+
+.password-input-container {
+    position: relative;
+}
+
+.password-controls {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 0.5rem;
+    background-color: var(--bg-color);
+    padding: 0.25rem;
     border-radius: 4px;
 }
 
-.password-generator {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.generate-btn {
-    position: absolute;
-    right: 10px;
+.password-toggle,
+.password-generate,
+.password-copy {
     background: none;
     border: none;
     cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.password-toggle:hover,
+.password-generate:hover,
+.password-copy:hover {
+    color: var(--primary-color);
+    background-color: var(--hover-color);
+}
+
+.password-generate {
     color: var(--primary-color);
 }
 
-.hint-text, .error-text {
-    font-size: 0.8em;
-    margin-top: 5px;
+.password-strength {
+    margin-top: 0.5rem;
+}
+
+.strength-meter {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.strength-bar {
+    flex: 1;
+    height: 4px;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+}
+
+.strength-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
 }
 
 .hint-text {
+    font-size: 0.8rem;
     color: var(--text-secondary);
 }
 
 .error-text {
-    color: red;
+    font-size: 0.8rem;
+    color: var(--error-color);
     display: none;
 }
 
 .submit-btn {
-    padding: 10px;
+    padding: 0.75rem;
     background-color: var(--primary-color);
-    color: white;
+    color: var(--text-inverse);
     border: none;
     border-radius: 4px;
+    font-size: 1rem;
     cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-dark);
 }
 
 .login-link {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
 }
 
 .login-link a {
     color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.login-link a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 576px) {
+    .registration-container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .registration-title {
+        font-size: 1.5rem;
+    }
+
+    .password-controls {
+        gap: 0.25rem;
+    }
 }

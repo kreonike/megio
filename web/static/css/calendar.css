@@ -61,6 +61,21 @@
 .calendar-table-container {
     flex: 3;
     min-width: 300px;
+    position: relative;
+}
+
+.calendar-table-container.loading::after {
+    content: 'Загрузка...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2em;
+    color: var(--text-primary);
+    background: var(--bg-secondary-color);
+    padding: 10px 20px;
+    border-radius: 4px;
+    z-index: 10;
 }
 
 .calendar-table {
@@ -445,7 +460,7 @@
 
 /* Стили для индикатора приоритета */
 .tasks-sidebar .task-meta .priority-indicator.priority-1,
-.tasks-sidebar .completed-task-meta .priority-indicator.priority-1 {
+.tasks-sidebarjeff .completed-task-meta .priority-indicator.priority-1 {
     color: #4caf50;
     background-color: transparent;
     padding: 2px 8px;
@@ -1106,7 +1121,7 @@
 .feature-card h3 {
     color: var(--text-primary);
     margin-bottom: 1rem;
-    font-size: 1.3rem; /* Исправлено с "1.3 продвинуть" */
+    font-size: 1.3rem;
 }
 
 .feature-card p {

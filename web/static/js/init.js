@@ -1,4 +1,3 @@
-// static/js/init.js
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('[init] DOMContentLoaded fired');
     const tasksSection = document.querySelector('.tasks-section');
@@ -86,6 +85,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 todayLink.classList.add('selected');
             }
         }
+
+        // Обработчик для навигационных ссылок по месяцам
+        document.querySelectorAll('.month-nav-btn').forEach(link => {
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                console.log('[init] Month navigation clicked:', link.href);
+                const href = link.getAttribute('href');
+                window.location.href = href; // Переход по ссылке
+                const url = new URL(href, window.location.origin);
+                const newYear = parseInt(url.pathname.split('/')[2], 10);
+                const newMonth = parseInt(url.pathname.split('/')[3], 10);
+                console.log('[init] Navigating to:', { newYear, newMonth });
+                await import('./calendar-module.js').then(({ updateCalendar }) => {
+                    updateCalendar(newYear, newMonth);
+                });
+            });
+        });
     } catch (error) {
         console.error('[init] Error:', error);
         tasksSection.innerHTML = '<p>Ошибка загрузки задач</p>';
