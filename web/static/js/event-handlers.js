@@ -73,7 +73,8 @@ export function bindDayClickHandlers(year, month) {
 export function bindTaskEventHandlers(year, month, day) {
     console.log(`[event-handlers/bindTaskEventHandlers] Binding task handlers for ${year}-${month}-${day}`);
 
-    const timeInputs = document.querySelectorAll('.edit-time-input, #task-time');
+    // Привязываем обработчики ко всем полям ввода времени
+    const timeInputs = document.querySelectorAll('.time-input, .edit-time-input');
     timeInputs.forEach(input => {
         if (!input.dataset.spinnerBound) {
             bindTimeSpinnerEvents(input);

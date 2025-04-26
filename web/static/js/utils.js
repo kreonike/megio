@@ -84,6 +84,12 @@ export function bindTimeSpinnerEvents(timeInput) {
         return;
     }
 
+    // Проверяем, существует ли элемент в DOM
+    if (!document.body.contains(timeInput)) {
+        console.warn('[utils/bindTimeSpinnerEvents] Time input not in DOM');
+        return;
+    }
+
     // Удаляем старые обработчики, чтобы избежать дублирования
     timeInput.removeEventListener('input', handleInput);
     timeInput.removeEventListener('blur', handleBlur);

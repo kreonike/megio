@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { updateCalendar } = await import('./calendar-module.js');
         const { fetchTasks, fetchCompletedTasks } = await import('./api.js');
         const { updateTasksSection } = await import('./tasks-module.js');
-        const { bindDayClickHandlers } = await import('./event-handlers.js');
+        const { bindDayClickHandlers, bindTaskEventHandlers } = await import('./event-handlers.js');
 
         const today = new Date();
         const year = today.getFullYear();
@@ -37,9 +37,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 completedTasks || [],
                 `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
                 day,
-                taskData.data.categories || [] // Используем категории из API
+                taskData.data.categories || []
             );
             tasksSection.classList.add('loaded');
+
+            // Привязываем обработчики для основной формы
+            bindTaskEventHandlers(year, month, day);
         } else {
             console.error('[init] Invalid task data:', taskData);
             tasksSection.innerHTML = '<p>Ошибка загрузки задач</p>';
