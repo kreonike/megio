@@ -1,0 +1,8 @@
+../web/.env
+../bot/.env
+/.venv/
+/bot/.env
+/web/.env
+/backup/
+/.idea
+.env

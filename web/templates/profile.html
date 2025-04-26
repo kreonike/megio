@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/categories-module.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1 class="profile-title">{{ user.username }}</h1>
+
+    <!-- Основная информация -->
+    <div class="profile-section">
+        <div class="form-group">
+            <label class="form-label">Имя пользователя:</label>
+            <div class="profile-username">{{ user.username }}</div>
+        </div>
+
+        <form method="POST" class="profile-form">
+            <div class="form-group">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}"
+                       class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label for="timezone" class="form-label">Временная зона:</label>
+                <select id="timezone" name="timezone" class="form-select">
+                    {% for tz in timezones %}
+                        <option value="{{ tz }}" {% if tz == user.timezone %}selected{% endif %}>{{ tz }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Обновить профиль
+            </button>
+        </form>
+    </div>
+
+    <!-- Управление категориями -->
+    <div class="profile-section">
+        <h2><i class="fas fa-tags"></i> Управление категориями</h2>
+
+        <form method="POST" class="category-form" id="category-form">
+            <div class="form-row">
+                <div class="form-group" style="flex-grow: 1;">
+                    <input type="text" name="name" placeholder="Введите название категории"
+                           class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <input type="color" name="color" value="#3498db" class="color-picker">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Добавить
+                </button>
+            </div>
+        </form>
+
+        <div class="categories-list">
+            {% if not categories %}
+                <p class="no-categories">Нет созданных категорий</p>
+            {% else %}
+                <div class="category-grid">
+                    {% for cat in categories %}
+                    <div class="category-item" data-category-id="{{ cat.id }}">
+                        <span class="category-badge" style="background-color: {{ cat.color }}">{{ cat.name }}</span>
+                        <form method="POST" class="delete-category-form" style="margin: 0;">
+                            <input type="hidden" name="delete_category" value="{{ cat.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Привязка Telegram -->
+    <div class="profile-section">
+        <h2><i class="fab fa-telegram"></i> Telegram</h2>
+
+        {% if user.is_telegram_linked() %}
+            <div class="status-connected">
+                <i class="fas fa-check-circle"></i> Аккаунт привязан
+            </div>
+        {% else %}
+            <div class="status-disconnected">
+                <i class="fas fa-exclamation-triangle"></i> Аккаунт не привязан
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('link_telegram') }}" class="telegram-form">
+            <div class="form-group">
+                <input type="text" name="telegram_id"
+                       placeholder="Введите Telegram ID"
+                       class="form-input"
+                       required>
+            </div>
+            <button type="submit" class="btn btn-telegram">
+                {% if user.is_telegram_linked() %}
+                    <i class="fas fa-redo-alt"></i> Обновить
+                {% else %}
+                    <i class="fas fa-link"></i> Привязать
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    <!-- Интеграция с Google Calendar -->
+    <div class="profile-section">
+        <h2><i class="fab fa-google"></i> Google Calendar</h2>
+
+        <div class="integration-status">
+            {% if user.google_token %}
+                <span class="status-connected">
+                    <i class="fas fa-check-circle"></i> Подключено
+                </span>
+                <form method="POST" action="{{ url_for('disconnect_google') }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-unlink"></i> Отключить
+                    </button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('connect_google') }}" class="btn btn-google">
+                    <i class="fab fa-google"></i> Подключить
+                </a>
+            {% endif %}
+        </div>
+
+        {% with messages = get_flashed_messages(category_filter=["google"]) %}
+            {% if messages %}
+                <div class="flash google-flash">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Кнопка возврата -->
+    <div class="profile-footer">
+        <a href="{{ url_for('show_calendar') }}" class="btn btn-back">
+            <i class="fas fa-arrow-left"></i> Вернуться к календарю
+        </a>
+    </div>
+</div>
+{% endblock %}
