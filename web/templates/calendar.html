@@ -7,13 +7,15 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        const currentUserId = {{ current_user_id | tojson }};
-        const currentDate = {
+    <script defer>
+        console.log('[calendar.html] Определение currentDate');
+        window.currentUserId = {{ current_user_id | tojson }};
+        window.currentDate = {
             year: {{ year }},
             month: {{ month }},
             day: new Date().getDate()
         };
+        console.log('[calendar.html] currentDate:', window.currentDate);
     </script>
     <script type="module" src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/api.js') }}"></script>

@@ -41,10 +41,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { bindDayClickHandlers, bindTaskEventHandlers } = await import('./event-handlers.js');
 
         // Инициализация календаря
+        console.log('[init] Вызов updateCalendar:', { year, month });
         await updateCalendar(year, month);
         console.log('[init] Calendar initialized');
 
         // Загрузка задач и завершённых задач
+        console.log('[init] Загрузка задач для:', { year, month, day });
         const [taskData, completedTasks] = await Promise.all([
             fetchTasks(year, month, day),
             fetchCompletedTasks(year, month, day)
@@ -71,6 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Привязка обработчиков
+        console.log('[init] Привязка обработчиков кликов по дням');
         bindDayClickHandlers(year, month);
 
         // Выделение текущего дня (только если это текущий месяц и год)
@@ -79,6 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (isCurrentMonth) {
             const todayLink = document.querySelector(`.day-link[data-day="${day}"]`);
             if (todayLink) {
+                console.log('[init] Выделение текущего дня:', day);
                 todayLink.classList.add('selected');
             }
         }
