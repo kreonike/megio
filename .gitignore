@@ -6,4 +6,4 @@
 /backup/
 /.idea
 .env
-/web/logs
+/web/logs/
