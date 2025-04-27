@@ -111,6 +111,11 @@ def init_db(app):
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )''')
 
+            # Добавление индекса для google_event_id
+            cursor.execute('''
+                CREATE INDEX IF NOT EXISTS idx_tasks_google_event_id ON tasks(google_event_id)
+            ''')
+
             db.commit()
 
             # Проверка и добавление отсутствующих столбцов

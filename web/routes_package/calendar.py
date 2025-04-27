@@ -43,7 +43,8 @@ def generate_calendar(year, month, user_id, db, highlight_today=True, show_overd
             t.repeat_start,
             t.repeat_end,
             c.color,
-            ct.id AS completed_task_id
+            ct.id AS completed_task_id,
+            t.google_event_id
         FROM tasks t
         LEFT JOIN completed_tasks ct 
             ON t.id = ct.task_id 
@@ -60,6 +61,7 @@ def generate_calendar(year, month, user_id, db, highlight_today=True, show_overd
     days_colors = {}
     overdue_days = set()
     completed_days = set()
+    processed_google_events = set()  # Для отслеживания обработанных Google-событий
 
     for row in cursor.fetchall():
         task_id = row['task_id']
@@ -72,6 +74,7 @@ def generate_calendar(year, month, user_id, db, highlight_today=True, show_overd
         repeat_end = row['repeat_end']
         color = row['color']
         completed_task_id = row['completed_task_id']
+        google_event_id = row['google_event_id']
 
         # Функция для добавления задачи в день
         def add_task_to_day(day, is_overdue=False):
@@ -87,6 +90,10 @@ def generate_calendar(year, month, user_id, db, highlight_today=True, show_overd
             if completed_task_id:
                 completed_days.add(day)
 
+        # Пропускаем Google-события, если они уже обработаны
+        if google_event_id and google_event_id in processed_google_events:
+            continue
+
         # Обрабатываем основную задачу, только если она принадлежит текущему месяцу
         if task_year == year and task_month == month:
             is_overdue = (not completed_task_id and
@@ -94,10 +101,12 @@ def generate_calendar(year, month, user_id, db, highlight_today=True, show_overd
                            (task_year == now.year and task_month < now.month) or
                            (task_year == now.year and task_month == now.month and task_day < now.day)))
             add_task_to_day(task_day, is_overdue)
+            if google_event_id:
+                processed_google_events.add(google_event_id)
             app.logger.debug(f"Добавлена основная задача {task_id} для {year}-{month}-{task_day}")
 
-        # Обрабатываем повторяющиеся задачи, только если все поля заполнены
-        if repeat_days and repeat_start and repeat_end:
+        # Обрабатываем повторяющиеся задачи, только если они не из Google Календаря
+        if repeat_days and repeat_start and repeat_end and not google_event_id:
             try:
                 start_date = datetime.strptime(repeat_start, '%Y-%m-%d')
                 end_date = datetime.strptime(repeat_end, '%Y-%m-%d')
