@@ -6,18 +6,18 @@ from flask import Flask, render_template, request, redirect, flash, jsonify, mak
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_required, current_user
 from web.logging_config import configure_logging
-from web.routes.stats import stats_routes
+from web.routes_package.stats import stats_routes
 from web.config.config import init_db, db_connection, MONTH_NAMES
 from web.models.models import User
-from web.routes.profile import init_profile_routes
-from web.routes.telegram import telegram_routes
-from web.routes.auth import init_auth_routes
-from web.routes.google import google_routes, google_sync_scheduler
-from web.routes.categories import categories_routes
-from web.routes.remind import remind_routes
-from web.routes.complete import complete_routes
-from web.routes.tasks import tasks_routes
-from web.routes.task_restore import init_task_restore_routes
+from web.routes_package.profile import init_profile_routes
+from web.routes_package.telegram import telegram_routes
+from web.routes_package.auth import init_auth_routes
+from web.routes_package.google import google_routes, google_sync_scheduler
+from web.routes_package.categories import categories_routes
+from web.routes_package.remind import remind_routes
+from web.routes_package.complete import complete_routes
+from web.routes_package.tasks import tasks_routes
+from web.routes_package.task_restore import init_task_restore_routes
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
