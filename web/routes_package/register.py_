@@ -1,0 +1,99 @@
+# register.py
+import sqlite3
+import random
+import string
+from flask import render_template, redirect, url_for, flash, request, jsonify
+import re
+from web.config.config import db_connection
+
+
+def register_routes(app, bcrypt):
+    def generate_strong_password(length=12):
+        """Генерирует надежный пароль с гарантированными типами символов"""
+        lower = string.ascii_lowercase
+        upper = string.ascii_uppercase
+        digits = string.digits
+        symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+
+        # Гарантируем минимум по одному символу каждого типа
+        password = [
+            random.choice(lower),
+            random.choice(upper),
+            random.choice(digits),
+            random.choice(symbols)
+        ]
+
+        # Заполняем оставшуюся длину случайными символами
+        all_chars = lower + upper + digits + symbols
+        password.extend(random.choice(all_chars) for _ in range(length - 4))
+
+        # Перемешиваем и объединяем
+        random.shuffle(password)
+        return ''.join(password)
+
+    @app.route('/generate-password', methods=['GET'])
+    def generate_password_endpoint():
+        """API endpoint для генерации пароля"""
+        password = generate_strong_password()
+        return jsonify({'password': password})
+
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        if request.method == 'POST':
+            username = request.form.get('username', '').strip()
+            email = request.form.get('email', '').strip()
+            password = request.form.get('password', '')
+
+            # Валидация
+            errors = False
+
+            if not username or len(username) < 3:
+                flash('Имя пользователя должно содержать минимум 3 символа', 'error')
+                errors = True
+
+            if not email or not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+                flash('Введите корректный email', 'error')
+                errors = True
+
+            if (not password or len(password) < 8 or
+                    not re.search(r'[A-Z]', password) or
+                    not re.search(r'[a-z]', password) or
+                    not re.search(r'\d', password)):
+                flash('Пароль должен содержать минимум 8 символов, включая цифры, заглавные и строчные буквы', 'error')
+                errors = True
+
+            if errors:
+                return render_template('register.html',
+                                    username=username,
+                                    email=email)
+
+            # Хеширование пароля
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+            try:
+                with db_connection() as db:
+                    cursor = db.cursor()
+                    cursor.execute('''
+                        INSERT INTO users (username, email, password)
+                        VALUES (?, ?, ?)
+                    ''', (username, email, hashed_password))
+                    db.commit()
+
+                    flash('Регистрация успешна. Теперь вы можете войти.', 'success')
+                    return redirect(url_for('login'))
+
+            except sqlite3.IntegrityError as e:
+                if 'username' in str(e):
+                    flash('Это имя пользователя уже занято', 'error')
+                elif 'email' in str(e):
+                    flash('Этот email уже используется', 'error')
+                return render_template('register.html',
+                                    username=username,
+                                    email=email)
+            except Exception as e:
+                flash(f'Ошибка при регистрации: {str(e)}', 'error')
+                return render_template('register.html',
+                                    username=username,
+                                    email=email)
+
+        return render_template('register.html')
