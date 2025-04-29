@@ -1,4 +1,4 @@
-import { fetchMonthTasks } from './api.js';
+import { fetchMonthTasks, fetchCompletedTasks } from './api.js';
 
 export function updateCalendar(year, month) {
     /**
@@ -14,11 +14,18 @@ export function updateCalendar(year, month) {
     const calendarTable = document.querySelector('.calendar-table-container');
     calendarTable.classList.add('loading');
 
-    return fetchMonthTasks(year, month)
-        .then(data => {
-            if (!data.success || !data.data) throw new Error('Некорректные данные ответа');
-            const tasksByDay = data.data.tasksByDay || {};
+    // Запрашиваем активные и завершенные задачи для месяца
+    return Promise.all([
+        fetchMonthTasks(year, month),
+        fetchMonthCompletedTasks(year, month)
+    ])
+        .then(([monthData, completedData]) => {
+            if (!monthData.success || !monthData.data) throw new Error('Некорректные данные ответа для задач');
+            const tasksByDay = monthData.data.tasksByDay || {};
+            const completedTasksByDay = completedData || {};
+
             console.log('[calendar-module/updateCalendar] tasksByDay:', tasksByDay);
+            console.log('[calendar-module/updateCalendar] completedTasksByDay:', completedTasksByDay);
 
             document.querySelectorAll('.day-link').forEach(link => {
                 const day = link.getAttribute('data-day');
@@ -27,10 +34,17 @@ export function updateCalendar(year, month) {
 
                 if (day) {
                     const tasks = tasksByDay[day] || [];
+                    const completedTasks = completedTasksByDay[day] || [];
+
                     dayCell.classList.remove('has-overdue-tasks', 'all-tasks-completed', 'has-tasks');
                     dayCell.style.background = '';
 
-                    if (tasks.length > 0) {
+                    // Проверяем, есть ли активные задачи или только завершенные
+                    if (tasks.length === 0 && completedTasks.length > 0) {
+                        // Только завершенные задачи — применяем синий цвет
+                        dayCell.classList.add('all-tasks-completed');
+                        if (badge) badge.remove();
+                    } else if (tasks.length > 0) {
                         const now = new Date();
                         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                         const taskDate = new Date(year, month - 1, day);
@@ -95,6 +109,31 @@ export function updateCalendar(year, month) {
         });
 }
 
+// Новая функция для получения завершенных задач за месяц
+async function fetchMonthCompletedTasks(year, month) {
+    console.log(`[calendar-module/fetchMonthCompletedTasks] Запрос завершённых задач для ${year}-${month}`);
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const completedTasksByDay = {};
+
+    // Запрашиваем завершенные задачи для каждого дня
+    const promises = [];
+    for (let day = 1; day <= daysInMonth; day++) {
+        promises.push(
+            fetchCompletedTasks(year, month, day)
+                .then(data => ({ day, tasks: data.data?.completedTasks || [] }))
+        );
+    }
+
+    const results = await Promise.all(promises);
+    results.forEach(({ day, tasks }) => {
+        if (tasks.length > 0) {
+            completedTasksByDay[day] = tasks;
+        }
+    });
+
+    return completedTasksByDay;
+}
+
 export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
     /**
      * Обновляет индикатор приоритета для дня в календаре.
@@ -106,7 +145,7 @@ export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
     console.log(`[calendar-module/updateTaskPriorityIndicator] Обновление индикатора приоритета, задачи: ${tasks.length}, завершённые: ${completedTasks.length}`);
     const badge = dayElement.querySelector('.task-count-badge');
 
-    dayElement.classList.remove('has-tasks', 'all-tasks-completed');
+    dayElement.classList.remove('has-tasks', 'has-overdue-tasks');
 
     if (tasks.length > 0) {
         const now = new Date();
@@ -138,15 +177,11 @@ export function updateTaskPriorityIndicator(dayElement, tasks, completedTasks) {
             else if (maxPriority === 2) updatedBadge.classList.add('priority-medium');
             else updatedBadge.classList.add('priority-low');
 
-            if (!hasOverdue) {
-                dayElement.classList.add('has-tasks');
-            } else {
+            dayElement.classList.add('has-tasks');
+            if (hasOverdue) {
                 dayElement.classList.add('has-overdue-tasks');
             }
         }
-    } else if (completedTasks.length > 0) {
-        if (badge) badge.remove();
-        dayElement.classList.add('all-tasks-completed');
     } else {
         if (badge) badge.remove();
     }

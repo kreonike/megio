@@ -1,8 +1,8 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import calendar
 from datetime import datetime
-from bot.config.config import get_db_connection
-from bot.locales.loader import i18n
+from config.config import get_db_connection
+from locales.loader import i18n
 import logging
 
 logger = logging.getLogger("bot")

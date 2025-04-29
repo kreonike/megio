@@ -1,9 +1,9 @@
 from aiogram import types, F
 from datetime import datetime
-from bot.utils.db import get_user_id_by_telegram_id
-from bot.config.config import get_db_connection
-from bot.utils.calendar import show_day_tasks
-from bot.utils.state import user_states, UserState
+from utils.db import get_user_id_by_telegram_id
+from config.config import get_db_connection
+from utils.calendar import show_day_tasks
+from utils.state import user_states, UserState
 import re
 import logging
 

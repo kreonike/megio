@@ -1,10 +1,10 @@
 # bot/handlers/commands.py
 from aiogram import types, F
-from bot.utils.db import get_user_id_by_telegram_id
-from bot.utils.state import user_states, UserState, get_user_state
-from bot.config.config import get_db_connection
+from utils.db import get_user_id_by_telegram_id
+from utils.state import user_states, UserState, get_user_state
+from config.config import get_db_connection
 from datetime import datetime
-from bot.keyboards.keyboards import create_calendar_keyboard, create_tasks_keyboard, create_help_keyboard, \
+from keyboards.keyboards import create_calendar_keyboard, create_tasks_keyboard, create_help_keyboard, \
     create_language_keyboard
 import logging
 

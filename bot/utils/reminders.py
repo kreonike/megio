@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 import asyncio
 import logging
+from datetime import time as dtime
 
 logger = logging.getLogger("bot")
 
@@ -60,11 +61,26 @@ async def send_reminder(bot, telegram_id, task_datetime, task_text, reminder_typ
         return False
 
 
-def parse_task_datetime(year, month, day, time_obj):
+def parse_task_datetime(year, month, day, task_time):
     try:
-        if time_obj is None:
+        if task_time is None:
             return datetime(year, month, day)
-        return datetime.combine(datetime(year, month, day).date(), time_obj)
+        if isinstance(task_time, str):
+            # Предполагаем, что строка в формате "HH:MM" или "HH:MM:SS"
+            try:
+                # Разделяем строку на часы, минуты и (если есть) секунды
+                time_parts = task_time.split(":")
+                hours = int(time_parts[0])
+                minutes = int(time_parts[1])
+                seconds = int(time_parts[2]) if len(time_parts) > 2 else 0
+                task_time = dtime(hours, minutes, seconds)
+            except (ValueError, IndexError) as e:
+                logger.error(f"Ошибка парсинга строки времени '{task_time}': {e}")
+                return None
+        elif not isinstance(task_time, dtime):
+            logger.error(f"Неподдерживаемый тип времени: {type(task_time)}")
+            return None
+        return datetime.combine(datetime(year, month, day).date(), task_time)
     except ValueError as e:
         logger.error(f"Ошибка парсинга времени: {e}")
         return None

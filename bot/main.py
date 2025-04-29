@@ -4,21 +4,21 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client import telegram
 from aiogram import Bot, Dispatcher
 import asyncio
-from bot.handlers.commands import register_handlers as reg_commands
-from bot.handlers.callbacks import register_handlers as reg_callbacks
-from bot.handlers.messages import register_handlers as reg_messages
-from bot.utils.reminders import check_reminders
-from bot.config.logging_config import dict_config
+from handlers.commands import register_handlers as reg_commands
+from handlers.callbacks import register_handlers as reg_callbacks
+from handlers.messages import register_handlers as reg_messages
+from utils.reminders import check_reminders
+from config.logging_config import dict_config
 import sys
 from pathlib import Path
-from bot.config.config import DB_PATH
+from config.config import DB_PATH
 from dotenv import load_dotenv
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
-from bot.config.models import Base
+from config.models import Base
 
 load_dotenv()
 

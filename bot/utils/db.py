@@ -1,6 +1,6 @@
 # utils/db.py
 import logging
-from bot.config.config import get_db_connection  # Абсолютный импорт из bot.utils.config
+from config.config import get_db_connection  # Абсолютный импорт из bot.utils.config
 
 logger = logging.getLogger("bot")
 

@@ -1,12 +1,12 @@
 # bot/handlers/callbacks.py
 from aiogram import types, F
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.utils.db import get_user_id_by_telegram_id
-from bot.config.config import get_db_connection
-from bot.utils.calendar import show_day_tasks
-from bot.utils.state import user_states, UserState
-from bot.keyboards.keyboards import create_calendar_keyboard, create_delete_tasks_keyboard
-from bot.config.constants import MONTH_NAMES
+from utils.db import get_user_id_by_telegram_id
+from config.config import get_db_connection
+from utils.calendar import show_day_tasks
+from utils.state import user_states, UserState
+from keyboards.keyboards import create_calendar_keyboard, create_delete_tasks_keyboard
+from config.constants import MONTH_NAMES
 import logging
 
 logger = logging.getLogger("bot")

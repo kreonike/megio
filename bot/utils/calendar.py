@@ -1,6 +1,6 @@
 # bot/utils/calendar.py
 from aiogram import types
-from bot.keyboards.keyboards import create_calendar_keyboard, create_tasks_keyboard
+from keyboards.keyboards import create_calendar_keyboard, create_tasks_keyboard
 import logging
 
 logger = logging.getLogger("bot")
