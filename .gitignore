@@ -3,3 +3,4 @@
 /.venv/
 ./bot/logs
 ./web/logs
+/.env
